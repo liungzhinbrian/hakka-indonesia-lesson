@@ -133,86 +133,145 @@ html,body{font-size:18px}
 .dialog .vocab-pinyin{font-size:20px;color:#315f6a;line-height:1.65;overflow-wrap:anywhere}
 @media(max-width:600px){.reading-title-pinyin{font-size:calc(16px * var(--fontup))}.tone-mode-toggle{padding:9px 11px}}
 
-/* beta V6.1.0：正式名稱、版本署名、地圖互動與課堂工具 */
-.site-heading{display:flex;flex-direction:column;align-items:flex-start;gap:3px;white-space:normal;min-width:240px}
-.site-heading>span{font-size:13px;color:#68818c;font-weight:700}
-.site-heading>strong{font-size:clamp(16px,1.25vw,20px);color:#173c49;font-weight:850;line-height:1.35;letter-spacing:.02em}
-.site-credit{text-align:center;color:#75909a;background:#fff;border-top:1px solid var(--line);padding:7px 12px;font-size:13px;line-height:1.4}
-.side-bottom .lessonplan-link{display:block;margin-top:13px;padding:11px 12px;border:1px solid #5e7e83;border-radius:11px;font-weight:700;line-height:1.4;color:#f5ddb3;text-decoration:none}
-.side-bottom .lessonplan-link.is-disabled{color:#a2b5b9;border-color:#38545e;cursor:default}
-.tools-toggle{font-weight:800;background:#f6e8ce;border-color:#dbb778;color:#7c5125}
-.map-panel .migration-route{fill:none;stroke:#ffcb79;stroke-width:4;stroke-dasharray:var(--pathlength,800);stroke-dashoffset:var(--pathlength,800);stroke-linecap:round;filter:drop-shadow(0px 0px 5px #e7a257);animation:draw-migration 3s ease-in-out forwards}
-@keyframes draw-migration{to{stroke-dashoffset:0}}
-.migration-options{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:15px 0 3px}
-.migration-options button{background:#edf5f2;border:2px solid #97bfc0;border-radius:17px;color:#153e4e;display:flex;flex-direction:column;align-items:center;gap:9px;padding:22px 14px;font-weight:750}
-.migration-options button:hover{border-color:#de9e54;background:#fff4e4}
-.migration-options strong{font-size:23px}.migration-options span{font-size:15px;color:#5c7780}
-.route-reset{background:#f8d29a;border:0;border-radius:8px;padding:5px 12px;color:#193b48;font-size:15px;font-weight:800}
-.map-panel .map-svg .county-pin text{font-size:20px;paint-order:stroke;stroke:#153a49;stroke-width:4px}
-.map-panel .map-svg .county-pin .core{stroke-width:2.7px}
-.map-panel .map-svg .county-pin .halo{opacity:.6;transform-box:fill-box;transform-origin:center;animation:county-pulse 3.1s ease-out infinite}
-.map-panel .map-svg .county-pin .pulse-2{animation-delay:1.55s}
-.map-panel .map-svg .county-pin.hot .halo{fill:#ff654e;opacity:.7}
-.map-panel .map-svg .county-pin.warm .halo{fill:#ffc16d;opacity:.63}
-.map-panel .map-svg .county-pin.mild .halo{fill:#c6dfad;opacity:.58}
-.map-panel .map-svg .county-pin.light .halo{fill:#9bdce0;opacity:.56}
-.map-panel .map-svg .county-pin:hover .halo,.map-panel .map-svg .county-pin:focus .halo{fill:#ffeb94;opacity:.9}
-@keyframes county-pulse{0%{transform:scale(.7);opacity:.75}75%{opacity:.12}100%{transform:scale(2.8);opacity:0}}
-.county-stats{display:flex;gap:17px;flex-wrap:wrap;margin:11px 0}
-.county-stats>span{display:flex;gap:11px;align-items:baseline;background:#315865;border-radius:12px;padding:8px 13px;font-size:16px}
-.map-info .county-stats strong{color:#f8db9d;font-size:24px}
-.map-info .dialect-list{font-size:18px;line-height:1.7}
-.ratio-button{border:0;background:transparent;padding:8px;border-radius:9px;text-align:left;color:#204453;cursor:pointer;width:100%}
-.ratio-button:hover{background:#e4f3ef}
-.ratio-button .ratio-track{display:block}
-.ratio-button .ratio-track>span{display:block;height:100%;background:linear-gradient(90deg,#efca81,#df7850);border-radius:99px}
 
-.tools-overlay[hidden]{display:none!important}
-.tools-overlay{position:fixed;inset:0;background:rgba(7,27,35,.7);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}
-.tools-dialog{background:#fff;color:#143744;width:min(900px,97vw);max-height:min(90vh,920px);overflow:auto;border-radius:22px;box-shadow:0 20px 90px rgba(0,0,0,.35);padding:25px 28px 30px}
-.tools-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.tools-dialog-head h2{font-size:28px;margin:6px 0 16px}
-.tools-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
-.tool-tab{border:1px solid #c4dcdd;background:#f1f6f5;color:#2b6670;padding:14px 10px;font-size:19px;font-weight:750;border-radius:13px}
-.tool-tab.active{background:#1d6370;color:white;border-color:#1d6370}
-.tool-section{text-align:center;display:grid;place-items:center;gap:12px;padding:4px 6px 14px}
-.timer-big{font-variant-numeric:tabular-nums;font-size:clamp(68px,10vw,118px);font-weight:850;letter-spacing:.04em;color:#1d6370;line-height:1.3}
-.timer-big.time-up{color:#ba4b43}
-.tools-overlay.timer-finished .timer-big{color:#bf5046}
-.tool-label{font-size:20px;color:#66818a;margin:0 0 14px}
-.tool-buttons{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
-.tool-buttons button{min-width:130px}
-.time-presets{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:700px;margin:7px 0 15px}
-.time-presets .preset{background:#eef5f3;color:#225b63;border:1px solid #bad3d0;padding:12px 16px;border-radius:12px;font-size:19px;font-weight:750}
-.time-presets .preset.active{background:#f5c37e;border-color:#e5a852;color:#633d1d}
-.wheel-tool{display:grid;grid-template-columns:minmax(240px,1fr) minmax(290px,1.2fr);gap:26px;align-items:start}
-.wheel-form{display:grid;gap:12px}.wheel-form>label:not(.tool-checkbox){font-size:18px;font-weight:800}
-.wheel-form textarea{font:inherit;border:1px solid #b6ced0;border-radius:12px;width:100%;padding:12px 14px;font-size:18px;line-height:1.5;resize:vertical}
-.wheel-form .tool-buttons{justify-content:flex-start}.wheel-form .tool-buttons button{min-width:0;font-size:16px;padding:10px 13px}
-.tool-checkbox{display:flex;gap:12px;align-items:center;font-size:17px}.tool-checkbox input{width:20px;height:20px;accent-color:#1a6b78}
-.wheel-pool{margin:0;color:#597580;font-size:17px}
-.wheel-area{display:grid;justify-items:center;gap:15px}.wheel-wrap{position:relative;width:min(360px,100%);aspect-ratio:1;display:grid;place-items:center}
-.wheel-disc{position:relative;width:100%;height:100%;border-radius:50%;border:8px solid #f9faf6;box-shadow:0 7px 24px rgba(17,60,72,.22);overflow:hidden;display:grid;place-items:center}
-.wheel-disc:after{content:'';position:absolute;top:50%;left:50%;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px #1b6470;transform:translate(-50%,-50%);z-index:2}
-.wheel-empty{background:radial-gradient(circle,#91b5ae,#326f77);color:#fff;font-size:22px;font-weight:800;text-align:center}
-.wheel-label{position:absolute;top:50%;left:50%;width:86px;margin-left:-43px;margin-top:-13px;color:#163c49;text-align:center;font-size:16px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0px 1px 2px #fff}
-.wheel-center-count{font-size:32px;font-weight:850;color:#173c4b;background:#ffffffdd;border-radius:16px;padding:9px 18px}
-.wheel-pointer{position:absolute;z-index:3;left:50%;top:-11px;transform:translateX(-50%);width:0;height:0;border-left:19px solid transparent;border-right:19px solid transparent;border-top:34px solid #d64c42;filter:drop-shadow(0 2px 3px #152e4b)}
-.wheel-result{font-size:clamp(24px,3vw,37px);font-weight:850;color:#ad5f2b;min-height:55px;text-align:center}
-.spin-btn{font-size:21px;padding:13px 24px}
-@media(max-width:1100px){.site-heading{min-width:unset}.topbar{flex-wrap:wrap}.top-actions{flex-wrap:wrap}}
-@media(max-width:760px){.migration-options,.wheel-tool{grid-template-columns:1fr}.tools-dialog{padding:17px}.tools-tabs{gap:5px}.tool-tab{font-size:16px;padding:12px 4px}.wheel-wrap{width:min(310px,95%)}.map-panel .map-svg .county-pin text{font-size:23px}.site-credit{font-size:11px}}
-@media(prefers-reduced-motion:reduce){.map-panel .migration-route{stroke-dashoffset:0;animation:none}.map-panel .map-svg .county-pin .halo{animation:none}}
-@media print{.tools-overlay,.site-credit{display:none!important}}
-.map-panel .map-svg image{pointer-events:none}
-.map-panel .map-svg .pin{pointer-events:bounding-box}
-.map-panel .map-svg .pin circle.halo{pointer-events:none}
-
-/* 桌面投影：導覽列佔固定區塊，內容獨立捲動，避免遮住地圖 */
-@media(min-width:901px){
-  .site-shell{height:100vh;min-height:100vh;overflow:hidden}
-  .workspace{height:100vh;min-height:0}
-  .main{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
-  .toolbar{position:static;bottom:auto;flex-shrink:0}
-  .site-credit{flex-shrink:0}
-}
+/* 內建課堂工具：不再需要另外上傳tools.css。 */
+/* beta V6.0：投影友善字級／課堂小工具／人口地圖互動 */
+:root { --projector-text: 1.08; }
+.site-shell { grid-template-columns: 244px minmax(0,1fr); }
+.sidebar { padding-bottom: 14px; }
+.brand strong { font-size:18px; }
+.brand span { font-size:13px; }
+.side-caption { font-size:13px; }
+.lesson-nav .nav-step strong { font-size:16px; }
+.lesson-nav .nav-step small { font-size:13px; }
+.breadcrumb { font-size:14px;white-space:normal; line-height:1.35; }
+.breadcrumb .site-full-name { color:#163c49; font-size:14px; }
+.topbar { min-height:82px; flex-wrap:wrap; row-gap:12px; padding-top:13px; padding-bottom:13px; }
+.top-actions { gap:7px; flex-wrap:wrap; }
+.top-button { font-size:13px; padding:10px 12px; }
+.tool-launchers { display:flex;align-items:center;gap:5px;padding-left:10px;border-left:1px solid #dce7e7; }
+.tool-trigger { color:#236071; background:#e9f3f1; border:1px solid #d1e3df; font-weight:780; }
+.tool-trigger:hover { background:#d4ece7; }
+.main { padding-top:26px; }
+.content-head h1 { font-size:clamp(30px,3.1vw,45px); }
+.content-head p { font-size:17px; }
+.eyebrow { font-size:15px; }
+.panel p, .teacher-note p, .intro-side p { font-size:17px; line-height:1.7; }
+.panel h2 { font-size:24px; }
+.panel h3 { font-size:20px; }
+.micro-label { font-size:13px; }
+.question { font-size:clamp(22px,2.1vw,32px); }
+.map-tabs .map-tab, .map-tab { font-size:15px; }
+.map-panel h2 { font-size:clamp(20px,2vw,28px); }
+.map-panel .micro-label { font-size:14px; color:#efc68a; }
+.map-info { font-size:17px; line-height:1.6; min-height:88px; }
+.map-info strong { font-size:21px; }
+.map-panel .map-svg .pin text { font-size:20px; }
+.map-panel .map-svg.map-taiwan .pin text { font-size:20px; paint-order:stroke;stroke:#173b46;stroke-width:4px;stroke-linejoin:round; }
+.map-panel .map-svg.map-taiwan { height:min(64vh,685px); max-height:685px; }
+.map-panel .map-svg.map-geo { max-height:620px; }
+.map-panel .map-svg.map-indonesia { max-height:570px; }
+.map-panel { padding:20px 23px; }
+.map-header { margin-bottom:8px; }
+.map-viewport { min-height:420px; }
+.map-note, .teacher-note, .read-tip { display:none !important; }
+.intro-layout { grid-template-columns:minmax(0,1.85fr) minmax(305px,.85fr);gap:18px; }
+.intro-side { gap:14px; }
+.intro-side h2 { font-size:23px; }
+.ratio-row { font-size:15px; }
+.ratio-row.ratio-button { display:grid;grid-template-columns:76px 1fr 56px;align-items:center;gap:9px;width:100%;padding:7px 4px;color:#304955;border:0;background:transparent;text-align:left;cursor:pointer; }
+.ratio-row.ratio-button:hover { background:#f1f7f5; border-radius:8px; }
+.ratio-row.ratio-button span.ratio-track { display:block;height:10px;border-radius:10px;background:#edf0ef;overflow:hidden; }
+.ratio-row.ratio-button span.ratio-track span { display:block;height:100%;background:linear-gradient(90deg,#f3c875,#db694e);border-radius:10px; }
+.ratio-row.ratio-button strong { text-align:right;color:#284f59; }
+.location-list-title { font-size:17px !important; margin:6px 0 0; }
+.location-chips button { font-size:15px; padding:9px 11px; }
+.county-chips button.active { background:#1c6575; color:#fff; border-color:#1c6575; }
+.choice-hint { background:#f0f6f3; color:#276572;border-radius:12px;padding:15px 18px;line-height:1.5;font-size:16px; }
+.county-info { display:grid;gap:12px; }
+.county-info-name { display:block; font-size:27px !important; }
+.county-info-year { color:#bcd3d6; font-size:13px; }
+.county-info-number { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.county-info-number span { display:grid;gap:2px; background:#2c5660;border:1px solid #416c73;border-radius:12px;padding:10px 13px; }
+.county-info-number small,.county-info-dialects small { color:#b7d2d3; font-size:13px; }
+.county-info-number b { color:#ffe2ac; font-size:clamp(23px,2.2vw,30px); }
+.county-info-dialects { display:grid;gap:7px; }
+.county-info-dialects span { display:grid;grid-template-columns:105px 1fr;align-items:baseline;gap:9px; }
+.county-info-dialects b { font-size:16px; color:#fff9df; }
+.map-svg .county-pin .pulse-ring { fill:none; stroke:#f9b870; stroke-width:2.7px;opacity:0; transform-box:fill-box;transform-origin:center;animation:county-ripple 2.9s ease-out infinite;pointer-events:all; }
+.map-svg .county-pin .pulse-ring.delay { animation-delay:1.43s; }
+.map-svg .county-pin.high .pulse-ring { stroke:#ff9267;stroke-width:3.6; }
+.map-svg .county-pin.medium .pulse-ring { stroke:#ffd087; }
+.map-svg .county-pin.normal .pulse-ring { stroke:#bce6dc;stroke-width:2.5; }
+.map-svg .county-pin .core { fill:#ffd38e;stroke:#fff;stroke-width:2.2; filter:drop-shadow(0 0 7px #f4bb77); }
+.map-svg .county-pin.selected .core { fill:#fff; stroke:#f8a456;stroke-width:5; }
+.map-svg .county-pin .pin-leader { fill:none;stroke:#b2d5d1;stroke-width:1.35;opacity:.7;pointer-events:none; }
+.map-svg .county-pin.selected .pin-leader { stroke:#ffe1a9;stroke-width:2;opacity:1; }
+.map-svg .county-pin { cursor:pointer; }
+.map-svg .county-pin:focus .core { stroke:#fff;stroke-width:5; }
+@keyframes county-ripple { 0% { transform:scale(.55);opacity:.74;} 75% { opacity:.25; } 100% { transform:scale(3.5); opacity:0; } }
+.map-svg .migration-path { fill:none; stroke:#ffbd74;stroke-width:5;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;animation:migration-draw 3.5s ease forwards;filter:drop-shadow(0 0 4px #e59855); }
+.map-svg .route-destination { fill:none;stroke:#ffd29a;stroke-width:3; opacity:0;transform-box:fill-box;transform-origin:center;animation:route-arrive 2s ease-out 3.25s forwards; }
+@keyframes migration-draw { to { stroke-dashoffset:0; } }
+@keyframes route-arrive { 0% { transform:scale(.4);opacity:0; } 24% { opacity:.9; } 100% { transform:scale(2.7);opacity:0; } }
+.migration-choices { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px; }
+.migration-choices button { border:1px solid #d8e5e3;border-radius:15px;background:#eef5f3;color:#255565;display:grid;gap:6px;text-align:left;padding:19px 15px;cursor:pointer; }
+.migration-choices button:hover,.migration-choices button:focus-visible { background:#d4eae4;border-color:#7cbcb0; }
+.migration-choices button strong { font-size:19px; }
+.migration-choices button small { font-size:13px;color:#5f7c83; }
+.choice-symbol { font-size:28px;color:#ca985c; }
+.pinyin-text,.reading-title-pinyin { font-size:clamp(18px,1.5vw,23px) !important;line-height:1.8; }
+.han-text { font-size:clamp(23px,2.2vw,35px) !important;line-height:1.6; }
+.reading-unit { padding:19px 18px; }
+.unit-n { font-size:13px; }
+.policy-col p,.food-body p,.festival-card p { font-size:17px; }
+.toolbar { padding-bottom:7px;padding-top:12px; flex-wrap:wrap; }
+.site-credit { flex:1 0 100%;font-size:12px;color:#7c8991;text-align:right;letter-spacing:.02em; padding:0 2px 3px; }
+.site-credit strong { font-weight:750;color:#38616b; }
+.toolbar-right button { font-size:16px; }
+/* 課堂小工具的對話視窗 */
+.tool-overlay { position:fixed;inset:0;background:rgba(11,34,45,.82);z-index:170;display:grid;place-items:center;padding:20px; }
+.tool-overlay[hidden] { display:none; }
+.tool-dialog { width:min(900px,96vw);max-height:95vh;overflow:auto;border-radius:24px;background:#f9fbfa;box-shadow:0 32px 90px #07191cc0;padding:24px 30px 29px;color:#193d49; }
+.tool-dialog-head { display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px;border-bottom:1px solid #dceae7;padding-bottom:15px; }
+.tool-dialog-head h2 { font-size:clamp(25px,3vw,38px);margin:2px 0 0; }
+.tool-kicker { color:#a16c42;font-size:13px;font-weight:800;letter-spacing:.09em; }
+.tool-close { width:48px;height:48px;display:grid;place-items:center;border:1px solid #d8e6e3;border-radius:13px;color:#355761;background:white;cursor:pointer;font-size:29px; }
+.tool-clock { font-variant-numeric:tabular-nums;letter-spacing:.02em;text-align:center;color:#164d5e;font-size:clamp(65px,11vw,132px);font-weight:850;line-height:1.3; padding:25px 8px; }
+.countdown-clock { font-size:clamp(90px,15vw,165px);padding-bottom:0; }
+.countdown-clock.timer-done { color:#ba5743;animation:timer-alert 1s ease-in-out 2; }
+@keyframes timer-alert { 50%{opacity:.35;} }
+.timer-end-caption { text-align:center;min-height:34px;font-size:23px;font-weight:800;color:#a36b38; }
+.tool-actions { display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:21px; }
+.tool-actions button { border-radius:14px;padding:15px 27px;min-width:143px;font-size:20px;font-weight:800;cursor:pointer; }
+.tool-primary { background:#1a6475;color:white;border:1px solid #1a6475; }
+.tool-primary:hover { background:#12495a; }
+.tool-primary:disabled { opacity:.55;cursor:wait; }
+.tool-secondary { background:#fff;color:#2e606f;border:1px solid #cadae0; }
+.tool-secondary:hover { background:#e9f2f1; }
+.tool-presets { display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px; }
+.tool-presets .preset { font-size:17px;font-weight:800;border-radius:12px;padding:12px 6px;border:1px solid #d1e2e2;color:#38606b;background:#fff;cursor:pointer; }
+.tool-presets .preset.active { background:#206779;color:#fff;border-color:#206779; }
+.spinner-layout { display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);gap:25px; }
+.wheel-panel { min-width:0; }
+.wheel-surround { position:relative; width:min(100%,440px); margin:auto; aspect-ratio:1; }
+#wheelCanvas { display:block;width:100%;height:100%;transform-origin:center center; border-radius:50%; }
+.wheel-pointer { position:absolute;z-index:4;top:-10px;left:calc(50% - 18px);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:37px solid #e36d46;filter:drop-shadow(0 2px 3px #18333e77); }
+.wheel-hub { position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;border:5px solid #fff;border-radius:50%;width:65px;height:65px;display:grid;place-items:center;background:#ffdca0;color:#365866;font-size:29px;font-weight:900;box-shadow:0 2px 10px #1128357c;pointer-events:none; }
+.wheel-result { min-height:37px;text-align:center;font-size:clamp(18px,2vw,24px);color:#b06543;font-weight:800;margin-top:12px; }
+.wheel-settings { display:flex;flex-direction:column;gap:10px; }
+.wheel-settings label { font-size:16px;font-weight:750; }
+.wheel-settings textarea { width:100%;min-height:196px;resize:vertical;border:1px solid #b8d1d1;background:#fff;border-radius:12px;padding:13px 15px;font-size:17px;line-height:1.5; }
+.wheel-settings .wheel-check { display:flex;gap:10px;align-items:center;font-size:16px;font-weight:650; }
+.wheel-check input { width:20px;height:20px;accent-color:#1a6475; }
+.wheel-status { font-size:14px;color:#597581;margin:0; }
+.picked-label { font-size:15px;font-weight:800;margin-top:5px; }
+.picked-names { min-height:55px;display:flex;gap:7px;flex-wrap:wrap;align-content:flex-start;font-size:14px;color:#60747b; }
+.picked-names span { background:#e5f1ec;color:#2a6370;border-radius:40px;padding:5px 11px; }
+@media(max-width:1200px){ .topbar{align-items:flex-start;} .breadcrumb .site-full-name{display:none;} .intro-layout{grid-template-columns:minmax(0,1.4fr) minmax(250px,.95fr);} .map-panel .map-svg.map-taiwan .pin text{font-size:19px;} }
+@media(max-width:980px){.intro-layout{grid-template-columns:1fr;}.map-panel .map-svg.map-taiwan{max-height:620px;height:min(75vh,620px);} .tool-presets{grid-template-columns:repeat(3,minmax(0,1fr));} .spinner-layout{grid-template-columns:1fr;}.wheel-surround{max-width:370px;} }
+@media(max-width:650px){.tool-dialog{padding:17px 18px;} .tool-clock{font-size:clamp(48px,13vw,86px);} .countdown-clock{font-size:clamp(82px,20vw,140px);} .tool-launchers{padding-left:0;border-left:0;} .top-button{font-size:13px;} .migration-choices{grid-template-columns:1fr;} .site-credit{text-align:center;} .map-panel .map-svg.map-taiwan .pin text{font-size:18px;} .map-info{font-size:15px;} .county-info-number b{font-size:23px;} .top-actions{justify-content:flex-start;} }
+@media(prefers-reduced-motion:reduce){.map-svg .county-pin .pulse-ring{animation:none;opacity:.5;transform:scale(1.2);} .map-svg .migration-path{animation:none;stroke-dasharray:none;stroke-dashoffset:0;} .map-svg .route-destination{display:none;} }
+/* 讓整個地名＋標記區域都能點擊，不只是圓點本身 */
+.map-svg .pin { pointer-events:bounding-box; cursor:pointer; }
+.map-svg .pin .halo { pointer-events:all; }

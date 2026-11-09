@@ -6,10 +6,10 @@
   const DATA = window.LESSON_DATA;
   if (!DATA) { document.getElementById('stageBody').textContent='找不到content.js，請確認檔案放在同一資料夾。'; return; }
   const STAGES = [
-    {name:'認識印尼',sub:'人口、語言與移民路線',time:'0～5分鐘',heading:'千島之國，客家在哪裡？',lead:'認識原鄉、臺灣與南洋的客家移民與地理分布。'},
+    {name:'認識印尼',sub:'人口、語言與移民路線',time:'0～5分鐘',heading:'千島之國，客家在哪裡？',lead:'認識臺灣與印尼的位置，追尋客家人從廣東、福建遷往不同地區的故事。'},
     {name:'課文閱讀',sub:'雙腔課文、8個詞彙',time:'5～14分鐘',heading:'行讀客家世界：印尼客家之旅',lead:'看課本、朗讀重點句，點擊詞彙可開啟註解。'},
     {name:'語言傳承',sub:'政策與生活經驗',time:'14～20分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從課文中的印尼語言政策，連結臺灣的歷史與學生生活。'},
-    {name:'海外客語',sub:'聽見山口洋',time:'20～24分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'聽一聽臺灣與山口洋的客語，找出熟悉的聲音。'},
+    {name:'海外客語',sub:'聽見山口洋',time:'20～24分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'透過短音檔認識海外客語；本課不進行次方言語音比較訓練。'},
     {name:'蘭芳公司',sub:'羅芳伯與海外移民',time:'24～32分鐘',heading:'蘭芳公司，真的只是一間公司嗎？',lead:'從採金移民到地方組織，認識18世紀海外客家人的歷史。'},
     {name:'尋找客家味',sub:'臺灣菜包與印尼菜粄',time:'32～39分鐘',heading:'看起來相似的粄，吃起來也一樣嗎？',lead:'從米食的名稱、食材與內餡，觀察文化在不同地方的延續與變化。'},
     {name:'元宵文化',sub:'花燈、𪹚龍與油笐火',time:'39～42分鐘',heading:'元宵節，原來可以這樣過！',lead:'從臺灣客庄到印尼山口洋，看看節慶如何展現地方特色。'},
@@ -17,22 +17,7 @@
   ];
   /* 加入正式、已取得使用權的音檔後可把這裡改為相對路徑，例如 'assets/audio/taiwan-hailu.mp3'。*/
   const BUILTIN_AUDIO = {tw:'', id:''};
-  // 完成教案後，把PDF放在assets/docs，再填入相對路徑即可啟用下載。
-  const LESSON_PLAN_FILE = '';
-  const COUNTY_DATA = {
-    hsinchu:{name:'新竹縣',count:387000,ratio:67.8,primary:'海陸腔',others:'北四縣腔、饒平腔'},
-    hsinchuCity:{name:'新竹市',count:137000,ratio:30.3,primary:'海陸腔',others:'四縣腔'},
-    taoyuan:{name:'桃園市',count:905000,ratio:39.9,primary:'四縣腔',others:'海陸腔、饒平腔'},
-    miaoli:{name:'苗栗縣',count:339000,ratio:62.5,primary:'四縣腔',others:'海陸腔、饒平腔'},
-    taichung:{name:'臺中市',count:493000,ratio:17.5,primary:'大埔腔',others:'四縣腔'},
-    yunlin:{name:'雲林縣',count:58000,ratio:8.5,primary:'詔安腔',others:'四縣腔'},
-    kaohsiung:{name:'高雄市',count:407000,ratio:14.7,primary:'南四縣腔',others:'四縣腔'},
-    pintung:{name:'屏東縣',count:188000,ratio:23.1,primary:'南四縣腔',others:'四縣腔'},
-    hualien:{name:'花蓮縣',count:111000,ratio:34.2,primary:'海陸腔、四縣腔',others:'—'},
-    taitung:{name:'臺東縣',count:44000,ratio:20.6,primary:'海陸腔、四縣腔',others:'—'}
-  };
-  const COUNTY_SOURCE = 'https://www.hakka.gov.tw/chhakka/app/data/doc?aplistdn=&detailNo=96737&id=83&module=basicInformation&preview=&serno=37585&type=s';
-  const state = {migrationRoute:null,mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,reveal:false,place:'intro',poll:[],lanfang:0,food:0,reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,reveal:false,place:'intro',poll:[],lanfang:0,food:0,reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -75,7 +60,8 @@
   }
   function render(){
     const item=STAGES[state.stage];
-    document.getElementById('stageEyebrow').textContent=`第${state.stage+1}站`;
+    document.getElementById('stepLabel').textContent=item.name;
+    document.getElementById('stageEyebrow').textContent=`第${'一二三四五六七八'[state.stage]}站`;
     document.getElementById('stageTitle').textContent=item.heading;
     document.getElementById('stageIntro').textContent=item.lead;
     document.getElementById('progressText').textContent=`${String(state.stage+1).padStart(2,'0')} / 08`;
@@ -96,7 +82,7 @@
     navRender();
     const fn=[introStage,readingStage,policyStage,audioStage,historyStage,foodStage,festivalStage,endingStage][state.stage];
     body.innerHTML=fn();
-    body.querySelectorAll('.teacher-note,.read-tip,.citation,.map-note').forEach(el=>el.remove());
+    body.querySelectorAll(".teacher-note,.read-tip,.map-note").forEach(el=>el.remove());
     if(state.stage===0) updateMapInfo();
     if(state.stage===3) updateAudioPlayers();
     document.getElementById('sidebar').classList.remove('open');
@@ -105,124 +91,136 @@
   function introStage(){
     return `<section class="intro-layout">${mapComponent()}${mapSidePanel()}</section>`;
   }
+  // 110年客委會全國客家人口調查；人口數採圖3-6所公布之「千人」數值。
+  // 腔調欄依教師指定的地方使用概況，並參照教育部、各地官方語言資料。
+  const TW_COUNTIES = [
+    {id:'hsinchu',name:'新竹縣',count:387,ratio:67.8,primary:'海陸腔',other:'北四縣腔、饒平腔',x:350,y:191,lx:221,ly:202},
+    {id:'hsinchucity',name:'新竹市',count:137,ratio:30.3,primary:'海陸腔',other:'四縣腔',x:338,y:166,lx:208,ly:149},
+    {id:'taoyuan',name:'桃園市',count:905,ratio:39.9,primary:'四縣腔',other:'海陸腔、饒平腔',x:394,y:139,lx:433,ly:124},
+    {id:'miaoli',name:'苗栗縣',count:339,ratio:62.5,primary:'四縣腔',other:'海陸腔、饒平腔',x:318,y:226,lx:190,ly:239},
+    {id:'taichung',name:'臺中市',count:493,ratio:17.5,primary:'大埔腔',other:'四縣腔',x:300,y:285,lx:190,ly:296},
+    {id:'yunlin',name:'雲林縣',count:58,ratio:8.5,primary:'詔安腔',other:'四縣腔',x:266,y:359,lx:155,ly:371},
+    {id:'kaohsiung',name:'高雄市',count:407,ratio:14.7,primary:'南四縣腔',other:'四縣腔',x:274,y:467,lx:146,ly:464},
+    {id:'pintung',name:'屏東縣',count:188,ratio:23.1,primary:'南四縣腔',other:'四縣腔',x:294,y:535,lx:171,ly:558},
+    {id:'hualien',name:'花蓮縣',count:111,ratio:34.2,primary:'海陸腔、四縣腔',other:'',x:432,y:341,lx:464,ly:342},
+    {id:'taitung',name:'臺東縣',count:44,ratio:20.6,primary:'海陸腔、四縣腔',other:'',x:355,y:480,lx:398,ly:503}
+  ];
   function makePin(x,y,name,id,labelX,labelY,cls=''){
     return `<g class="pin ${cls}" role="button" tabindex="0" data-action="map-point" data-place="${id}" aria-label="查看${name}"><circle class="halo" cx="${x}" cy="${y}" r="29"/><circle class="core" cx="${x}" cy="${y}" r="8"/><text x="${labelX}" y="${labelY}">${name}</text></g>`;
   }
-  function makeCountyPin(x,y,name,id,labelX,labelY){
-    const ratio=COUNTY_DATA[id]?.ratio||0;
-    const intensity=ratio>=60?'hot':ratio>=30?'warm':ratio>=20?'mild':'light';
-    return `<g class="pin county-pin ${intensity}" role="button" tabindex="0" data-action="map-point" data-place="${id}" aria-label="查看${name}客家人口與腔調"><circle class="halo pulse-1" cx="${x}" cy="${y}" r="17"/><circle class="halo pulse-2" cx="${x}" cy="${y}" r="17"/><circle class="core" cx="${x}" cy="${y}" r="6"/><text x="${labelX}" y="${labelY}">${name}</text></g>`;
+  function countyPin(c){
+    const higher=c.ratio>=50?'high':c.ratio>=30?'medium':'normal';
+    const selected=state.place===c.id?'selected':'';
+    const labelX=c.lx,labelY=c.ly;
+    const startX=c.x, startY=c.y;
+    return `<g class="pin county-pin ${higher} ${selected}" role="button" tabindex="0" data-action="map-point" data-place="${c.id}" aria-label="查看${c.name}客家人口資料">
+      <circle class="pulse-ring" cx="${c.x}" cy="${c.y}" r="18"/>
+      <circle class="pulse-ring delay" cx="${c.x}" cy="${c.y}" r="18"/>
+      <circle class="halo" cx="${c.x}" cy="${c.y}" r="24"/>
+      <path class="pin-leader" d="M${startX} ${startY} L${labelX<c.x?labelX+82:labelX-7} ${labelY-5}"/>
+      <circle class="core" cx="${c.x}" cy="${c.y}" r="7"/>
+      <text x="${labelX}" y="${labelY}">${c.name}</text>
+    </g>`;
   }
   function mapComponent(){
-    const tabs=[['overview','東亞與東南亞'],['taiwan','臺灣客家人口'],['indonesia','印尼客家聚居地']].map(([id,label])=>`<button type="button" class="map-tab ${state.mapView===id?'active':''}" data-action="map-view" data-view="${id}" aria-pressed="${state.mapView===id}">${label}</button>`).join('');
-    let title='',map='',note='';
+    const tabs=[['overview','東亞與東南亞'],['taiwan','臺灣客家人口'],['indonesia','印尼客家聚居地']]
+      .map(([id,label])=>`<button type="button" class="map-tab ${state.mapView===id?'active':''}" data-action="map-view" data-view="${id}" aria-pressed="${state.mapView===id}">${label}</button>`).join('');
+    let title='',map='';
     if(state.mapView==='overview'){
-      title='從共同原鄉，走向不同的家園';
-      map=`<svg class="map-svg map-geo" viewBox="0 0 1020 680" role="img" aria-label="使用真實海岸線地理資料的東亞與東南亞地圖，臺灣在中國東南外海、山口洋位於西加里曼丹。">
-      <image href="assets/images/asia-coast-accurate.svg" width="1020" height="680"/>
-      <defs><marker id="overviewArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#f6b76c"/></marker></defs>
-      ${state.migrationRoute==='taiwan'?'<path class="migration-route" d="M471 139 Q520 103 545 126" marker-end="url(#overviewArrow)"/>':''}
-      ${state.migrationRoute==='nanyang'?'<path class="migration-route" d="M471 139 Q445 285 378 459" marker-end="url(#overviewArrow)"/>':''}
-      ${makePin(471,139,'客家原鄉','origin',347,112)}
-      ${makePin(545,126,'臺灣','taiwan',570,105)}
-      ${makePin(378,459,'山口洋','singkawang',403,454)}
-      ${makePin(338,501,'邦加島','bangka',248,522)}
-      ${makePin(398,569,'爪哇島','java',431,591)}
-      <text class="geo-label" x="475" y="376">南海</text><text class="geo-label" x="620" y="491">印尼群島</text><text class="geo-label" x="575" y="255">菲律賓</text>
+      title='從廣東、福建出發，客家人走向哪裡？';
+      const route=state.migrationRoute==='taiwan'
+        ? `<path class="migration-path" pathLength="100" d="M471 139 Q520 103 545 126" marker-end="url(#migrationArrow)"/><circle class="route-destination" cx="545" cy="126" r="24"/>`
+        : state.migrationRoute==='nanyang'
+          ? `<path class="migration-path" pathLength="100" d="M471 139 C433 257 412 378 378 459" marker-end="url(#migrationArrow)"/><circle class="route-destination" cx="378" cy="459" r="24"/>`
+          : '';
+      map=`<svg class="map-svg map-geo" viewBox="0 0 1020 680" role="img" aria-label="東亞與東南亞地圖。點選廣東、福建客家原鄉選擇遷移方向。">
+        <image href="assets/images/asia-coast-accurate.svg" width="1020" height="680"/>
+        <defs><marker id="migrationArrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#ffc874"/></marker></defs>
+        ${route}
+        ${makePin(471,139,'廣東、福建原鄉','origin',290,113,'origin-pin')}
+        ${makePin(545,126,'臺灣','taiwan',572,102)}
+        ${makePin(378,459,'山口洋','singkawang',403,453)}
+        ${makePin(338,501,'邦加島','bangka',243,525)}
+        ${makePin(398,569,'爪哇島','java',432,592)}
+        <text class="geo-label" x="475" y="376">南海</text><text class="geo-label" x="619" y="492">印尼群島</text><text class="geo-label" x="575" y="255">菲律賓</text>
       </svg>`;
-      note='';
-    } else if(state.mapView==='taiwan'){
-      title='臺灣：客家人口在哪裡比較集中？';
-      map=`<svg class="map-svg map-taiwan" viewBox="0 0 680 710" role="img" aria-label="臺灣本島真實海岸線及客家人口分布熱區示意，北臺灣與花東等地較明顯。">
-      <image href="assets/images/taiwan-hakka-heatmap.svg" width="680" height="710"/>
-      ${makeCountyPin(383,152,'桃園市','taoyuan',410,138)}
-      ${makeCountyPin(348,177,'新竹縣','hsinchu',205,195)}
-      ${makeCountyPin(324,167,'新竹市','hsinchuCity',200,147)}
-      ${makeCountyPin(305,227,'苗栗縣','miaoli',193,247)}
-      ${makeCountyPin(275,296,'臺中市','taichung',169,310)}
-      ${makeCountyPin(239,372,'雲林縣','yunlin',134,376)}
-      ${makeCountyPin(262,478,'高雄市','kaohsiung',151,475)}
-      ${makeCountyPin(302,536,'屏東縣','pintung',178,557)}
-      ${makeCountyPin(424,332,'花蓮縣','hualien',447,331)}
-      ${makeCountyPin(376,450,'臺東縣','taitung',404,457)}
+    }else if(state.mapView==='taiwan'){
+      title='臺灣的客家人，分布在哪些縣市？';
+      map=`<svg class="map-svg map-taiwan" viewBox="0 0 680 710" role="img" aria-label="臺灣客家人口熱區地圖，點選十個縣市的光暈標記查看客家人口及客語腔調。">
+        <image href="assets/images/taiwan-hakka-heatmap-v6.svg" width="680" height="710"/>
+        <image class="county-boundaries" href="assets/images/taiwan-county-lines.png" x="74" y="57" width="486.2" height="629.7" preserveAspectRatio="none" opacity=".65" style="pointer-events:none"/>
+        ${TW_COUNTIES.map(countyPin).join('')}
       </svg>`;
-      note='';
     } else {
-      title='印尼：客家社群分布在哪些地方？';
-      map=`<svg class="map-svg map-indonesia" viewBox="0 0 1020 500" role="img" aria-label="具有真實海岸線的印尼地圖，標示有資料支持的客家社群與歷史聚居地。">
-      <image href="assets/images/indonesia-coast-accurate.svg" width="1020" height="500"/>
-      ${makePin(56,99,'亞齊','aceh',87,75)}
-      ${makePin(329,192,'山口洋','singkawang',355,177)}
-      ${makePin(337,211,'坤甸','pontianak',357,248)}
-      ${makePin(273,252,'邦加島','bangka',176,235)}
-      ${makePin(287,334,'雅加達','jakarta',199,362)}
-      ${makePin(405,355,'泗水','surabaya',427,354)}
-      <text class="geo-label" x="458" y="113">加里曼丹</text><text class="geo-label" x="147" y="180">蘇門答臘</text><text class="geo-label" x="350" y="401">爪哇島</text><text class="geo-label" x="705" y="400">印尼東部群島</text>
+      title='印尼的客家人，聚居在哪些地方？';
+      map=`<svg class="map-svg map-indonesia" viewBox="0 0 1020 500" role="img" aria-label="印尼海岸線與客家社群位置，點選圖釘認識地點。">
+        <image href="assets/images/indonesia-coast-accurate.svg" width="1020" height="500"/>
+        ${makePin(329,192,'山口洋','singkawang',355,174)}
+        ${makePin(337,211,'坤甸','pontianak',366,253)}
+        ${makePin(273,252,'邦加島','bangka',174,233)}
+        ${makePin(287,334,'雅加達','jakarta',198,361)}
+        ${makePin(405,355,'泗水','surabaya',429,352)}
+        <text class="geo-label" x="458" y="113">加里曼丹</text><text class="geo-label" x="147" y="180">蘇門答臘</text><text class="geo-label" x="348" y="400">爪哇島</text>
       </svg>`;
-      note='';
     }
-    return `<section class="map-panel" id="mapPanel"><div class="map-header"><div><span class="micro-label" style="color:#f5c385">地理探索 · 真實海岸線</span><h2>${title}</h2></div>${state.mapView==='overview'?'<button type="button" class="ghost" data-action="migration-options">選擇移民方向</button>':''}</div>
-      <div class="map-tabs" role="group" aria-label="切換地圖主題">${tabs}</div>
-      <div class="map-viewport">${map}</div><div class="map-info" id="mapInfo"></div>
+    return `<section class="map-panel" id="mapPanel"><div class="map-header"><div><span class="micro-label">地理探索</span><h2>${title}</h2></div></div>
+       <div class="map-tabs" role="group" aria-label="切換地圖主題">${tabs}</div>
+       <div class="map-viewport">${map}</div>
+       <div class="map-info" id="mapInfo" aria-live="polite"></div>
     </section>`;
   }
   function mapSidePanel(){
     if(state.mapView==='taiwan'){
-      const data=['hsinchu','miaoli','taoyuan','hualien','hsinchuCity'];
-      return `<aside class="panel intro-side distribution-panel"><span class="micro-label">客家委員會｜110年調查</span><h2>哪些縣市的客家人口比例較高？</h2>
-      <div class="county-ratios">${data.map(id=>{const x=COUNTY_DATA[id];return `<button class="ratio-row ratio-button" data-action="map-point" data-place="${id}" aria-label="查看${x.name}客家人口資料"><span>${x.name}</span><span class="ratio-track"><span style="width:${x.ratio}%"></span></span><strong>${x.ratio}%</strong></button>`;}).join('')}</div>
-      <p class="prompt-side">點擊地圖上的縣市，認識客家人口與當地客語腔調。</p></aside>`;
-    }
-    if(state.mapView==='indonesia'){
-      return `<aside class="panel intro-side distribution-panel"><span class="micro-label">海外客家社群</span><h2>客家人不只住在西加里曼丹</h2><p>點選地圖上的地名，看看西加里曼丹、邦加，以及爪哇、蘇門答臘的客家聚居與社團活動。</p>
-      <div class="location-chips"><button data-action="map-point" data-place="singkawang">山口洋</button><button data-action="map-point" data-place="pontianak">坤甸</button><button data-action="map-point" data-place="bangka">邦加</button><button data-action="map-point" data-place="aceh">亞齊</button><button data-action="map-point" data-place="jakarta">雅加達</button><button data-action="map-point" data-place="surabaya">泗水</button></div>
-      <p class="prompt-side">這些客家社群都在同一座島上嗎？</p>
+      const top=[...TW_COUNTIES].sort((a,b)=>b.ratio-a.ratio).slice(0,5);
+      return `<aside class="panel intro-side distribution-panel"><span class="micro-label">客委會｜2021年調查</span><h2>客家人口比例</h2>
+        <div class="county-ratios">${top.map(c=>`<button type="button" class="ratio-row ratio-button" data-action="map-point" data-place="${c.id}"><span>${c.name}</span><span class="ratio-track"><span style="width:${c.ratio}%"></span></span><strong>${c.ratio}%</strong></button>`).join('')}</div>
+        <h3 class="location-list-title">選擇縣市</h3>
+        <div class="location-chips county-chips">${TW_COUNTIES.map(c=>`<button type="button" class="${state.place===c.id?'active':''}" data-action="map-point" data-place="${c.id}">${c.name}</button>`).join('')}</div>
+        <p class="prompt-side">為什麼客家人口較多的地區，仍然需要客語課？</p>
       </aside>`;
     }
-    return `<aside class="panel intro-side"><div class="micro-label">先猜一猜</div><h2 class="question">印尼有多少人口？<br>有多少種地方語言？</h2><p class="muted">先猜猜看，再揭曉。</p>
-        <div class="stat"><div class="micro-label">印尼人口</div><div class="number">${state.reveal?'2.87億':'？'}</div><small>${state.reveal?'2026年年中估計｜BPS':'先猜一猜'}</small></div>
-        <div class="stat"><div class="micro-label">已盤點地方語言</div><div class="number">${state.reveal?'718種':'？'}</div><small>${state.reveal?'印尼教育部語言資料庫':'先猜一猜'}</small></div>
+    if(state.mapView==='indonesia'){
+      return `<aside class="panel intro-side distribution-panel"><span class="micro-label">印尼客家聚落</span><h2>跨島嶼的客家生活</h2>
+      <p>從西加里曼丹的山口洋、坤甸，到邦加和爪哇島的城市，探索不同地方的客家社群。</p>
+      <div class="location-chips"><button data-action="map-point" data-place="singkawang">山口洋</button><button data-action="map-point" data-place="pontianak">坤甸</button><button data-action="map-point" data-place="bangka">邦加</button><button data-action="map-point" data-place="jakarta">雅加達</button><button data-action="map-point" data-place="surabaya">泗水</button></div>
+      <p class="prompt-side">這些客家社群都在同一座島上嗎？</p></aside>`;
+    }
+    return `<aside class="panel intro-side"><div class="micro-label">探索印尼</div><h2 class="question">印尼有多少人口？<br>有多少種地方語言？</h2>
+        <p class="muted">先猜一猜，再揭曉。</p>
+        <div class="stat"><div class="micro-label">印尼人口</div><div class="number">${state.reveal?'2.87億':'？'}</div><small>${state.reveal?'2026年年中估計':'猜猜看'}</small></div>
+        <div class="stat"><div class="micro-label">地方語言</div><div class="number">${state.reveal?'718種':'？'}</div><small>${state.reveal?'印尼教育部資料庫':'猜猜看'}</small></div>
         <button class="action" data-action="reveal">${state.reveal?'收起數據':'揭曉答案'}</button>
-        <p class="citation">印尼語是國家語言，各地還有許多地方語言。兩個數字採不同資料來源與統計年度。</p></aside>`;
+        <div class="choice-hint">點選地圖上的「廣東、福建原鄉」，展開遷移故事。</div>
+      </aside>`;
   }
   function updateMapInfo(){
     const e=document.getElementById('mapInfo');if(!e)return;
     if(state.mapView==='taiwan'){
-      const x=COUNTY_DATA[state.place];
-      if(!x){e.innerHTML='<strong>臺灣客家人口與腔調</strong><div>點擊地圖上的縣市，查看客家人口數、人口比例與主要腔調。</div>';return;}
-      const count=(x.count/10000).toFixed(1);
-      e.innerHTML=`<strong>${esc(x.name)}</strong><div class="county-stats"><span>客家人口約<strong>${count}萬人</strong></span><span>比例<strong>${x.ratio}%</strong></span></div><div class="dialect-list">主要腔調：<b>${esc(x.primary)}</b><br>其他腔調：${esc(x.others)}</div>`;
+      const c=TW_COUNTIES.find(x=>x.id===state.place)||TW_COUNTIES[0];
+      e.innerHTML=`<div class="county-info"><div><strong class="county-info-name">${c.name}</strong><span class="county-info-year">2021年客家人口推估</span></div>
+        <div class="county-info-number"><span><small>客家人口</small><b>約${(c.count/10).toFixed(1)}萬人</b></span><span><small>占縣市人口</small><b>${c.ratio}%</b></span></div>
+        <div class="county-info-dialects"><span><small>主要客語腔調</small><b>${esc(c.primary)}</b></span>${c.other?`<span><small>其他腔調</small><b>${esc(c.other)}</b></span>`:''}</div></div>`;
       return;
     }
-    if(state.mapView==='overview'){
-      const items={
-        intro:['客家人從哪裡出發？','點擊「客家原鄉」，選擇往臺灣或往南洋的移民方向。'],
-        origin:['廣東、福建客家原鄉','選擇移民方向，觀看歷史遷徙路線。'],
-        taiwan:['臺灣','客家移民在臺灣形成不同的客庄聚落。'],
-        singkawang:['山口洋｜Singkawang','位於印尼西加里曼丹，有活躍的客家社群。'],
-        bangka:['邦加島｜Bangka','錫礦產業與客家移民歷史密切相關。'],
-        java:['爪哇島｜Java','印尼主要人口與城市集中地之一。']
-      };
-      const r=state.migrationRoute;
-      if(r){e.innerHTML=`<strong>${r==='taiwan'?'往臺灣移民':'往南洋移民'}</strong><div>${r==='taiwan'?'客家移民由廣東、福建等地渡海抵達臺灣。':'客家移民從中國南方出海，前往婆羅洲與南洋各地定居。'}　<button class="route-reset" data-action="migration-options">改選方向</button></div>`;return;}
-      const item=items[state.place]||items.intro;
-      e.innerHTML=`<strong>${item[0]}</strong><div>${item[1]}</div>`;return;
-    }
-    const items={
-      intro:['印尼客家社群','點擊地點，查看當地客家社群與歷史。'],
-      singkawang:['山口洋｜Singkawang','位於西加里曼丹，以客語文化及元宵活動聞名。'],
-      pontianak:['坤甸｜Pontianak','西加里曼丹城市，有客家與其他華人移民社群。'],
-      java:['爪哇島｜Java','雅加達、泗水等地有客家社團。'],
-      bangka:['邦加島｜Bangka','錫礦開採與客家移民的歷史發展密切相關。'],
-      aceh:['亞齊｜Aceh','位於蘇門答臘北部，歷史上有客家移民社群。'],
-      jakarta:['雅加達｜Jakarta','印尼首都都會區，具有客家社團與都市移民社群。'],
-      surabaya:['泗水｜Surabaya','東爪哇城市，有客家會館及社群文化活動。']
+    const places={
+      intro:['點選地圖，開始探索','請點廣東、福建客家原鄉，選擇往臺灣或往南洋的遷移方向。'],
+      origin:['廣東、福建客家原鄉','選擇「往臺灣移民」或「往南洋移民」，探索歷史遷移路線。'],
+      taiwan:['臺灣客庄','客家人移居臺灣後，形成桃竹苗、六堆、花東等不同地方的客家生活。'],
+      singkawang:['山口洋｜Singkawang','位於西加里曼丹，保有客語生活、廟宇與元宵慶典。'],
+      pontianak:['坤甸｜Pontianak','西加里曼丹主要城市，有客家及其他華人移民社群。'],
+      java:['爪哇島｜Java','雅加達、泗水等城市有客家社團與華人移民社群。'],
+      bangka:['邦加島｜Bangka','當地錫礦產業與歷史上的客家移民發展有密切關係。'],
+      jakarta:['雅加達｜Jakarta','印尼首都與都會區，歷來有客家會館及社團。'],
+      surabaya:['泗水｜Surabaya','位於東爪哇，有客家社團與會館活動。']
     };
-    const x=items[state.place]||items.intro;
-    e.innerHTML=`<strong>${x[0]}</strong><div>${x[1]}</div>`;
+    const s=places[state.place]||places.intro;
+    e.innerHTML=`<strong>${s[0]}</strong><div>${s[1]}</div>`;
   }
-  function showMigrationOptions(){
-    openDialog('客家人往哪裡遷移？','客家原鄉・移民方向',`<div class="migration-options"><button type="button" data-action="migration-select" data-route="taiwan"><strong>往臺灣移民</strong><span>廣東、福建 → 臺灣</span></button><button type="button" data-action="migration-select" data-route="nanyang"><strong>往南洋移民</strong><span>廣東、福建 → 婆羅洲與南洋</span></button></div>`);
+  function showMigrationChoice(){
+    openDialog('客家人離開原鄉，往哪裡遷移？','選擇遷移方向',`<div class="migration-choices">
+      <button type="button" data-action="migration-select" data-destination="taiwan"><span class="choice-symbol">↗</span><strong>往臺灣移民</strong><small>從原鄉到臺灣客庄</small></button>
+      <button type="button" data-action="migration-select" data-destination="nanyang"><span class="choice-symbol">↘</span><strong>往南洋移民</strong><small>從原鄉到婆羅洲等地</small></button>
+    </div>`);
   }
   function groupFor(i){return i<=4?0:i<=8?1:i<=11?2:3;}
   function highlightWords(text,dialect){
@@ -253,7 +251,7 @@
     return `<section class="panel"><span class="micro-label">從課文回到生活</span><h2 class="question">住在客家人口集中的地方，<br>就一定會說客語嗎？</h2><div class="grid2">
        <div class="policy-col"><span class="tag amber">印尼的歷史背景</span><h3>華文教育與出版曾受限制</h3><p>課文描述1960年代中後期開始的限制；華文學校、出版等政策影響了部分族群語言的學習與使用環境。</p></div>
        <div class="policy-col"><span class="tag">臺灣的歷史背景</span><h3>過去推行國語政策</h3><p>學校與公共場合的語言環境曾以國語為主，本土語言的使用機會與世代傳承受到影響。</p></div>
-     </div><p class="citation">兩地的制度背景、政策目標與實施方式並不完全相同。比較的是語言政策及生活環境如何影響語言使用，不是認定兩者完全相同。</p></section>
+     </div></section>
      <section class="panel soft"><div class="micro-label">課堂提問 · 學習單任務一</div><h2>你平常在哪裡比較容易聽到客語？</h2><div class="poll">${poll.map((p,i)=>`<button class="${state.poll.includes(i)?'active':''}" data-action="poll" data-index="${i}">${p}</button>`).join('')}</div><div class="selection-output">${state.poll.length?`目前選擇：${state.poll.map(i=>poll[i]).join('、')}`:'可以複選，分享你生活中的客語經驗。'}</div><p class="question" style="font-size:19px;margin-top:15px">如果希望客語繼續有人使用，生活中還可以增加哪些使用機會？</p></section>`;
   }
   function audioCard(id,title,subtitle){
@@ -264,7 +262,7 @@
     </div>`;
   }
   function audioStage(){
-    return `<section class="panel"><span class="micro-label">聆聽兩地客語</span><h2 class="question">你聽到了熟悉的客語聲音嗎？</h2><div class="grid2">${audioCard('tw','臺灣海陸客語','臺灣客語語音')}${audioCard('id','印尼山口洋客語','山口洋客語語音')}</div><p class="citation">可選擇兩段錄音，聽聽臺灣與印尼客語的異同。</p></section>
+    return `<section class="panel"><span class="micro-label">聆聽兩地客語</span><h2 class="question">你聽到了熟悉的客語聲音嗎？</h2><div class="grid2">${audioCard('tw','臺灣海陸客語','臺灣客語語音')}${audioCard('id','印尼山口洋客語','山口洋客語語音')}</div></section>
     <section class="panel photo-context">${photo('singkawang','community-photo')}<div><span class="micro-label">印尼・西加里曼丹</span><h2>山口洋的客家社群</h2><p>客語、廟宇與節慶活動，延續在地客家社群的日常生活。</p></div></section><section class="panel soft"><div class="grid2"><div><div class="micro-label">聆聽問題</div><h2>哪些地方聽起來熟悉？</h2><p>語調、個別詞語，還是整句的大意？你注意到哪些熟悉的聲音？</p></div><div><div class="micro-label">連回課文</div><h2>海外也有客語生活</h2><p>早期限制政策不等於每一個客家社群都停止使用客語。家庭、社區與日常交往都可能影響語言延續。</p></div></div></section>`;
   }
   function historyStage(){
@@ -288,7 +286,7 @@
   function foodStage(){
     return `<section class="grid2"><div class="food-card"><div class="card-illustration">${photo('twfood','food-photo')}</div><div class="food-body"><span class="tag">臺灣客家</span><h3>菜包／豬籠粄</h3><p>常見鹹餡：蘿蔔絲、蘿蔔乾、香菇等，外皮以米製作。</p></div></div><div class="food-card"><div class="card-illustration">${photo('idfood','food-photo')}</div><div class="food-body"><span class="tag amber">印尼邦加</span><h3>Choi Pan／菜粄</h3><p>名稱是「菜粄」的在地羅馬字拼寫之一；常見涼薯、韭菜等餡料，也是鹹食。</p></div></div></section>
     <section class="panel"><div class="micro-label">觀察實景照片</div><h2>找找看：相同在哪裡？不同在哪裡？</h2><div class="compare-line"><div><strong>共同點</strong><br>以米製外皮包餡，都是移民社群熟悉的粄食文化。</div><div><strong>差異</strong><br>餡料、調味、外形與搭配醬料可因地方而不同。</div></div><div class="answer-box" style="margin-top:14px">先觀察圖片，再在學習單各寫下一項相同與不同。</div></section>
-    <section class="panel soft"><h2>南洋米食都比較甜嗎？</h2><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但山口洋的Choi Pan常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p><p class="muted">避免把整個南洋、或整個臺灣的飲食文化概括成單一口味。</p></section>`;
+    <section class="panel soft"><h2>南洋米食都比較甜嗎？</h2><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但山口洋的Choi Pan常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></section>`;
   }
   function festivalStage(){
     const f=[
@@ -306,7 +304,7 @@
       {name:'融合',desc:'與其他族群、地方文化相遇並交流',example:'山口洋元宵活動展現不同族群的共同參與。'}
     ];
     return `<section class="panel"><div class="micro-label">最後的文化提問</div><h2 class="question">你今天最有印象的是哪一個例子？<br>它讓你想到「保留、改變」還是「融合」？</h2><div class="grid3">${cards.map(c=>`<button type="button" class="reflection ${state.reflection===c.name?'active':''}" data-action="reflect" data-value="${c.name}" style="text-align:left"><strong>${c.name}</strong><p>${c.desc}</p></button>`).join('')}</div>
-    <div class="answer-box" style="margin-top:15px">${cards.find(c=>c.name===state.reflection).example}</div><p class="citation">一個案例可以同時有保留、改變與融合，不必硬分成互斥的類別。</p></section>
+    <div class="answer-box" style="margin-top:15px">${cards.find(c=>c.name===state.reflection).example}</div></section>
     <section class="panel soft"><div class="grid2"><div><div class="micro-label">課程總結</div><div class="lesson-outro">飄洋過海，客家文化在不同地方繼續生活。</div><p>臺灣與印尼的客家人有歷史連結，也有各自的社會環境與文化發展。</p></div><div><h2>收回學習單前</h2><p>選一個今天的實例，寫出你看到的文化現象與理由。</p><a href="worksheet.html" target="_blank" rel="noopener" class="action" style="display:inline-block;text-decoration:none;margin-top:10px">開啟可列印學習單 ↗</a></div></div></section>`;
   }
   function updateAudioPlayers(){
@@ -325,143 +323,24 @@
     const w=DATA.vocab.find(x=>x.id===id);if(!w)return;
     const p=vocabPinyin[id];
     const lines=[['海陸腔',w.hailu,p[0],'hailu'],['四縣腔',w.sixian,p[1],'sixian']].map(x=>`<div class="dialog-dialect"><span><strong>${esc(x[0])}：</strong>${esc(x[1])}</span><small class="vocab-pinyin">${esc(formatPinyin(x[2],x[3]))}</small></div>`).join('');
-    openDialog(w.hailu===w.sixian?w.hailu:`${w.hailu}／${w.sixian}`,'課文詞彙註解',`${lines}<p><strong>詞義：</strong>${esc(w.definition)}</p><p><strong>補充：</strong>${esc(w.note)}</p>`);
+    openDialog(w.hailu===w.sixian?w.hailu:`${w.hailu}／${w.sixian}`,'詞彙解釋',`${lines}<p><strong>詞義：</strong>${esc(w.definition)}</p><p><strong>補充：</strong>${esc(w.note)}</p>`);
   }
   function showSources(){
-    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${DATA.sources.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}<a href="${COUNTY_SOURCE}" target="_blank" rel="noopener noreferrer">客家委員會《110年全國客家人口暨語言基礎資料調查研究》（各縣市人口數與比例） ↗</a>${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.tatung.page}" target="_blank" rel="noopener noreferrer">山口洋元宵Tatung・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div><p class="citation">課文、拼音依提供的雙腔版本整理。照片來源另見各圖片下方連結；分布圖與錄音各有資料範圍。</p>`);
+    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},...DATA.sources]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.tatung.page}" target="_blank" rel="noopener noreferrer">山口洋元宵Tatung・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
   }
   function closeDialog(){overlay.hidden=true;}
-  // 課堂輔助工具：全程在瀏覽器本機執行，不上傳名單或計時資料。
-  const toolsOverlay=document.getElementById('toolsOverlay');
-  const toolsTabs=document.getElementById('toolsTabs');
-  const toolsBody=document.getElementById('toolsBody');
-  const stopwatch = {running:false, elapsed:0, startedAt:0};
-  const countdown = {running:false, preset:60, remaining:60, endAt:0};
-  const wheel = {names:[], picked:[], noRepeat:true, running:false, angle:0, result:''};
-  let currentTool='stopwatch';
-  let soundContext=null;
-  function clockFormat(seconds, precision=false){
-    const total=Math.max(0,seconds);
-    const m=Math.floor(total/60).toString().padStart(2,'0');
-    const sec=Math.floor(total%60).toString().padStart(2,'0');
-    return `${m}:${sec}${precision?'.'+Math.floor((total%1)*10):''}`;
-  }
-  function stopwatchNow(){return stopwatch.elapsed+(stopwatch.running?(Date.now()-stopwatch.startedAt)/1000:0);}
-  function countdownNow(){return countdown.running?Math.max(0,(countdown.endAt-Date.now())/1000):countdown.remaining;}
-  function chime(){
-    try{
-      const AC=window.AudioContext||window.webkitAudioContext;
-      if(!AC)return;
-      soundContext=soundContext||new AC();
-      soundContext.resume().catch(()=>{});
-      for(let i=0;i<2;i++){
-        const o=soundContext.createOscillator(),g=soundContext.createGain(),t=soundContext.currentTime+i*.28;
-        o.type='sine';o.frequency.value=i===0?880:1175;
-        g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.18,t+.03);
-        g.gain.exponentialRampToValueAtTime(.0001,t+.22);
-        o.connect(g);g.connect(soundContext.destination);o.start(t);o.stop(t+.23);
-      }
-    }catch(err){/* 沒有音效裝置時仍可使用視覺倒數 */}
-  }
-  function tickTools(){
-    const timerVal=countdownNow();
-    if(countdown.running&&timerVal<=0){countdown.running=false;countdown.remaining=0;chime();toolsOverlay.classList.add('timer-finished');}
-    const sw=document.getElementById('stopwatchClock');if(sw)sw.textContent=clockFormat(stopwatchNow(),true);
-    const cd=document.getElementById('countdownClock');if(cd)cd.textContent=clockFormat(timerVal);
-    const top=document.getElementById('toolsToggle');if(top)top.textContent=countdown.running?`◷ ${clockFormat(timerVal)}`:'◷ 課堂工具';
-  }
-  function wheelPool(){return wheel.noRepeat?wheel.names.filter(x=>!wheel.picked.includes(x)):wheel.names.slice();}
-  function wheelVisual(pool){
-    if(!pool.length)return '<div class="wheel-disc wheel-empty"><span>載入名單後<br>開始抽籤</span></div>';
-    const palette=['#f4b36d','#447d82','#d87557','#90b6ab','#e5ba62','#6a9ca7','#b88b8d','#7cb49f'];
-    const n=pool.length,arc=360/n;
-    const gradient=`conic-gradient(${pool.map((_,i)=>`${palette[i%palette.length]} ${(i*arc).toFixed(3)}deg ${((i+1)*arc).toFixed(3)}deg`).join(',')})`;
-    const names=n<=14?pool.map((name,i)=>`<span class="wheel-label" style="transform:rotate(${((i+.5)*arc).toFixed(2)}deg) translateY(-110px) rotate(${(-((i+.5)*arc)).toFixed(2)}deg)">${esc(name)}</span>`).join(''):`<span class="wheel-center-count">${n}位候選人</span>`;
-    return `<div id="wheelDisc" class="wheel-disc" style="background:${gradient};transform:rotate(${wheel.angle}deg)">${names}</div>`;
-  }
-  function renderTools(){
-    const choices=[['stopwatch','碼錶'],['countdown','倒數計時'],['wheel','輪盤抽籤']];
-    toolsTabs.innerHTML=choices.map(([id,label])=>`<button type="button" class="tool-tab ${id===currentTool?'active':''}" data-tool-tab="${id}" aria-pressed="${id===currentTool}">${label}</button>`).join('');
-    if(currentTool==='stopwatch'){
-      toolsBody.innerHTML=`<section class="tool-section"><div class="timer-big" id="stopwatchClock">${clockFormat(stopwatchNow(),true)}</div><p class="tool-label">正向計時</p><div class="tool-buttons"><button class="primary-button" data-tool-action="stopwatch-toggle">${stopwatch.running?'暫停':'開始／繼續'}</button><button class="outline-button" data-tool-action="stopwatch-reset">歸零</button></div></section>`;
-    }else if(currentTool==='countdown'){
-      const values=[15,30,60,120,180,300];
-      toolsBody.innerHTML=`<section class="tool-section"><div class="timer-big ${!countdown.running&&countdown.remaining===0?'time-up':''}" id="countdownClock">${clockFormat(countdownNow())}</div><p class="tool-label">倒數計時，到時響鈴</p><div class="time-presets">${values.map(v=>`<button class="preset ${countdown.preset===v?'active':''}" data-tool-action="preset" data-seconds="${v}">${v<60?v+'秒':v/60+'分鐘'}</button>`).join('')}</div><div class="tool-buttons"><button class="primary-button" data-tool-action="countdown-toggle">${countdown.running?'暫停':'開始／繼續'}</button><button class="outline-button" data-tool-action="countdown-reset">重新設定</button></div></section>`;
-    }else{
-      const pool=wheelPool();
-      toolsBody.innerHTML=`<section class="wheel-tool"><div class="wheel-form"><label for="wheelNamesInput">學生姓名或座號（每行一位）</label><textarea rows="8" id="wheelNamesInput" placeholder="例如：\n1\n2\n3\n或直接貼上班級名單">${esc(wheel.names.join('\n'))}</textarea><div class="tool-buttons"><button class="outline-button" data-tool-action="wheel-load" ${wheel.running?'disabled':''}>更新名單</button><button class="outline-button" data-tool-action="wheel-clear-picks" ${wheel.running?'disabled':''}>重置抽籤紀錄</button></div><label class="tool-checkbox"><input type="checkbox" id="wheelNoRepeat" ${wheel.noRepeat?'checked':''} ${wheel.running?'disabled':''}>抽過的人暫不重複</label><p class="wheel-pool">名單：${wheel.names.length}人　可抽：${pool.length}人</p></div><div class="wheel-area"><div class="wheel-wrap"><div class="wheel-pointer" aria-hidden="true"></div>${wheelVisual(pool)}</div><button class="primary-button spin-btn" data-tool-action="wheel-spin" ${wheel.running||!pool.length?'disabled':''}>${wheel.running?'抽籤中…':'轉動輪盤'}</button><div class="wheel-result" aria-live="polite">${wheel.result?'抽中：'+esc(wheel.result):'準備抽籤'}</div></div></section>`;
-    }
-    tickTools();
-  }
-  function openTools(){
-    toolsOverlay.hidden=false;toolsOverlay.classList.remove('timer-finished');
-    renderTools();document.getElementById('toolsClose').focus();
-  }
-  function closeTools(){toolsOverlay.hidden=true;}
-  document.getElementById('toolsToggle').addEventListener('click',openTools);
-  document.getElementById('toolsClose').addEventListener('click',closeTools);
-  toolsOverlay.addEventListener('click',e=>{if(e.target===toolsOverlay)closeTools();});
-  document.addEventListener('click',e=>{
-    const tab=e.target.closest('[data-tool-tab]');if(tab){currentTool=tab.dataset.toolTab;renderTools();return;}
-    const el=e.target.closest('[data-tool-action]');if(!el)return;
-    const action=el.dataset.toolAction;
-    if(action==='stopwatch-toggle'){
-      if(stopwatch.running){stopwatch.elapsed=stopwatchNow();stopwatch.running=false;}
-      else {stopwatch.startedAt=Date.now();stopwatch.running=true;}
-    }
-    if(action==='stopwatch-reset'){stopwatch.running=false;stopwatch.elapsed=0;}
-    if(action==='preset'){
-      countdown.preset=Number(el.dataset.seconds);countdown.remaining=countdown.preset;countdown.running=false;
-      toolsOverlay.classList.remove('timer-finished');
-    }
-    if(action==='countdown-toggle'){
-      if(countdown.running){countdown.remaining=countdownNow();countdown.running=false;}
-      else {if(countdown.remaining<=0)countdown.remaining=countdown.preset;countdown.endAt=Date.now()+countdown.remaining*1000;countdown.running=true;toolsOverlay.classList.remove('timer-finished');}
-    }
-    if(action==='countdown-reset'){
-      countdown.running=false;countdown.remaining=countdown.preset;toolsOverlay.classList.remove('timer-finished');
-    }
-    if(action==='wheel-load'){
-      const raw=document.getElementById('wheelNamesInput').value;
-      wheel.names=[...new Set(raw.split(/[\n\r,，、;；]+/).map(x=>x.trim()).filter(Boolean))].slice(0,60);
-      wheel.picked=[];wheel.result='';wheel.angle=0;
-    }
-    if(action==='wheel-clear-picks'){wheel.picked=[];wheel.result='';wheel.angle=0;}
-    if(action==='wheel-spin'){
-      const pool=wheelPool();if(wheel.running||!pool.length)return;
-      const index=Math.floor(Math.random()*pool.length),chosen=pool[index];
-      wheel.running=true;wheel.result='';
-      const disc=document.getElementById('wheelDisc');
-      const arc=360/pool.length;
-      const target=(360-(index+.5)*arc)%360;
-      const current=((wheel.angle%360)+360)%360;
-      wheel.angle+=6*360+((target-current+360)%360);
-      const spinBtn=document.querySelector('.spin-btn');if(spinBtn){spinBtn.disabled=true;spinBtn.textContent='抽籤中…';}
-      if(disc){disc.getBoundingClientRect();requestAnimationFrame(()=>{disc.style.transition='transform 4s cubic-bezier(.16,.84,.13,1)';disc.style.transform=`rotate(${wheel.angle}deg)`;});}
-      setTimeout(()=>{wheel.running=false;wheel.picked.push(chosen);wheel.result=chosen;if(!toolsOverlay.hidden)renderTools();},4200);
-      return;
-    }
-    renderTools();
-  });
-  document.addEventListener('change',e=>{
-    if(e.target.id==='wheelNoRepeat'){wheel.noRepeat=e.target.checked;wheel.angle=0;renderTools();}
-  });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!toolsOverlay.hidden){closeTools();e.stopImmediatePropagation();}});
-  setInterval(tickTools,100);
   document.addEventListener('click',e=>{
     if(e.target===overlay){closeDialog();return;}
     const el=e.target.closest('[data-action]');if(!el)return;
     const action=el.dataset.action;
     if(action==='jump')goto(Number(el.dataset.index));
     if(action==='reveal'){state.reveal=!state.reveal;render();}
-    if(action==='map-view'){state.mapView=el.dataset.view;state.place='intro';render();}
-    if(action==='map-point'){state.place=el.dataset.place;if(state.mapView==='overview'&&state.place==='origin'){showMigrationOptions();}else{updateMapInfo();}}
-    if(action==='migration-options'){showMigrationOptions();}
+    if(action==='map-view'){state.mapView=el.dataset.view;state.place=state.mapView==='taiwan'?'hsinchu':'intro';render();}
+    if(action==='map-point'){if(state.mapView==='overview'&&el.dataset.place==='origin'){showMigrationChoice();}else{state.place=el.dataset.place;updateMapInfo();body.querySelectorAll('.county-pin').forEach(p=>p.classList.toggle('selected',p.dataset.place===state.place));body.querySelectorAll('.county-chips button').forEach(p=>p.classList.toggle('active',p.dataset.place===state.place));}}
     if(action==='migration-select'){
-      state.migrationRoute=el.dataset.route==='taiwan'?'taiwan':'nanyang';
+      state.migrationRoute=el.dataset.destination;
+      state.place=state.migrationRoute==='taiwan'?'taiwan':'singkawang';
       closeDialog();render();
-      const route=document.querySelector('.migration-route');
-      if(route){const len=route.getTotalLength();route.style.setProperty('--pathlength',len);}
     }
     if(action==='chunk'){state.chunk=Number(el.dataset.index);render();}
     if(action==='vocab')showVocab(el.dataset.vocab);
@@ -479,7 +358,7 @@
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){closeDialog();document.getElementById('sidebar').classList.remove('open');return;}
     if(!overlay.hidden||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
-    if((e.key==='Enter'||e.key===' ') && e.target.matches('.map-svg .pin')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));return;}
+    if((e.key==='Enter'||e.key===' ') && e.target.matches('.map-svg .pin')){e.preventDefault();if(state.mapView==='overview'&&e.target.dataset.place==='origin'){showMigrationChoice();}else{state.place=e.target.dataset.place;updateMapInfo();}return;}
     if(e.key==='ArrowRight' || e.key==='PageDown'){e.preventDefault();goto(state.stage+1);}
     if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goto(state.stage-1);}
     if(e.key.toLowerCase()==='f'){document.getElementById('fullscreenToggle').click();}
@@ -497,11 +376,177 @@
   document.getElementById('fullscreenToggle').addEventListener('click',()=>{
     if(document.fullscreenElement)document.exitFullscreen(); else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});
   });
-  const lessonPlanLink=document.getElementById('lessonPlanDownload');
-  if(LESSON_PLAN_FILE){
-    lessonPlanLink.href=LESSON_PLAN_FILE;lessonPlanLink.download='飄洋過海尋客家_教案.pdf';
-    lessonPlanLink.textContent='下載正式教案 ↓';lessonPlanLink.classList.remove('is-disabled');
-    lessonPlanLink.removeAttribute('aria-disabled');lessonPlanLink.removeAttribute('tabindex');
-  }
   render();
 })();
+
+
+/* 內建課堂工具：不再需要另外上傳tools.js。 */
+/* beta V6.0.1 課堂工具：獨立原生JavaScript，無後端、無帳號、無網路傳送。 */
+(() => {
+  'use strict';
+  const overlay = document.getElementById('toolOverlay');
+  const content = document.getElementById('toolContent');
+  const title = document.getElementById('toolTitle');
+  if (!overlay || !content || !title) return;
+  let active = '';
+  const sw = { running:false, elapsed:0, started:0 };
+  const timer = { seconds:60, remaining:60*1000, running:false, until:0, finished:false };
+  const wheel = { names:['1號','2號','3號','4號','5號','6號','7號','8號'], picked:[], exclude:true, spinning:false, rotation:0, last:'' };
+  const presets = [[15,'15秒'],[30,'30秒'],[60,'1分鐘'],[120,'2分鐘'],[180,'3分鐘'],[300,'5分鐘']];
+  const fmt = ms => {
+    const seconds=Math.floor(Math.max(0,ms)/1000), cent=Math.floor((Math.max(0,ms)%1000)/10);
+    const h=Math.floor(seconds/3600),m=Math.floor((seconds%3600)/60),s=seconds%60;
+    return (h?String(h).padStart(2,'0')+':':'')+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+'.'+String(cent).padStart(2,'0');
+  };
+  const fmtTime = ms => {
+    const s=Math.ceil(Math.max(0,ms)/1000);
+    return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+  };
+  function openTool(kind){
+    active=kind; overlay.hidden=false;
+    title.textContent=({stopwatch:'碼錶',countdown:'倒數計時器',spinner:'輪盤抽籤'})[kind];
+    render();document.getElementById('toolClose').focus();
+  }
+  function closeTool(){overlay.hidden=true;active='';}
+  function stopwatchValue(){return sw.elapsed+(sw.running?Date.now()-sw.started:0);}
+  function timerValue(){return timer.running?Math.max(0,timer.until-Date.now()):timer.remaining;}
+  function render(){
+    if (active==='stopwatch'){
+      content.innerHTML=`<div class="tool-clock" id="stopwatchDisplay" aria-live="off">${fmt(stopwatchValue())}</div>
+       <div class="tool-actions"><button class="tool-primary" data-util="sw-toggle">${sw.running?'暫停':sw.elapsed?'繼續':'開始'}</button>
+       <button class="tool-secondary" data-util="sw-reset">歸零</button></div>`;
+    } else if (active==='countdown') {
+      content.innerHTML=`<div class="tool-presets" role="group" aria-label="倒數時間">${presets.map(([secs,label])=>`<button class="preset ${timer.seconds===secs?'active':''}" data-util="set-preset" data-seconds="${secs}" aria-pressed="${timer.seconds===secs}">${label}</button>`).join('')}</div>
+      <div class="tool-clock countdown-clock ${timer.finished?'timer-done':''}" id="countdownDisplay">${fmtTime(timerValue())}</div>
+      <div class="timer-end-caption" id="timerStatus">${timer.finished?'時間到！':timer.running?'倒數中':''}</div>
+      <div class="tool-actions"><button class="tool-primary" data-util="timer-toggle">${timer.running?'暫停':timer.remaining<timer.seconds&&!timer.finished?'繼續':'開始'}</button>
+      <button class="tool-secondary" data-util="timer-reset">重設</button></div>`;
+    } else if(active==='spinner'){
+      content.innerHTML=`<div class="spinner-layout"><div class="wheel-panel">
+       <div class="wheel-surround"><div class="wheel-pointer" aria-hidden="true"></div><canvas id="wheelCanvas" width="640" height="640" aria-label="旋轉抽籤輪盤"></canvas><div class="wheel-hub" aria-hidden="true">客</div></div>
+       <div id="wheelResult" class="wheel-result" aria-live="polite">${wheel.last?`抽中：${escapeHTML(wheel.last)}`:'按「開始抽籤」旋轉輪盤'}</div>
+       <div class="tool-actions"><button class="tool-primary" data-util="wheel-spin" ${wheel.spinning?'disabled':''}>${wheel.spinning?'抽籤中……':'開始抽籤'}</button><button class="tool-secondary" data-util="wheel-clear">重新抽籤</button></div></div>
+       <div class="wheel-settings"><label for="wheelNames">學生姓名／座號（一行一人，也可用逗號分隔）</label>
+       <textarea id="wheelNames" rows="10" placeholder="01\n02\n03\n04" ${wheel.spinning?'disabled':''}>${escapeHTML(wheel.names.join('\n'))}</textarea>
+       <label class="wheel-check"><input id="wheelExclude" type="checkbox" ${wheel.exclude?'checked':''} ${wheel.spinning?'disabled':''}/>抽過的人暫不重複</label>
+       <p id="wheelStatus" class="wheel-status">${wheel.names.length}人｜已抽${wheel.picked.length}人｜可抽${getPool().length}人</p>
+       <div class="picked-label">已抽中</div><div id="pickedNames" class="picked-names">${wheel.picked.length?wheel.picked.map(x=>`<span>${escapeHTML(x)}</span>`).join(''):'尚無紀錄'}</div>
+       </div></div>`;
+      drawWheel();
+    }
+  }
+  function escapeHTML(s){return String(s).replace(/[&<>"']/g,k=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[k]));}
+  function parseNames(input){return [...new Set(input.split(/[\n,，、;；]+/).map(s=>s.trim()).filter(Boolean))].slice(0,120);}
+  function getPool(){return wheel.exclude?wheel.names.filter(n=>!wheel.picked.includes(n)):wheel.names;}
+  function drawWheel(){
+    const canvas=document.getElementById('wheelCanvas'); if(!canvas)return;
+    const ctx=canvas.getContext('2d'); if(!ctx)return;
+    const a=getPool(); const n=a.length; const mid=320,r=296;
+    ctx.clearRect(0,0,640,640);
+    if(n===0){ctx.fillStyle='#e7f1ef';ctx.beginPath();ctx.arc(mid,mid,r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#305760';ctx.font='bold 34px sans-serif';ctx.textAlign='center';ctx.fillText('全部抽完了',mid,mid);return;}
+    const colors=['#24677a','#d49855','#317e81','#b9634e','#426d98','#b28a50','#5b8982','#a66a77'];
+    for(let i=0;i<n;i++){
+      const start=-Math.PI/2+i*2*Math.PI/n, end=-Math.PI/2+(i+1)*2*Math.PI/n;
+      ctx.beginPath();ctx.moveTo(mid,mid);ctx.arc(mid,mid,r,start,end);ctx.closePath();ctx.fillStyle=colors[i%colors.length];ctx.fill();ctx.strokeStyle='#ffffffa8';ctx.lineWidth=2;ctx.stroke();
+      ctx.save();ctx.translate(mid,mid);ctx.rotate((start+end)/2);
+      ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.shadowColor='#16323eaa';ctx.shadowBlur=4;
+      const font=n>40?13:n>25?16:n>15?21:n>8?25:30;
+      ctx.font=`bold ${font}px sans-serif`;
+      const label=n>36?String(i+1):a[i].slice(0,9);
+      ctx.fillText(label,r-22,0,r*.72);ctx.restore();
+    }
+    ctx.beginPath();ctx.arc(mid,mid,r,0,2*Math.PI);ctx.strokeStyle='#d6e3d9';ctx.lineWidth=8;ctx.stroke();
+  }
+  function randomIndex(length){
+    if(globalThis.crypto?.getRandomValues){const arr=new Uint32Array(1);globalThis.crypto.getRandomValues(arr);return arr[0]%length;}
+    return Math.floor(Math.random()*length);
+  }
+  let audioCtx;
+  function ding(){
+    try{
+      const AudioContext=window.AudioContext||window.webkitAudioContext;if(!AudioContext)return;
+      audioCtx=audioCtx||new AudioContext();if(audioCtx.state==='suspended') audioCtx.resume().catch(()=>{});
+      [880,1174.66,1567.98].forEach((freq,i)=>{
+        const osc=audioCtx.createOscillator(),gain=audioCtx.createGain(),now=audioCtx.currentTime+i*.18;
+        osc.type='sine';osc.frequency.value=freq;gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.14,now+.02);gain.gain.exponentialRampToValueAtTime(.0001,now+.24);
+        osc.connect(gain).connect(audioCtx.destination);osc.start(now);osc.stop(now+.25);
+      });
+    }catch(_){}
+  }
+  document.addEventListener('click',e=>{
+    const launch=e.target.closest('[data-tool]');if(launch){openTool(launch.dataset.tool);return;}
+    if(e.target===overlay||e.target.closest('#toolClose')){closeTool();return;}
+    const el=e.target.closest('[data-util]');if(!el)return;
+    const op=el.dataset.util;
+    if(op==='sw-toggle'){if(sw.running){sw.elapsed=stopwatchValue();sw.running=false;}else{sw.started=Date.now();sw.running=true;} render();}
+    if(op==='sw-reset'){sw.running=false;sw.elapsed=0;sw.started=0;render();}
+    if(op==='set-preset'){timer.seconds=Number(el.dataset.seconds);timer.remaining=timer.seconds*1000;timer.running=false;timer.finished=false;render();}
+    if(op==='timer-toggle'){
+      if(timer.running){timer.remaining=timerValue();timer.running=false;}
+      else {if(timer.finished||timer.remaining<=0){timer.remaining=timer.seconds*1000;timer.finished=false;}timer.until=Date.now()+timer.remaining;timer.running=true;}
+      render();
+    }
+    if(op==='timer-reset'){timer.running=false;timer.remaining=timer.seconds*1000;timer.finished=false;render();}
+    if(op==='wheel-clear'){if(wheel.spinning)return;wheel.picked=[];wheel.rotation=0;wheel.last='';render();}
+    if(op==='wheel-spin')spin();
+  });
+  document.addEventListener('input',e=>{
+    if(e.target.id!=='wheelNames'||wheel.spinning)return;
+    const names=parseNames(e.target.value);wheel.names=names;wheel.picked=wheel.picked.filter(n=>names.includes(n));wheel.last='';wheel.rotation=0;
+    drawWheel();
+    const canvas=document.getElementById('wheelCanvas');if(canvas){canvas.style.transition='none';canvas.style.transform='rotate(0deg)';}
+    const result=document.getElementById('wheelResult');if(result)result.textContent='按「開始抽籤」旋轉輪盤';
+    const picked=document.getElementById('pickedNames');if(picked){picked.replaceChildren(...wheel.picked.map(name=>{const span=document.createElement('span');span.textContent=name;return span;}));if(!wheel.picked.length)picked.textContent='尚無紀錄';}
+    const status=document.getElementById('wheelStatus');if(status)status.textContent=`${names.length}人｜已抽${wheel.picked.length}人｜可抽${getPool().length}人`;
+  });
+  document.addEventListener('change',e=>{
+    if(e.target.id!=='wheelExclude'||wheel.spinning)return;
+    wheel.exclude=e.target.checked;wheel.rotation=0;wheel.last='';render();
+  });
+  function spin(){
+    if(wheel.spinning)return;const pool=getPool();if(!pool.length){const r=document.getElementById('wheelResult');if(r)r.textContent='已全部抽完，請按「重新抽籤」。';return;}
+    wheel.spinning=true;
+    const canvas=document.getElementById('wheelCanvas');
+    // 上一次結果先保留在輪盤上；只有下一次開始抽籤才重新分配剩餘名單。
+    if(canvas){canvas.style.transition='none';canvas.style.transform='rotate(0deg)';}
+    wheel.rotation=0;
+    drawWheel();
+    const n=pool.length,winner=randomIndex(n),result=pool[winner];
+    const current=((wheel.rotation%360)+360)%360;
+    const desired=-((winner+.5)*360/n);
+    const adjustment=((desired-current)%360+360)%360;
+    wheel.rotation+=360*(5+Math.floor(Math.random()*2))+adjustment;
+    if(canvas){canvas.style.transition='transform 4.4s cubic-bezier(.12,.72,.12,1)';canvas.style.transform=`rotate(${wheel.rotation}deg)`;}
+    const spinButton=document.querySelector('[data-util="wheel-spin"]');if(spinButton){spinButton.disabled=true;spinButton.textContent='抽籤中……';}
+    window.setTimeout(()=>{
+      wheel.last=result;wheel.picked.push(result);wheel.spinning=false;
+      // 停在抽中的名字上，讓全班能看清楚結果；不立即重畫成剩餘名單。
+      if(active==='spinner'&&!overlay.hidden){
+        const resultBox=document.getElementById('wheelResult');
+        if(resultBox)resultBox.textContent=`抽中：${result}`;
+        const spinBtn=document.querySelector('[data-util="wheel-spin"]');
+        if(spinBtn){spinBtn.disabled=false;spinBtn.textContent='再抽一次';}
+        const status=document.getElementById('wheelStatus');
+        if(status)status.textContent=`${wheel.names.length}人｜已抽${wheel.picked.length}人｜可抽${getPool().length}人`;
+        const picked=document.getElementById('pickedNames');
+        if(picked){picked.replaceChildren(...wheel.picked.map(name=>{const span=document.createElement('span');span.textContent=name;return span;}));}
+      }
+    },4470);
+  }
+  function tick(){
+    if(timer.running&&Date.now()>=timer.until){timer.remaining=0;timer.running=false;timer.finished=true;ding();if(active==='countdown'&&!overlay.hidden)render();}
+    if(overlay.hidden)return;
+    if(active==='stopwatch'){
+      const el=document.getElementById('stopwatchDisplay');if(el)el.textContent=fmt(stopwatchValue());
+    } else if(active==='countdown'){
+      const el=document.getElementById('countdownDisplay');if(el)el.textContent=fmtTime(timerValue());
+    }
+  }
+  window.setInterval(tick,60);
+  document.addEventListener('keydown',e=>{
+    if(overlay.hidden)return;
+    if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeTool();}
+    else if(['ArrowRight','ArrowLeft','PageUp','PageDown','f','F'].includes(e.key))e.stopImmediatePropagation();
+  },true);
+})();
+

@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f2835">
-  <meta name="description" content="高中客語互動教學網站。海陸與四縣課文、移民歷史、語言傳承、蘭芳公司、飲食與元宵。">
-  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V6.1.0</title>
+  <meta name="description" content="高中客語第八課〈行讀客家世界：印尼客家之旅〉互動教學網站。海陸與四縣課文、移民歷史、語言傳承、蘭芳公司、飲食與元宵。">
+  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V6.0.1</title>
   <link rel="stylesheet" href="styles.css">
   <script src="content.js" defer></script>
   <script src="app.js" defer></script>
@@ -17,11 +17,11 @@
         <span class="brand-mark" aria-hidden="true">客</span>
         <div><strong>飄洋過海尋客家</strong><span>印尼客家文化之旅</span></div>
       </div>
+      <div class="side-caption">互動式客語教材</div>
       <nav id="lessonNav" class="lesson-nav" aria-label="八個教學階段"></nav>
       <div class="side-bottom">
         
-        <a href="worksheet.html" target="_blank" rel="noopener">下載／列印學習單 ↗</a>
-        <a id="lessonPlanDownload" class="lessonplan-link is-disabled" aria-disabled="true" tabindex="-1">教案下載（尚未提供）</a>
+        <a href="worksheet.html" target="_blank" rel="noopener">開啟可列印學習單 ↗</a>
         <button type="button" id="viewSources" class="quiet-button">資料與圖片來源</button>
       </div>
     </aside>
@@ -29,7 +29,7 @@
     <div class="workspace">
       <header class="topbar">
         <button type="button" id="mobileMenu" class="icon-button mobile-only" aria-label="切換章節選單">☰</button>
-        <div class="breadcrumb site-heading"><span>高中客語</span><strong>飄洋過海尋客家：印尼客家文化之旅</strong></div>
+        <div class="breadcrumb"><span>高中客語</span><span class="dot">·</span><strong class="site-full-name">飄洋過海尋客家：印尼客家文化之旅</strong><span class="dot">·</span><strong id="stepLabel">認識印尼</strong></div>
         <div class="top-actions">
           <div class="dialect-switch" role="group" aria-label="課文腔調">
             <button type="button" class="dialect active" data-dialect="hailu" aria-pressed="true">海陸</button>
@@ -39,7 +39,11 @@
           <button type="button" id="pinyinToggle" class="top-button" title="顯示或隱藏拼音" aria-pressed="true">拼音：開</button>
           <button type="button" id="toneModeToggle" class="top-button tone-mode-toggle" title="切換調值與調型標記" aria-label="目前使用調值標記，點擊切換為調型">標音：調值</button>
           <button type="button" id="fontToggle" class="top-button" title="調整課文顯示字級">字級＋</button>
-          <button type="button" id="toolsToggle" class="top-button tools-toggle" aria-label="開啟課堂工具">◷ 課堂工具</button>
+          <div class="tool-launchers" role="group" aria-label="課堂小工具">
+            <button type="button" data-tool="stopwatch" class="top-button tool-trigger" title="開啟碼錶">◴ 碼錶</button>
+            <button type="button" data-tool="countdown" class="top-button tool-trigger" title="開啟倒數計時器">⏱ 計時</button>
+            <button type="button" data-tool="spinner" class="top-button tool-trigger" title="開啟輪盤抽籤">◉ 抽籤</button>
+          </div>
           <button type="button" id="fullscreenToggle" class="icon-button" title="全螢幕（F）" aria-label="切換全螢幕">⛶</button>
         </div>
       </header>
@@ -63,8 +67,8 @@
           <button type="button" id="prevBtn" class="outline-button">← 上一步</button>
           <button type="button" id="nextBtn" class="primary-button">下一步 →</button>
         </div>
+        <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V6.0.1</strong></div>
       </footer>
-      <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜beta V6.1.0</div>
     </div>
   </div>
 
@@ -75,11 +79,10 @@
       <div id="dialogContent"></div>
     </div>
   </div>
-  <div class="tools-overlay" id="toolsOverlay" hidden>
-    <section class="tools-dialog" role="dialog" aria-modal="true" aria-labelledby="toolsTitle">
-      <header class="tools-dialog-head"><div><span class="micro-label">教學輔助</span><h2 id="toolsTitle">課堂小工具</h2></div><button type="button" class="icon-button" id="toolsClose" aria-label="關閉課堂工具">×</button></header>
-      <div class="tools-tabs" id="toolsTabs" role="group" aria-label="選擇小工具"></div>
-      <div class="tools-body" id="toolsBody"></div>
+  <div id="toolOverlay" class="tool-overlay" hidden>
+    <section class="tool-dialog" role="dialog" aria-modal="true" aria-labelledby="toolTitle">
+      <header class="tool-dialog-head"><div><div class="tool-kicker">課堂小工具</div><h2 id="toolTitle"></h2></div><button type="button" class="tool-close" id="toolClose" aria-label="關閉工具">×</button></header>
+      <div id="toolContent"></div>
     </section>
   </div>
   <noscript><p class="noscript">本教學網站需要啟用JavaScript，才能使用章節導覽與課文切換。</p></noscript>
