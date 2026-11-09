@@ -16,8 +16,7 @@
     {name:'文化統整',sub:'保留、改變、融合',time:'42～45分鐘',heading:'飄洋過海之後，客家文化變了嗎？',lead:'回顧今天的探索，從一個具體案例說明你的觀察。'}
   ];
   /* 固定播放教師提供的臺灣海陸及山口洋河婆客語語料。 */
-  const BUILTIN_AUDIO = {tw:'assets/audio/台灣海陸客語語料.wav', id:'assets/audio/山口洋客語語料.wav'};
-  const LANFANG_VIDEO = 'assets/video/lanfang-hakka-animation.mp4';
+  const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu.wav', id:'assets/audio/singkawang-hopo.wav'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
   const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodPos:{tw:0,id:0},foodPaused:{tw:false,id:false},reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
@@ -454,7 +453,7 @@
   }
   function showLanfangVideo(){
     openDialog('蘭芳公司：18世紀的客家移民史','客家公共傳播基金會 × 臺灣吧・客語版',
-      `<div class="video-player-frame"><video id="lanfangVideo" controls playsinline preload="metadata" poster="assets/images/lanfang-video-cover.jpg" src="${esc(LANFANG_VIDEO)}">此瀏覽器無法播放此影片。</video></div>
+      `<div class="video-player-frame festival-video-frame"><iframe title="蘭芳公司：18世紀的客家移民史（客語版）" src="https://www.youtube-nocookie.com/embed/pwxlliP1mqQ?rel=0" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
        <div class="video-player-bottom"><span>超狂的客家移民史：18世紀誕生於婆羅洲的「蘭芳公司」</span><a href="${esc(LANFANG_YOUTUBE)}" target="_blank" rel="noopener noreferrer">在YouTube觀看原始影片 ↗</a></div>`);
     overlay.querySelector('.dialog')?.classList.add('video-dialog');
   }
