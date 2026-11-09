@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f2835">
+  <meta name="description" content="高中客語第八課〈行讀客家世界：印尼客家之旅〉互動教學網站。海陸與四縣課文、移民歷史、語言傳承、蘭芳公司、飲食與元宵。">
+  <title>漂洋過海尋客家｜印尼客家文化之旅</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="content.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="site-shell" id="siteShell">
+    <aside class="sidebar" id="sidebar" aria-label="教學章節">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">客</span>
+        <div><strong>漂洋過海尋客家</strong><span>印尼客家文化之旅</span></div>
+      </div>
+      <div class="side-caption">45分鐘 · 教師導覽</div>
+      <nav id="lessonNav" class="lesson-nav" aria-label="八個教學階段"></nav>
+      <div class="side-bottom">
+        <div class="mini-label">教師備忘</div>
+        <p>課本負責朗讀與註記，網站負責展示，學習單負責比較與思考。</p>
+        <a href="worksheet.html" target="_blank" rel="noopener">開啟可列印學習單 ↗</a>
+        <button type="button" id="viewSources" class="quiet-button">資料來源與使用說明</button>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <button type="button" id="mobileMenu" class="icon-button mobile-only" aria-label="切換章節選單">☰</button>
+        <div class="breadcrumb"><span>高中本土語文 · 客語</span><span class="dot">·</span><strong id="stepLabel">開場：認識印尼</strong></div>
+        <div class="top-actions">
+          <div class="dialect-switch" role="group" aria-label="課文腔調">
+            <button type="button" class="dialect active" data-dialect="hailu" aria-pressed="true">海陸</button>
+            <button type="button" class="dialect" data-dialect="sixian" aria-pressed="false">四縣</button>
+            <button type="button" class="dialect" data-dialect="both" aria-pressed="false">雙腔</button>
+          </div>
+          <button type="button" id="pinyinToggle" class="top-button" title="顯示或隱藏拼音" aria-pressed="true">拼音：開</button>
+          <button type="button" id="fontToggle" class="top-button" title="調整課文顯示字級">字級＋</button>
+          <button type="button" id="fullscreenToggle" class="icon-button" title="全螢幕（F）" aria-label="切換全螢幕">⛶</button>
+        </div>
+      </header>
+
+      <main class="main" id="main" tabindex="-1">
+        <div class="content-head">
+          <div class="eyebrow" id="stageEyebrow">第一站 · 0～5分鐘</div>
+          <h1 id="stageTitle">千島之國，客家在哪裡？</h1>
+          <p id="stageIntro">從臺灣出發，前往印尼認識另一個客家世界。</p>
+        </div>
+        <div class="stage-body" id="stageBody" aria-live="polite"></div>
+      </main>
+
+      <footer class="toolbar">
+        <div class="toolbar-left">
+          <button type="button" id="mapHome" class="toolbar-quiet">⌖ 返回地圖</button>
+          <span id="progressText" class="progress-text">01 / 08</span>
+          <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+        </div>
+        <div class="toolbar-right">
+          <button type="button" id="prevBtn" class="outline-button">← 上一步</button>
+          <button type="button" id="nextBtn" class="primary-button">下一步 →</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <div id="dialogOverlay" class="dialog-overlay" hidden>
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+      <div class="dialog-top"><div class="micro-label" id="dialogTag">詞彙註解</div><button type="button" id="dialogClose" class="icon-button" aria-label="關閉">×</button></div>
+      <h2 id="dialogTitle"></h2>
+      <div id="dialogContent"></div>
+    </div>
+  </div>
+  <noscript><p class="noscript">本教學網站需要啟用JavaScript，才能使用章節導覽與課文切換。</p></noscript>
+</body>
+</html>
