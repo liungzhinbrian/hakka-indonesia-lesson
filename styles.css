@@ -275,3 +275,34 @@ html,body{font-size:18px}
 /* 讓整個地名＋標記區域都能點擊，不只是圓點本身 */
 .map-svg .pin { pointer-events:bounding-box; cursor:pointer; }
 .map-svg .pin .halo { pointer-events:all; }
+
+/* beta V6.0.2：印尼社群光點、臺灣地圖縮放及原課文段落導覽 */
+.map-svg .indo-pin .pulse-ring{stroke:#ffd292;stroke-width:3.3;animation-duration:2.9s;}
+.map-svg .indo-pin .pulse-ring.delay{animation-delay:1.43s;}
+.map-svg .indo-pin .core{fill:#ffdd9f;filter:drop-shadow(0 0 9px #ffc374);}
+.map-svg .indo-pin .halo{fill:#ffc778;opacity:.2;}
+.map-svg .indo-pin.selected .core{fill:#fff;stroke:#f2ad61;stroke-width:5px;}
+.map-viewport.zoomable-map{position:relative;overflow:hidden;}
+.map-svg.map-taiwan{transition:none;}
+.map-zoom-controls{position:absolute;top:10px;right:12px;z-index:8;display:flex;gap:6px;align-items:center;padding:7px;border-radius:12px;background:rgba(10,36,46,.9);border:1px solid rgba(255,255,255,.25);box-shadow:0 6px 22px rgba(0,0,0,.26);}
+.map-zoom-controls button{min-width:40px;height:39px;border-radius:8px;border:1px solid #4e7980;background:#2a5864;color:#fff;font-size:21px;font-weight:800;cursor:pointer;}
+.map-zoom-controls button:last-child{font-size:15px;min-width:51px;}
+.map-zoom-controls button:disabled{opacity:.4;cursor:not-allowed;}
+.map-zoom-controls button:hover:not(:disabled){background:#437989;}
+.map-zoom-controls span{font-size:15px;min-width:48px;text-align:center;font-variant-numeric:tabular-nums;color:#fff;}
+.map-svg.map-taiwan .county-pin {cursor:pointer;}
+.map-svg .migration-path.nanyang-path{stroke:#ffcc85;stroke-width:4.5;}
+.reading-paragraph-nav{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0 20px;}
+.reading-paragraph-nav button{border:1px solid #cbdedb;border-radius:9px;background:#f0f6f4;color:#355f6c;min-width:41px;height:40px;font-size:17px;font-weight:750;cursor:pointer;}
+.reading-paragraph-nav button.active,.reading-paragraph-nav button:hover{background:#206779;border-color:#206779;color:white;}
+.reading-anchor{scroll-margin-top:20px;}
+.reading-all{display:grid;gap:14px;}
+@media(max-width:650px){.map-zoom-controls{right:6px;top:6px;gap:3px;padding:4px;}.map-zoom-controls button{min-width:34px;height:33px;font-size:18px;}.map-zoom-controls span{font-size:12px;min-width:37px;}}
+
+/* beta V6.1.0｜地圖鏡頭隨遷移路線移動，使用者可手動回全圖或重播。 */
+.map-panel .map-viewport{position:relative;overflow:hidden;}
+.geo-camera-controls{position:absolute;right:12px;top:12px;display:flex;gap:7px;z-index:10;}
+.geo-camera-controls button{background:rgba(17,53,64,.94);color:#fff6e4;border:1px solid #68878e;border-radius:9px;font-size:15px;font-weight:800;padding:9px 12px;cursor:pointer;box-shadow:0 5px 12px #07171c55;}
+.geo-camera-controls button:hover{background:#316673;}
+.map-panel .map-svg.map-geo{will-change:contents;}
+@media(max-width:650px){.geo-camera-controls{right:5px;top:5px;gap:4px;}.geo-camera-controls button{font-size:12px;padding:6px 8px;}}

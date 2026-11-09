@@ -17,7 +17,7 @@
   ];
   /* 加入正式、已取得使用權的音檔後可把這裡改為相對路徑，例如 'assets/audio/taiwan-hailu.mp3'。*/
   const BUILTIN_AUDIO = {tw:'', id:''};
-  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,reveal:false,place:'intro',poll:[],lanfang:0,food:0,reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -83,11 +83,11 @@
     const fn=[introStage,readingStage,policyStage,audioStage,historyStage,foodStage,festivalStage,endingStage][state.stage];
     body.innerHTML=fn();
     body.querySelectorAll(".teacher-note,.read-tip,.map-note").forEach(el=>el.remove());
-    if(state.stage===0) updateMapInfo();
+    if(state.stage===0){updateMapInfo();if(state.mapView==='taiwan')updateTaiwanZoom();}
     if(state.stage===3) updateAudioPlayers();
     document.getElementById('sidebar').classList.remove('open');
   }
-  function goto(i){state.stage=Math.max(0,Math.min(7,i)); render();window.scrollTo({top:0,behavior:'instant'}); main.scrollTop=0;}
+  function goto(i){resetGeoCamera();state.stage=Math.max(0,Math.min(7,i)); render();window.scrollTo({top:0,behavior:'instant'}); main.scrollTop=0;}
   function introStage(){
     return `<section class="intro-layout">${mapComponent()}${mapSidePanel()}</section>`;
   }
@@ -122,18 +122,114 @@
       <text x="${labelX}" y="${labelY}">${c.name}</text>
     </g>`;
   }
+  // 印尼客家社群位置：與臺灣地圖採用同一種擴散光暈，但不以光圈大小代表人口數量。
+  const ID_PLACES = [
+    {id:'singkawang',name:'山口洋',x:329,y:192,lx:355,ly:174},
+    {id:'pontianak',name:'坤甸',x:337,y:211,lx:366,ly:253},
+    {id:'bangka',name:'邦加島',x:273,y:252,lx:174,ly:233},
+    {id:'jakarta',name:'雅加達',x:287,y:334,lx:198,ly:361},
+    {id:'surabaya',name:'泗水',x:405,y:355,lx:429,ly:352}
+  ];
+  function indoPin(c){
+    const selected=state.place===c.id?'selected':'';
+    return `<g class="pin county-pin indo-pin ${selected}" role="button" tabindex="0" data-action="map-point" data-place="${c.id}" aria-label="查看${c.name}客家社群">
+      <circle class="pulse-ring" cx="${c.x}" cy="${c.y}" r="15"/>
+      <circle class="pulse-ring delay" cx="${c.x}" cy="${c.y}" r="15"/>
+      <circle class="halo" cx="${c.x}" cy="${c.y}" r="30"/>
+      <path class="pin-leader" d="M${c.x} ${c.y} L${c.lx<c.x?c.lx+85:c.lx-7} ${c.ly-6}"/>
+      <circle class="core" cx="${c.x}" cy="${c.y}" r="7"/>
+      <text x="${c.lx}" y="${c.ly}">${c.name}</text>
+    </g>`;
+  }
+  function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+  function taiwanViewBox(){
+    const w=680/state.twZoom,h=710/state.twZoom;
+    return `${clamp(state.twCenter.x-w/2,0,680-w).toFixed(1)} ${clamp(state.twCenter.y-h/2,0,710-h).toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`;
+  }
+  function updateTaiwanZoom(){
+    const svg=document.querySelector('.map-svg.map-taiwan');if(!svg)return;
+    svg.setAttribute('viewBox',taiwanViewBox());
+    const label=document.getElementById('taiwanZoomLabel');if(label)label.textContent=`${Math.round(state.twZoom*100)}%`;
+    document.querySelectorAll('[data-action="map-zoom"]').forEach(b=>{
+      if(b.dataset.zoom==='in')b.disabled=state.twZoom>=2.49;
+      if(b.dataset.zoom==='out')b.disabled=state.twZoom<=1.01;
+    });
+  }
+  // 路線動畫與地圖鏡頭分開處理：目的地是實際標註位置，鏡頭只改變觀看範圍。
+  const GEO_FULL={x:0,y:0,w:1020,h:680};
+  let geoFrame=0;
+  function geoViewBox(){
+    const b=state.geoCamera;
+    return `${b.x.toFixed(2)} ${b.y.toFixed(2)} ${b.w.toFixed(2)} ${b.h.toFixed(2)}`;
+  }
+  function stopGeoCamera(){
+    if(geoFrame)cancelAnimationFrame(geoFrame);
+    geoFrame=0;
+  }
+  function resetGeoCamera(){
+    stopGeoCamera();
+    state.geoCamera={...GEO_FULL};
+    const svg=document.querySelector('.map-svg.map-geo');
+    if(svg)svg.setAttribute('viewBox',geoViewBox());
+  }
+  function startGeoJourney(){
+    stopGeoCamera();
+    const svg=document.querySelector('.map-svg.map-geo');
+    if(!svg||!state.migrationRoute)return;
+    state.geoCamera={...GEO_FULL};
+    svg.setAttribute('viewBox',geoViewBox());
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    // 從全圖開始，隨著遷移路線的描繪，逐漸聚焦到目的地。
+    // 南洋線以涵蓋全部四個目的地為準，避免只看得到山口洋。
+    const towardTaiwan=state.migrationRoute==='taiwan';
+    const frames=towardTaiwan?[
+      {at:0,box:{...GEO_FULL}},
+      {at:.16,box:{...GEO_FULL}},
+      {at:.57,box:{x:216,y:32,w:690,h:460}},
+      {at:1,box:{x:324,y:28,w:500,h:333}}
+    ]:[
+      {at:0,box:{...GEO_FULL}},
+      {at:.12,box:{...GEO_FULL}},
+      {at:.53,box:{x:170,y:125,w:760,h:507}},
+      {at:1,box:{x:210,y:276,w:600,h:400}}
+    ];
+    const duration=towardTaiwan?4600:5900;
+    const start=performance.now();
+    function tick(now){
+      if(!svg.isConnected||state.stage!==0||state.mapView!=='overview'){geoFrame=0;return;}
+      const progress=clamp((now-start)/duration,0,1);
+      let i=0;
+      while(i<frames.length-2&&progress>frames[i+1].at)i++;
+      const a=frames[i],b=frames[i+1];
+      const u=clamp((progress-a.at)/(b.at-a.at),0,1);
+      const eased=u*u*(3-2*u);
+      const v={};
+      for(const k of ['x','y','w','h'])v[k]=a.box[k]+(b.box[k]-a.box[k])*eased;
+      state.geoCamera=v;
+      svg.setAttribute('viewBox',geoViewBox());
+      if(progress<1)geoFrame=requestAnimationFrame(tick);
+      else geoFrame=0;
+    }
+    geoFrame=requestAnimationFrame(tick);
+  }
   function mapComponent(){
     const tabs=[['overview','東亞與東南亞'],['taiwan','臺灣客家人口'],['indonesia','印尼客家聚居地']]
       .map(([id,label])=>`<button type="button" class="map-tab ${state.mapView===id?'active':''}" data-action="map-view" data-view="${id}" aria-pressed="${state.mapView===id}">${label}</button>`).join('');
     let title='',map='';
     if(state.mapView==='overview'){
       title='從廣東、福建出發，客家人走向哪裡？';
+      const nanyangRoutes=[
+        {place:'山口洋',x:378,y:459,d:'M471 139 C446 264 407 368 378 459'},
+        {place:'邦加島',x:338,y:501,d:'M471 139 C419 248 366 399 338 501'},
+        {place:'雅加達',x:372,y:566,d:'M471 139 C416 308 388 472 372 566'},
+        {place:'泗水',x:446,y:580,d:'M471 139 C465 308 447 469 446 580'}
+      ];
       const route=state.migrationRoute==='taiwan'
         ? `<path class="migration-path" pathLength="100" d="M471 139 Q520 103 545 126" marker-end="url(#migrationArrow)"/><circle class="route-destination" cx="545" cy="126" r="24"/>`
         : state.migrationRoute==='nanyang'
-          ? `<path class="migration-path" pathLength="100" d="M471 139 C433 257 412 378 378 459" marker-end="url(#migrationArrow)"/><circle class="route-destination" cx="378" cy="459" r="24"/>`
+          ? nanyangRoutes.map((p,i)=>`<path class="migration-path nanyang-path" pathLength="100" d="${p.d}" style="animation-delay:${(i*.48).toFixed(2)}s" aria-label="原鄉至${p.place}的遷移方向"/><circle class="route-destination" cx="${p.x}" cy="${p.y}" r="20" style="animation-delay:${(3.25+i*.48).toFixed(2)}s"/>`).join('')
           : '';
-      map=`<svg class="map-svg map-geo" viewBox="0 0 1020 680" role="img" aria-label="東亞與東南亞地圖。點選廣東、福建客家原鄉選擇遷移方向。">
+      map=`<svg class="map-svg map-geo" viewBox="${geoViewBox()}" role="img" aria-label="東亞與東南亞地圖。點選廣東、福建客家原鄉選擇遷移方向。">
         <image href="assets/images/asia-coast-accurate.svg" width="1020" height="680"/>
         <defs><marker id="migrationArrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#ffc874"/></marker></defs>
         ${route}
@@ -141,12 +237,13 @@
         ${makePin(545,126,'臺灣','taiwan',572,102)}
         ${makePin(378,459,'山口洋','singkawang',403,453)}
         ${makePin(338,501,'邦加島','bangka',243,525)}
-        ${makePin(398,569,'爪哇島','java',432,592)}
+        ${makePin(372,566,'雅加達','jakarta',255,566)}
+        ${makePin(446,580,'泗水','surabaya',465,595)}
         <text class="geo-label" x="475" y="376">南海</text><text class="geo-label" x="619" y="492">印尼群島</text><text class="geo-label" x="575" y="255">菲律賓</text>
       </svg>`;
     }else if(state.mapView==='taiwan'){
       title='臺灣的客家人，分布在哪些縣市？';
-      map=`<svg class="map-svg map-taiwan" viewBox="0 0 680 710" role="img" aria-label="臺灣客家人口熱區地圖，點選十個縣市的光暈標記查看客家人口及客語腔調。">
+      map=`<svg class="map-svg map-taiwan" viewBox="${taiwanViewBox()}" role="img" aria-label="臺灣客家人口熱區地圖，點選十個縣市的光暈標記查看客家人口及客語腔調。">
         <image href="assets/images/taiwan-hakka-heatmap-v6.svg" width="680" height="710"/>
         <image class="county-boundaries" href="assets/images/taiwan-county-lines.png" x="74" y="57" width="486.2" height="629.7" preserveAspectRatio="none" opacity=".65" style="pointer-events:none"/>
         ${TW_COUNTIES.map(countyPin).join('')}
@@ -155,17 +252,16 @@
       title='印尼的客家人，聚居在哪些地方？';
       map=`<svg class="map-svg map-indonesia" viewBox="0 0 1020 500" role="img" aria-label="印尼海岸線與客家社群位置，點選圖釘認識地點。">
         <image href="assets/images/indonesia-coast-accurate.svg" width="1020" height="500"/>
-        ${makePin(329,192,'山口洋','singkawang',355,174)}
-        ${makePin(337,211,'坤甸','pontianak',366,253)}
-        ${makePin(273,252,'邦加島','bangka',174,233)}
-        ${makePin(287,334,'雅加達','jakarta',198,361)}
-        ${makePin(405,355,'泗水','surabaya',429,352)}
+        ${ID_PLACES.map(indoPin).join('')}
         <text class="geo-label" x="458" y="113">加里曼丹</text><text class="geo-label" x="147" y="180">蘇門答臘</text><text class="geo-label" x="348" y="400">爪哇島</text>
       </svg>`;
     }
     return `<section class="map-panel" id="mapPanel"><div class="map-header"><div><span class="micro-label">地理探索</span><h2>${title}</h2></div></div>
        <div class="map-tabs" role="group" aria-label="切換地圖主題">${tabs}</div>
-       <div class="map-viewport">${map}</div>
+       <div class="map-viewport ${state.mapView==='taiwan'?'zoomable-map':''}">${map}
+         ${state.mapView==='taiwan'?`<div class="map-zoom-controls" role="group" aria-label="縮放臺灣地圖"><button type="button" data-action="map-zoom" data-zoom="out" aria-label="縮小臺灣地圖" ${state.twZoom<=1?'disabled':''}>−</button><span id="taiwanZoomLabel">${Math.round(state.twZoom*100)}%</span><button type="button" data-action="map-zoom" data-zoom="in" aria-label="放大臺灣地圖" ${state.twZoom>=2.5?'disabled':''}>＋</button><button type="button" data-action="map-zoom" data-zoom="reset" aria-label="恢復原始比例">還原</button></div>`:''}
+         ${state.mapView==='overview'&&state.migrationRoute?`<div class="geo-camera-controls" role="group" aria-label="遷移路線檢視"><button type="button" data-action="geo-replay">重播路線</button><button type="button" data-action="geo-reset">返回全圖</button></div>`:''}
+       </div>
        <div class="map-info" id="mapInfo" aria-live="polite"></div>
     </section>`;
   }
@@ -237,12 +333,10 @@
     return `<div class="reading-unit ${d==='both'?'both':''}"><div class="unit-n">課文第${row.id}段</div>${d==='both'?content('hailu')+content('sixian'):content(d)}</div>`;
   }
   function readingStage(){
-    const sets=[{name:'旅程與祖籍',ids:[1,2,3,4,5]},{name:'世代與政策',ids:[6,7,8,9]},{name:'工作與產業',ids:[10,11,12]},{name:'羅芳伯與蘭芳',ids:[13,14]}];
-    const group=sets[state.chunk];
     const title=(which)=>DATA.title[which];
-    return `<section class="panel"><div class="row spacebetween"><div><div class="micro-label">配合課本閱讀 · 標音可隱藏</div><h2 style="margin-top:5px">${esc(title('hailu').text)}</h2>${state.pinyin?`<div class="reading-title-pinyin">${state.dialect==='both'?`<span>海陸：${esc(formatPinyin(title('hailu').pinyin,'hailu'))}</span><span>四縣：${esc(formatPinyin(title('sixian').pinyin,'sixian'))}</span>`:esc(formatPinyin(title(state.dialect).pinyin,state.dialect))}</div>`:''}</div><span class="tag amber">點擊底線詞語查看註解</span></div>
-      <div class="reading-controls">${sets.map((s,i)=>`<button class="chunk ${i===state.chunk?'active':''}" data-action="chunk" data-index="${i}">${i+1}. ${s.name}</button>`).join('')}</div>
-      <div class="reading-panel">${DATA.rows.filter(r=>group.ids.includes(r.id)).map(readingUnit).join('')}</div>
+    return `<section class="panel"><div class="row spacebetween"><div><div class="micro-label">課文閱讀</div><h2 style="margin-top:5px">${esc(title('hailu').text)}</h2>${state.pinyin?`<div class="reading-title-pinyin">${state.dialect==='both'?`<span>海陸：${esc(formatPinyin(title('hailu').pinyin,'hailu'))}</span><span>四縣：${esc(formatPinyin(title('sixian').pinyin,'sixian'))}</span>`:esc(formatPinyin(title(state.dialect).pinyin,state.dialect))}</div>`:''}</div><span class="tag amber">點擊底線詞語查看註解</span></div>
+      <nav class="reading-paragraph-nav" aria-label="跳至課文段落">${DATA.rows.map(r=>`<button type="button" data-action="reading-paragraph" data-paragraph="${r.id}" class="${state.readingParagraph===r.id?'active':''}" aria-label="閱讀課文第${r.id}段">${r.id}</button>`).join('')}</nav>
+      <div class="reading-panel reading-all">${DATA.rows.map(r=>`<div id="reading-row-${r.id}" class="reading-anchor">${readingUnit(r)}</div>`).join('')}</div>
       <div class="vocab-strip">${DATA.vocab.map(v=>`<button data-action="vocab" data-vocab="${v.id}">${esc(state.dialect==='sixian'?v.sixian:v.hailu)}</button>`).join('')}</div>
     </section>`;
   }
@@ -335,14 +429,30 @@
     const action=el.dataset.action;
     if(action==='jump')goto(Number(el.dataset.index));
     if(action==='reveal'){state.reveal=!state.reveal;render();}
-    if(action==='map-view'){state.mapView=el.dataset.view;state.place=state.mapView==='taiwan'?'hsinchu':'intro';render();}
-    if(action==='map-point'){if(state.mapView==='overview'&&el.dataset.place==='origin'){showMigrationChoice();}else{state.place=el.dataset.place;updateMapInfo();body.querySelectorAll('.county-pin').forEach(p=>p.classList.toggle('selected',p.dataset.place===state.place));body.querySelectorAll('.county-chips button').forEach(p=>p.classList.toggle('active',p.dataset.place===state.place));}}
+    if(action==='map-view'){resetGeoCamera();state.mapView=el.dataset.view;state.place=state.mapView==='taiwan'?'hsinchu':'intro';render();}
+    if(action==='map-point'){if(state.mapView==='overview'&&el.dataset.place==='origin'){showMigrationChoice();}else{state.place=el.dataset.place;updateMapInfo();body.querySelectorAll('.county-pin').forEach(p=>p.classList.toggle('selected',p.dataset.place===state.place));body.querySelectorAll('.location-chips button').forEach(p=>p.classList.toggle('active',p.dataset.place===state.place));if(state.mapView==='taiwan'&&state.twZoom>1){const c=TW_COUNTIES.find(x=>x.id===state.place);if(c){state.twCenter={x:c.x,y:c.y};updateTaiwanZoom();}}}}
     if(action==='migration-select'){
       state.migrationRoute=el.dataset.destination;
       state.place=state.migrationRoute==='taiwan'?'taiwan':'singkawang';
-      closeDialog();render();
+      resetGeoCamera();closeDialog();render();startGeoJourney();
     }
-    if(action==='chunk'){state.chunk=Number(el.dataset.index);render();}
+    if(action==='geo-reset'){resetGeoCamera();}
+    if(action==='geo-replay'){resetGeoCamera();render();startGeoJourney();}
+    if(action==='map-zoom'){
+      const level=el.dataset.zoom;
+      if(level==='reset'){state.twZoom=1;state.twCenter={x:340,y:355};}
+      else{state.twZoom=clamp(state.twZoom+(level==='in'?.5:-.5),1,2.5);
+        const county=TW_COUNTIES.find(c=>c.id===state.place);
+        if(county&&state.twZoom>1)state.twCenter={x:county.x,y:county.y};
+      }
+      updateTaiwanZoom();
+    }
+    if(action==='reading-paragraph'){
+      const id=Number(el.dataset.paragraph);state.readingParagraph=id;
+      body.querySelectorAll('.reading-paragraph-nav button').forEach(b=>b.classList.toggle('active',Number(b.dataset.paragraph)===id));
+      document.getElementById(`reading-row-${id}`)?.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
     if(action==='vocab')showVocab(el.dataset.vocab);
     if(action==='poll'){const i=Number(el.dataset.index);state.poll=state.poll.includes(i)?state.poll.filter(x=>x!==i):[...state.poll,i];render();}
     if(action==='history'){state.lanfang=Number(el.dataset.index);render();}
@@ -358,7 +468,7 @@
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){closeDialog();document.getElementById('sidebar').classList.remove('open');return;}
     if(!overlay.hidden||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
-    if((e.key==='Enter'||e.key===' ') && e.target.matches('.map-svg .pin')){e.preventDefault();if(state.mapView==='overview'&&e.target.dataset.place==='origin'){showMigrationChoice();}else{state.place=e.target.dataset.place;updateMapInfo();}return;}
+    if((e.key==='Enter'||e.key===' ') && e.target.matches('.map-svg .pin')){e.preventDefault();if(state.mapView==='overview'&&e.target.dataset.place==='origin'){showMigrationChoice();}else{state.place=e.target.dataset.place;updateMapInfo();body.querySelectorAll('.county-pin').forEach(p=>p.classList.toggle('selected',p.dataset.place===state.place));if(state.mapView==='taiwan'&&state.twZoom>1){const c=TW_COUNTIES.find(x=>x.id===state.place);if(c){state.twCenter={x:c.x,y:c.y};updateTaiwanZoom();}}}return;}
     if(e.key==='ArrowRight' || e.key==='PageDown'){e.preventDefault();goto(state.stage+1);}
     if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goto(state.stage-1);}
     if(e.key.toLowerCase()==='f'){document.getElementById('fullscreenToggle').click();}
