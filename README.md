@@ -95,3 +95,12 @@ GitHub官方說明：<https://docs.github.com/en/pages/getting-started-with-gith
 - 北埔油笐火（客家委員會）：<https://www.hakka.gov.tw/chhakka/app/data/view?id=25&module=hotnews&serno=4bb8a3bf-dfe4-4b40-aba4-d68d44c0f608>
 
 本專案使用原生HTML、CSS、JavaScript，沒有外部函式庫、分析追蹤或後端伺服器。
+
+
+## 實景照片與來源（第四版）
+
+網站以Wikimedia Commons所收錄的實景照片作為圖像素材，並在照片下方及「資料與圖片來源」中標示出處。照片由外部網址載入；需要網路連線才能顯示。若需完全離線展示，請由各照片來源頁下載合適尺寸並存入`assets/images/`，再把`app.js`中`PHOTO_SOURCES`的`url`改成相對路徑。
+
+臺灣菜包：客家委員會（OGDL1.0）；印尼邦加菜粄：Cun Cun（CC BY-SA 4.0）；山口洋廟宇：Wibowo Djatmiko（CC BY-SA）；苗栗𪹚龍：Wikimedia Commons；山口洋Tatung：Rudi Sugianto（CC BY-SA）；臺灣燈節：HC Lin（CC BY）。北埔油笐火暫以客委會官方照片頁連結呈現，未嵌入未確認授權的照片。
+
+GitHub Pages是公開網站，即使網站用於非營利教學，也不會自動變成非公開或取得全部照片重製權；本版優先使用可標示來源的開放授權照片。

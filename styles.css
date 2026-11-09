@@ -35,3 +35,91 @@
 .intro-side .action{align-self:flex-start}
 @media(max-width:1150px){.intro-layout{grid-template-columns:1fr}.intro-side{display:grid;grid-template-columns:1fr 1fr;align-items:center}.intro-side .stat{padding:11px}.intro-side>.action{justify-self:start}.intro-side>.citation{grid-column:1/-1}}
 @media(max-width:650px){.intro-side{display:flex}.intro-side>.action{width:100%}}
+
+/* 第三版：公開授課投影優先的字級與真實地理圖層 */
+html,body{font-size:18px}
+.site-shell{grid-template-columns:258px minmax(0,1fr)}
+.brand strong{font-size:19px}.brand span:not(.brand-mark){font-size:14px}.side-caption{font-size:13px}
+.nav-step strong{font-size:17px}.nav-step small{font-size:13px}.nav-step .n{font-size:14px}
+.side-bottom p,.side-bottom a,.side-bottom .mini-label{font-size:14px}
+.breadcrumb{font-size:15px}.dialect,.top-button{font-size:15px}.top-button{padding:10px 12px}
+.eyebrow{font-size:15px}.content-head h1{font-size:clamp(31px,3vw,44px)}.content-head p{font-size:19px}
+.micro-label{font-size:14px;letter-spacing:.06em}.panel h2{font-size:25px}.panel h3{font-size:21px}.panel p{font-size:18px}
+.question{font-size:clamp(23px,2.2vw,31px)}.teacher-note{font-size:17px}.citation{font-size:14px}
+.stat small{font-size:15px}.stat .number{font-size:46px}.action,.ghost,.toolbar-quiet,.outline-button,.primary-button{font-size:17px;padding:13px 18px}
+.toolbar{min-height:85px}.progress-text{font-size:16px}
+.han-text{font-size:calc(29px * var(--fontup));line-height:1.83}
+.pinyin-text{font-size:calc(20px * var(--fontup));line-height:1.8}
+.dialect-name,.reading-unit .unit-n,.read-tip{font-size:15px}.chunk,.vocab-strip button{font-size:16px;padding:10px 14px}
+.dialog{width:min(720px,94vw)}.dialog h2{font-size:33px}.dialog p,.dialog .dialog-dialect{font-size:19px}.dialog small{font-size:16px}
+.histcard p,.food-card p,.festival-card p,.reflection p,.audio-chooser .audio-note,.selection-output,.audio-chooser .audio-status{font-size:17px}
+.festival-card h3,.food-card h3{font-size:22px}.compare-line>div,.info-tiles .tile{font-size:18px}.info-tiles strong{font-size:21px}
+.policy-col,.answer-box{font-size:18px}.large-prompt{font-size:25px}
+
+/* 地圖改採GSHHG離線地理海岸線，依正確經緯度放置可點擊的標記 */
+.intro-layout{grid-template-columns:minmax(0,2.2fr) minmax(315px,.95fr);gap:20px}
+.map-panel{padding:20px 22px}.map-header h2{margin:7px 0 8px;font-size:25px;line-height:1.4}
+.map-tabs{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 12px}
+.map-tab{border:1px solid #78a6aa;color:#e1f2ef;background:#235160;border-radius:12px;padding:11px 15px;font-size:17px;font-weight:750;letter-spacing:.02em}
+.map-tab:hover{background:#315f70}.map-tab.active{background:#f8d29a;border-color:#f8d29a;color:#163945}
+.map-viewport{display:flex;align-items:center;justify-content:center;width:100%;min-height:380px}
+.map-panel .map-svg{width:100%;height:auto;max-height:620px}
+.map-panel .map-svg.map-taiwan{height:min(62vh,650px);width:auto;max-width:100%;max-height:650px}
+.map-panel .map-svg .pin text{font-size:22px;stroke-width:5px}
+.map-panel .map-svg .pin circle.core{stroke-width:3px}
+.map-panel .map-svg .geo-label{font-size:20px;font-weight:650;fill:#b7d0d1;opacity:.72;paint-order:stroke;stroke:#113342;stroke-width:3px}
+.map-info{padding:16px 19px;font-size:18px;line-height:1.68}
+.map-info strong{font-size:22px}
+.map-note{font-size:14px;line-height:1.7}
+.map-panel.flying .plane{display:block;offset-path:path('M 545 126 Q 480 310 378 459');animation:fly 3.2s ease-in-out forwards;offset-rotate:auto}
+.intro-side .question{font-size:24px}.intro-side p{font-size:17px;line-height:1.65}
+.intro-side .stat .number{font-size:44px}.intro-side .stat small{font-size:15px}
+.distribution-panel{gap:18px}.distribution-panel h2{font-size:24px;margin:0}
+.county-ratios{display:grid;gap:14px;margin:7px 0}.ratio-row{display:grid;grid-template-columns:70px minmax(0,1fr) 70px;align-items:center;gap:9px;font-size:17px;font-weight:700}
+.ratio-row strong{text-align:right;color:#1c6370;font-size:19px}.ratio-track{height:14px;background:#edf3f1;border-radius:99px;overflow:hidden}.ratio-track div{height:100%;border-radius:99px;background:linear-gradient(90deg,#f3c67b,#e88057)}
+.distribution-panel .prompt-side{border-radius:12px;padding:15px;background:#f5f7ef;color:#375866;font-size:18px;font-weight:700;line-height:1.65}
+.location-chips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.location-chips button{padding:13px 10px;border:1px solid #d3e5e4;border-radius:11px;background:#eff7f6;color:#235e69;font-size:17px;font-weight:750}
+.location-chips button:hover{background:#d9eeed}
+
+@media(max-width:1250px){
+ .intro-layout{grid-template-columns:1fr}.intro-side{display:flex}.map-panel .map-svg{max-height:620px}.map-viewport{min-height:0}
+ .distribution-panel .county-ratios{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:900px){.site-shell{grid-template-columns:1fr}.map-tabs{gap:7px}.map-tab{font-size:15px}.map-panel .map-svg .pin text{font-size:20px}}
+@media(max-width:520px){
+ .content-head h1{font-size:28px}.content-head p{font-size:17px}
+ .map-panel{padding:13px}.map-header h2{font-size:22px}
+ .map-tabs{display:grid;grid-template-columns:1fr}.map-tab{width:100%}
+ .map-panel .map-svg .pin text{font-size:23px}
+ .ratio-row{grid-template-columns:68px minmax(0,1fr) 63px;font-size:15px}
+ .distribution-panel .county-ratios{grid-template-columns:1fr}
+ .intro-side p{font-size:16px}.panel p{font-size:17px}
+ .han-text{font-size:calc(23px * var(--fontup))}.pinyin-text{font-size:calc(18px * var(--fontup))}
+}
+
+/* 投影版：所有提醒以學生可見的學習內容為主，不顯示教師教案備註 */
+.teacher-note,.read-tip,.side-bottom .mini-label,.side-bottom p{display:none!important}
+.real-photo{margin:0;position:relative;min-height:200px;background:linear-gradient(120deg,#294d56,#5b7e76);overflow:hidden;border-radius:14px}
+.real-photo img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:16/10;transition:transform .25s ease}
+.real-photo:hover img{transform:scale(1.015)}
+.real-photo figcaption{position:absolute;right:0;bottom:0;background:rgba(11,35,42,.73);padding:6px 11px;border-radius:12px 0 0 0;font-size:13px;line-height:1.3}
+.real-photo a{color:#fff;overflow-wrap:anywhere;text-decoration:none}
+.real-photo.photo-failed{display:grid;place-items:center}
+.real-photo.photo-failed:before{content:'圖片未載入 · 請檢查網路連線';color:#e3f1ee;font-size:17px;text-align:center;padding:18px}
+.real-photo.photo-failed figcaption{position:static;background:transparent}
+.food-card .card-illustration{padding:0;overflow:hidden;min-height:280px}
+.food-card .real-photo{border-radius:0;min-height:280px}
+.food-card .real-photo img{aspect-ratio:16/10;min-height:280px}
+.festival-card{padding:10px 10px 16px;overflow:hidden}
+.festival-card .real-photo{min-height:160px}
+.festival-card .real-photo img{aspect-ratio:5/4;min-height:160px}
+.festival-card h3,.festival-card p,.festival-source{margin-left:9px;margin-right:9px}
+.festival-card .festival-symbol{min-height:160px;display:grid;place-items:center;background:linear-gradient(115deg,#d2e0df,#f5d8a2);border-radius:14px;font-size:58px}
+.festival-source{display:inline-block;margin-top:11px;font-size:15px}
+.photo-context{display:grid;grid-template-columns: minmax(220px,1fr) minmax(0,1.4fr);align-items:center;gap:23px}
+.photo-context .real-photo{height:280px}
+.photo-context .real-photo img{height:100%}
+.photo-context h2{font-size:27px}
+@media(max-width:1000px){.photo-context{grid-template-columns:1fr}.photo-context .real-photo{height:260px}}
+@media(max-width:600px){.real-photo figcaption{font-size:11px}.festival-card .real-photo{min-height:180px}}
