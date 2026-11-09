@@ -63,27 +63,42 @@
     <div class="teacher-note"><strong>導入建議：</strong>航線代表今天從臺灣出發的虛構課堂旅行；客家移民的歷史路線則是從中國南方原鄉分別通往臺灣與印尼。</div>`;
   }
   function mapComponent(){
-    return `<section class="map-panel" id="mapPanel"><div class="map-header"><div><span class="micro-label" style="color:#f5c385">互動地圖 · 方位示意</span><h2 style="margin:5px 0;color:white;font-size:21px">漂洋過海，尋找客家</h2></div><button type="button" class="ghost" data-action="fly">✈ 模擬飛行</button></div>
-    <svg class="map-svg" viewBox="0 0 1020 580" role="img" aria-label="中國南方、臺灣與印尼的相對位置示意圖。點擊地名取得介紹。">
-      <defs><radialGradient id="hot" ><stop stop-color="#f5bf77" stop-opacity=".42"/><stop offset="1" stop-color="#f5bf77" stop-opacity="0"/></radialGradient><marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#f6b76c"/></marker></defs>
-      <path class="land" d="M 4 20 L 410 20 Q 438 49 418 81 L 427 113 393 130 407 161 380 202 358 214 337 229 308 225 297 259 265 247 243 269 213 251 191 277 160 263 133 298 99 285 76 311 41 302 5 274Z"/>
-      <path class="coast" d="M 570 246 Q 598 255 605 294 L 597 318 584 302 579 281Z"/>
-      <path class="coast" d="M 670 335 Q 718 324 760 339 L 787 378 758 426 738 478 706 500 667 458 645 420 647 378Z"/>
-      <path class="coast" d="M 728 532 Q 777 513 848 538 L 899 548 900 563 805 567 747 553Z"/>
-      <path class="coast" d="M 867 376 Q 887 371 903 381 L 918 399 899 413 890 432 869 416Z"/>
-      <path class="coast" d="M 803 339 Q 839 326 865 340 L 849 362 828 366Z"/>
-      <path class="coast" d="M 492 242 Q 506 217 512 243 L 510 290 500 293Z"/>
-      <ellipse cx="665" cy="420" rx="93" ry="89" fill="url(#hot)"/><ellipse cx="580" cy="267" rx="50" ry="63" fill="url(#hot)"/><ellipse cx="882" cy="390" rx="45" ry="48" fill="url(#hot)"/>
-      <text x="145" y="92" class="country-name">中國南方</text><text x="537" y="183" class="country-name">臺灣</text><text x="787" y="483" class="country-name">印尼</text><text x="711" y="372" class="minor-name">加里曼丹</text><text x="760" y="529" class="minor-name">爪哇島</text><text x="882" y="360" class="minor-name">邦加</text>
-      <path class="route" d="M 351 216 Q 448 160 498 258" marker-end="url(#arrowA)"/><path class="route" d="M 351 216 Q 540 300 665 420" marker-end="url(#arrowA)"/>
-      <path class="route modern" d="M 502 266 Q 572 325 665 420"/>
-      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="origin" aria-label="查看廣東、福建客家原鄉"><circle class="halo" cx="351" cy="216" r="31"/><circle class="core" cx="351" cy="216" r="8"/><text x="266" y="190">客家原鄉</text></g>
-      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="taiwan" aria-label="查看臺灣客庄"><circle class="halo" cx="502" cy="266" r="32"/><circle class="core" cx="502" cy="266" r="9"/><text x="518" y="262">臺灣客庄</text></g>
-      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="singkawang" aria-label="查看印尼山口洋"><circle class="halo" cx="665" cy="420" r="39"/><circle class="core" cx="665" cy="420" r="9"/><text x="560" y="454">山口洋</text></g>
-      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="java" aria-label="查看爪哇島"><circle class="halo" cx="789" cy="548" r="22"/><circle class="core" cx="789" cy="548" r="7"/><text x="749" y="512">爪哇島</text></g>
-      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="bangka" aria-label="查看邦加島"><circle class="halo" cx="882" cy="390" r="24"/><circle class="core" cx="882" cy="390" r="7"/><text x="892" y="388">邦加</text></g>
+    return `<section class="map-panel" id="mapPanel"><div class="map-header"><div><span class="micro-label" style="color:#f5c385">互動地圖 · 簡化方位圖</span><h2 style="margin:5px 0;color:white;font-size:21px">漂洋過海，尋找客家</h2></div><button type="button" class="ghost" data-action="fly">✈ 模擬飛行</button></div>
+    <svg class="map-svg" viewBox="0 0 1020 580" role="img" aria-label="依東亞與東南亞相對位置簡化繪製的地圖。點擊地名取得介紹。">
+      <defs>
+        <radialGradient id="hot"><stop stop-color="#f5bf77" stop-opacity=".42"/><stop offset="1" stop-color="#f5bf77" stop-opacity="0"/></radialGradient>
+        <marker id="arrowA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#f6b76c"/></marker>
+      </defs>
+      <path class="land" d="M 15 25 L 563 25 L 563 77 L 540 95 L 550 122 L 523 134 L 501 160 L 472 154 L 454 174 L 418 162 L 392 179 L 360 170 L 327 193 L 299 176 L 268 192 L 238 179 L 211 194 L 179 186 L 148 205 L 112 189 L 79 205 L 42 191 L 15 173 Z"/>
+      <path class="coast" d="M 593 70 Q 611 74 618 92 L 622 126 615 155 600 172 585 155 580 125 584 93 Z"/>
+      <path class="coast" d="M 664 154 Q 691 144 714 156 L 725 179 713 201 690 207 668 192 660 171 Z"/>
+      <path class="coast" d="M 699 223 Q 718 214 734 225 L 735 242 714 251 700 239 Z"/>
+      <path class="coast" d="M 705 258 Q 732 247 754 261 L 748 292 724 304 706 285 Z"/>
+      <path class="coast" d="M 304 363 Q 339 338 370 349 L 394 391 362 421 325 411 302 385 Z"/>
+      <path class="coast" d="M 388 391 Q 412 382 433 395 L 429 421 405 433 387 418 Z"/>
+      <path class="coast" d="M 457 226 Q 515 208 578 222 L 627 270 617 325 592 372 541 402 493 382 457 335 442 282 Z"/>
+      <path class="coast" d="M 412 447 Q 466 431 531 436 L 592 444 650 457 664 471 595 478 527 481 462 475 425 468 Z"/>
+      <ellipse cx="471" cy="287" rx="92" ry="76" fill="url(#hot)"/>
+      <ellipse cx="407" cy="410" rx="46" ry="42" fill="url(#hot)"/>
+      <ellipse cx="595" cy="118" rx="42" ry="48" fill="url(#hot)"/>
+      <text x="140" y="92" class="country-name">中國南方</text>
+      <text x="573" y="61" class="country-name">臺灣</text>
+      <text x="666" y="138" class="minor-name">菲律賓</text>
+      <text x="500" y="425" class="country-name">印尼</text>
+      <text x="517" y="265" class="minor-name">加里曼丹</text>
+      <text x="505" y="504" class="minor-name">爪哇島</text>
+      <text x="387" y="380" class="minor-name">邦加</text>
+      <text x="293" y="344" class="minor-name">蘇門答臘</text>
+      <path class="route" d="M 472 141 Q 528 100 586 118" marker-end="url(#arrowA)"/>
+      <path class="route" d="M 472 141 Q 478 206 471 287" marker-end="url(#arrowA)"/>
+      <path class="route modern" d="M 593 118 Q 553 188 471 287"/>
+      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="origin" aria-label="查看廣東、福建客家原鄉"><circle class="halo" cx="472" cy="141" r="31"/><circle class="core" cx="472" cy="141" r="8"/><text x="390" y="126">客家原鄉</text></g>
+      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="taiwan" aria-label="查看臺灣客庄"><circle class="halo" cx="593" cy="118" r="31"/><circle class="core" cx="593" cy="118" r="8"/><text x="614" y="116">臺灣客庄</text></g>
+      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="singkawang" aria-label="查看印尼山口洋"><circle class="halo" cx="471" cy="287" r="39"/><circle class="core" cx="471" cy="287" r="9"/><text x="402" y="325">山口洋</text></g>
+      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="java" aria-label="查看爪哇島"><circle class="halo" cx="530" cy="462" r="24"/><circle class="core" cx="530" cy="462" r="7"/><text x="550" y="462">爪哇島</text></g>
+      <g class="pin" role="button" tabindex="0" data-action="map-point" data-place="bangka" aria-label="查看邦加島"><circle class="halo" cx="407" cy="410" r="24"/><circle class="core" cx="407" cy="410" r="7"/><text x="420" y="409">邦加</text></g>
       <g class="plane"><path d="M0 -11 L5 -4 L15 0 L15 4 L3 3 L0 14 L-3 13 L-4 3 L-15 4 L-15 0 L-4 -4Z"/></g>
-    </svg><div class="map-info" id="mapInfo"></div><p class="map-note">地圖為教學方位示意，非精確國界或人口分布圖。光暈僅表示要介紹的聚居地區，不代表數量或比例。</p></section>`;
+    </svg><div class="map-info" id="mapInfo"></div><p class="map-note">此圖依東亞與東南亞的相對位置重新簡化繪製，仍屬教學示意圖，不等於精確國界或人口分布圖。光暈僅表示要介紹的聚居地區。</p></section>`;
   }
   function updateMapInfo(){
     const items={
