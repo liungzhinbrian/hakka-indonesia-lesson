@@ -7,17 +7,19 @@
   if (!DATA) { document.getElementById('stageBody').textContent='找不到content.js，請確認檔案放在同一資料夾。'; return; }
   const STAGES = [
     {name:'認識印尼',sub:'人口、語言與移民路線',time:'0～5分鐘',heading:'千島之國，客家在哪裡？',lead:'認識臺灣與印尼的位置，追尋客家人從廣東、福建遷往不同地區的故事。'},
-    {name:'課文閱讀',sub:'雙腔課文、8個詞彙',time:'5～14分鐘',heading:'行讀客家世界：印尼客家之旅',lead:'看課本、朗讀重點句，點擊詞彙可開啟註解。'},
+    {name:'課文閱讀',sub:'雙腔課文、10個詞彙',time:'5～14分鐘',heading:'行讀客家世界：印尼客家之旅',lead:'看課本、朗讀重點句，點擊詞彙可開啟註解。'},
     {name:'語言傳承',sub:'政策與生活經驗',time:'14～20分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從課文中的印尼語言政策，連結臺灣的歷史與學生生活。'},
-    {name:'海外客語',sub:'聽見山口洋',time:'20～24分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'透過短音檔認識海外客語；本課不進行次方言語音比較訓練。'},
+    {name:'海外客語',sub:'聽見山口洋',time:'20～24分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'聽聽看，是不是很熟悉呢？'},
     {name:'蘭芳公司',sub:'羅芳伯與海外移民',time:'24～32分鐘',heading:'蘭芳公司，真的只是一間公司嗎？',lead:'從採金移民到地方組織，認識18世紀海外客家人的歷史。'},
     {name:'尋找客家味',sub:'臺灣菜包與印尼菜粄',time:'32～39分鐘',heading:'看起來相似的粄，吃起來也一樣嗎？',lead:'從米食的名稱、食材與內餡，觀察文化在不同地方的延續與變化。'},
     {name:'元宵文化',sub:'花燈、𪹚龍與油笐火',time:'39～42分鐘',heading:'元宵節，原來可以這樣過！',lead:'從臺灣客庄到印尼山口洋，看看節慶如何展現地方特色。'},
     {name:'文化統整',sub:'保留、改變、融合',time:'42～45分鐘',heading:'飄洋過海之後，客家文化變了嗎？',lead:'回顧今天的探索，從一個具體案例說明你的觀察。'}
   ];
-  /* 加入正式、已取得使用權的音檔後可把這裡改為相對路徑，例如 'assets/audio/taiwan-hailu.mp3'。*/
-  const BUILTIN_AUDIO = {tw:'', id:''};
-  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  /* 固定播放教師提供的臺灣海陸及山口洋河婆客語語料。 */
+  const BUILTIN_AUDIO = {tw:'assets/audio/台灣海陸客語語料.wav', id:'assets/audio/山口洋客語語料.wav'};
+  const LANFANG_VIDEO = 'assets/video/lanfang-hakka-animation.mp4';
+  const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodPos:{tw:0,id:0},foodPaused:{tw:false,id:false},reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -52,7 +54,9 @@
     lantern: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Taiwan_Lantern_Festival_in_Taipei_2023.jpg/960px-Taiwan_Lantern_Festival_in_Taipei_2023.jpg', page:'https://commons.wikimedia.org/wiki/File:Taiwan_Lantern_Festival_in_Taipei_2023.jpg', credit:'HC Lin', alt:'臺灣元宵花燈' },
     dragon: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Taiwan_Bombing_Dragon-3.jpg/960px-Taiwan_Bombing_Dragon-3.jpg', page:'https://commons.wikimedia.org/wiki/File:Taiwan_Bombing_Dragon-3.jpg', credit:'Wikimedia Commons', alt:'苗栗𪹚龍' },
     tatung: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tatung.jpg/960px-Tatung.jpg', page:'https://commons.wikimedia.org/wiki/File:Tatung.jpg', credit:'Rudi Sugianto', alt:'山口洋元宵Tatung' },
-    singkawang: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Singkawang_temple_101221-10576.jpg/960px-Singkawang_temple_101221-10576.jpg', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10576.jpg', credit:'Wibowo Djatmiko', alt:'山口洋廟宇' },
+    singkawang: { url:'https://commons.wikimedia.org/wiki/Special:FilePath/Singkawang_temple_101221-10576.jpg?width=960', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10576.jpg', credit:'Wibowo Djatmiko', alt:'山口洋三教合一廟宇夜景' },
+    singkawang2: {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Singkawang_temple_101221-10563.JPG?width=960', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10563.JPG', credit:'Wibowo Djatmiko', alt:'山口洋廟宇實景'},
+    luo: {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Luo_Fangbo.jpg?width=700',page:'https://commons.wikimedia.org/wiki/File:Luo_Fangbo.jpg',credit:'Wikimedia Commons／羅芳伯後世圖像',alt:'羅芳伯的後世畫像'},
   };
   function photo(key, cls=''){ const x=PHOTO_SOURCES[key];return `<figure class="real-photo ${cls}"><img src="${x.url}" alt="${x.alt}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.classList.add('photo-failed')"><figcaption><a href="${x.page}" target="_blank" rel="noopener noreferrer">圖片來源：${x.credit} ↗</a></figcaption></figure>`; }
   function navRender(){
@@ -82,12 +86,33 @@
     navRender();
     const fn=[introStage,readingStage,policyStage,audioStage,historyStage,foodStage,festivalStage,endingStage][state.stage];
     body.innerHTML=fn();
+    startFoodTicker();
     body.querySelectorAll(".teacher-note,.read-tip,.map-note").forEach(el=>el.remove());
-    if(state.stage===0){updateMapInfo();if(state.mapView==='taiwan')updateTaiwanZoom();}
+    if(state.stage===0){updateMapInfo();if(state.mapView==='taiwan'){updateTaiwanZoom();bindTaiwanPan();}}
     if(state.stage===3) updateAudioPlayers();
     document.getElementById('sidebar').classList.remove('open');
   }
-  function goto(i){resetGeoCamera();state.stage=Math.max(0,Math.min(7,i)); render();window.scrollTo({top:0,behavior:'instant'}); main.scrollTop=0;}
+  function goto(i,transition=false){
+    if(transition && state.stage===0 && i===1){openJourneyTransition();return;}
+    stopIndoCamera();resetGeoCamera();state.stage=Math.max(0,Math.min(7,i));
+    render();window.scrollTo({top:0,behavior:'instant'});main.scrollTop=0;
+  }
+  const transitionOverlay=document.getElementById('journeyOverlay');
+  function openJourneyTransition(){
+    if(!transitionOverlay){goto(1);return;}
+    transitionOverlay.hidden=false;
+    // 重播兩段影格動畫
+    const scene=transitionOverlay.querySelector('.journey-scene');
+    scene.classList.remove('journey-playing');void scene.offsetWidth;scene.classList.add('journey-playing');
+    document.getElementById('journeyStart')?.focus();
+  }
+  function closeJourneyTransition(){
+    if(transitionOverlay)transitionOverlay.hidden=true;
+    goto(1,false);
+  }
+  document.getElementById('journeyStart')?.addEventListener('click',closeJourneyTransition);
+  document.getElementById('journeySkip')?.addEventListener('click',closeJourneyTransition);
+
   function introStage(){
     return `<section class="intro-layout">${mapComponent()}${mapSidePanel()}</section>`;
   }
@@ -154,6 +179,58 @@
       if(b.dataset.zoom==='in')b.disabled=state.twZoom>=2.49;
       if(b.dataset.zoom==='out')b.disabled=state.twZoom<=1.01;
     });
+  }
+  // 印尼聚居地：點擊標記後視角平滑放大，並可返回全圖。
+  let indoFrame=0;
+  function stopIndoCamera(){if(indoFrame)cancelAnimationFrame(indoFrame);indoFrame=0;}
+  function indoBox(zoom=state.indoZoom,center=state.indoCenter){
+    const w=1020/zoom,h=500/zoom;
+    return {x:clamp(center.x-w/2,0,1020-w),y:clamp(center.y-h/2,0,500-h),w,h};
+  }
+  function indoViewBox(){const b=indoBox();return `${b.x.toFixed(2)} ${b.y.toFixed(2)} ${b.w.toFixed(2)} ${b.h.toFixed(2)}`;}
+  function focusIndonesia(place){
+    const target=ID_PLACES.find(c=>c.id===place);if(!target)return;
+    stopIndoCamera();
+    const svg=document.querySelector('.map-svg.map-indonesia');if(!svg)return;
+    const from=indoBox(),to=indoBox(2.1,{x:target.x,y:target.y});
+    state.indoZoom=2.1;state.indoCenter={x:target.x,y:target.y};
+    const begin=performance.now(),duration=650;
+    function frame(now){
+      if(!svg.isConnected){indoFrame=0;return;}
+      const t=clamp((now-begin)/duration,0,1),u=t*t*(3-2*t);
+      const b={};for(const key of ['x','y','w','h'])b[key]=from[key]+(to[key]-from[key])*u;
+      svg.setAttribute('viewBox',`${b.x.toFixed(2)} ${b.y.toFixed(2)} ${b.w.toFixed(2)} ${b.h.toFixed(2)}`);
+      if(t<1)indoFrame=requestAnimationFrame(frame);else indoFrame=0;
+    }
+    if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){svg.setAttribute('viewBox',indoViewBox());return;}
+    indoFrame=requestAnimationFrame(frame);
+  }
+  function resetIndonesia(){
+    stopIndoCamera();state.indoZoom=1;state.indoCenter={x:510,y:250};
+    const svg=document.querySelector('.map-svg.map-indonesia');if(svg)svg.setAttribute('viewBox',indoViewBox());
+  }
+  // 臺灣地圖在放大時以滑鼠、觸控或觸控筆拖曳；完整視圖不拖動。
+  let ignoreMapClickUntil=0;
+  function bindTaiwanPan(){
+    const svg=document.querySelector('.map-svg.map-taiwan');if(!svg)return;
+    let drag=null;
+    svg.addEventListener('pointerdown',e=>{
+      if(state.twZoom<=1||e.button!==0||e.target.closest('.pin'))return;
+      const vb=svg.viewBox.baseVal;
+      drag={pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,cx:state.twCenter.x,cy:state.twCenter.y,w:vb.width,h:vb.height,moved:false};
+      svg.setPointerCapture(e.pointerId);e.preventDefault();
+    });
+    svg.addEventListener('pointermove',e=>{
+      if(!drag||e.pointerId!==drag.pointerId)return;
+      const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;
+      if(Math.hypot(dx,dy)>5)drag.moved=true;
+      const scale=Math.min(svg.clientWidth/drag.w,svg.clientHeight/drag.h);
+      if(!(scale>0))return;
+      state.twCenter={x:drag.cx-dx/scale,y:drag.cy-dy/scale};
+      updateTaiwanZoom();
+    });
+    const endDrag=()=>{if(drag?.moved)ignoreMapClickUntil=performance.now()+400;drag=null;};
+    svg.addEventListener('pointerup',endDrag);svg.addEventListener('pointercancel',endDrag);svg.addEventListener('lostpointercapture',endDrag);
   }
   // 路線動畫與地圖鏡頭分開處理：目的地是實際標註位置，鏡頭只改變觀看範圍。
   const GEO_FULL={x:0,y:0,w:1020,h:680};
@@ -250,7 +327,7 @@
       </svg>`;
     } else {
       title='印尼的客家人，聚居在哪些地方？';
-      map=`<svg class="map-svg map-indonesia" viewBox="0 0 1020 500" role="img" aria-label="印尼海岸線與客家社群位置，點選圖釘認識地點。">
+      map=`<svg class="map-svg map-indonesia" viewBox="${indoViewBox()}" role="img" aria-label="印尼海岸線與客家社群位置，點選圖釘認識地點。">
         <image href="assets/images/indonesia-coast-accurate.svg" width="1020" height="500"/>
         ${ID_PLACES.map(indoPin).join('')}
         <text class="geo-label" x="458" y="113">加里曼丹</text><text class="geo-label" x="147" y="180">蘇門答臘</text><text class="geo-label" x="348" y="400">爪哇島</text>
@@ -261,6 +338,7 @@
        <div class="map-viewport ${state.mapView==='taiwan'?'zoomable-map':''}">${map}
          ${state.mapView==='taiwan'?`<div class="map-zoom-controls" role="group" aria-label="縮放臺灣地圖"><button type="button" data-action="map-zoom" data-zoom="out" aria-label="縮小臺灣地圖" ${state.twZoom<=1?'disabled':''}>−</button><span id="taiwanZoomLabel">${Math.round(state.twZoom*100)}%</span><button type="button" data-action="map-zoom" data-zoom="in" aria-label="放大臺灣地圖" ${state.twZoom>=2.5?'disabled':''}>＋</button><button type="button" data-action="map-zoom" data-zoom="reset" aria-label="恢復原始比例">還原</button></div>`:''}
          ${state.mapView==='overview'&&state.migrationRoute?`<div class="geo-camera-controls" role="group" aria-label="遷移路線檢視"><button type="button" data-action="geo-replay">重播路線</button><button type="button" data-action="geo-reset">返回全圖</button></div>`:''}
+         ${state.mapView==='indonesia'&&state.indoZoom>1?`<div class="geo-camera-controls"><button type="button" data-action="indo-reset">返回全圖</button></div>`:''}
        </div>
        <div class="map-info" id="mapInfo" aria-live="polite"></div>
     </section>`;
@@ -340,35 +418,143 @@
       <div class="vocab-strip">${DATA.vocab.map(v=>`<button data-action="vocab" data-vocab="${v.id}">${esc(state.dialect==='sixian'?v.sixian:v.hailu)}</button>`).join('')}</div>
     </section>`;
   }
-  function policyStage(){
-    const poll=['家裡或親戚聚會','學校客語課','市場、商店或街上','社區活動與廟會','平常很少聽到'];
-    return `<section class="panel"><span class="micro-label">從課文回到生活</span><h2 class="question">住在客家人口集中的地方，<br>就一定會說客語嗎？</h2><div class="grid2">
-       <div class="policy-col"><span class="tag amber">印尼的歷史背景</span><h3>華文教育與出版曾受限制</h3><p>課文描述1960年代中後期開始的限制；華文學校、出版等政策影響了部分族群語言的學習與使用環境。</p></div>
-       <div class="policy-col"><span class="tag">臺灣的歷史背景</span><h3>過去推行國語政策</h3><p>學校與公共場合的語言環境曾以國語為主，本土語言的使用機會與世代傳承受到影響。</p></div>
-     </div></section>
-     <section class="panel soft"><div class="micro-label">課堂提問 · 學習單任務一</div><h2>你平常在哪裡比較容易聽到客語？</h2><div class="poll">${poll.map((p,i)=>`<button class="${state.poll.includes(i)?'active':''}" data-action="poll" data-index="${i}">${p}</button>`).join('')}</div><div class="selection-output">${state.poll.length?`目前選擇：${state.poll.map(i=>poll[i]).join('、')}`:'可以複選，分享你生活中的客語經驗。'}</div><p class="question" style="font-size:19px;margin-top:15px">如果希望客語繼續有人使用，生活中還可以增加哪些使用機會？</p></section>`;
-  }
+  // 比較音檔隨網站打包，開啟頁面即可播放；不顯示上傳欄位。
   function audioCard(id,title,subtitle){
-    const file=state.audio[id];
-    return `<div class="audio-chooser"><span class="micro-label">${id==='tw'?'音檔 A':'音檔 B'}</span><h3>${title}</h3><p class="audio-note">${subtitle}</p>
-      <input type="file" accept="audio/*" data-audio="${id}" aria-label="載入${title}音檔">
-      ${file?`<audio id="audio-${id}" controls preload="metadata" src="${esc(file)}">此瀏覽器無法播放音檔。</audio><div class="audio-status">${state.audioTemporary[id]?'本次臨時選取的本機檔案':'已配置固定音檔'}</div>`:`<div class="audio-status">尚未載入音檔，請選取音訊檔案。</div>`}
+    const file=BUILTIN_AUDIO[id];
+    return `<div class="audio-chooser audio-fixed"><span class="micro-label">${id==='tw'?'音檔 A':'音檔 B'}</span><h3>${title}</h3><p class="audio-note">${subtitle}</p>
+      <audio id="audio-${id}" controls preload="metadata" src="${esc(file)}">此瀏覽器無法播放音檔。</audio>
     </div>`;
   }
+  const INFO_CARDS={
+    'singkawang-language':{title:'山口洋的河婆客語',tag:'語言',body:'山口洋（Singkawang）位於印尼西加里曼丹。當地不少客家人使用河婆客語，與廣東揭西一帶的河婆話具有歷史聯繫。客語在家人、鄰里、市場及不同世代間的使用情況，也反映當地社群的生活環境。',source:'https://english.hakka.gov.tw/Content/Content?LanguageType=ENG&NodeID=769&PageID=43423'},
+    'singkawang-temple':{title:'廟宇：地方社群相聚的空間',tag:'信仰',body:'山口洋的廟宇既是信仰活動場所，也與地方節慶、社會網絡及社群記憶相連。不同祖籍、語言與信仰背景的人，都可能參與當地的活動。',photo:'singkawang2',source:'https://www.cambridge.org/core/journals/modern-asian-studies/article/in-the-shadow-of-the-bri-the-figurative-infrastructures-of-chinese-religion-along-the-maritime-silk-road/E2A66B6F830D3719DAC334145712F195'},
+    'singkawang-festival':{title:'Cap Go Meh：山口洋的元宵',tag:'節慶',body:'山口洋的農曆正月十五以Cap Go Meh慶典聞名，活動中可見Tatung遊行、廟宇信仰及各種地方文化元素。這也是學生觀察海外客家文化與不同族群互動的具體例子。',photo:'tatung',source:'https://english.hakka.gov.tw/Content/Content?LanguageType=ENG&NodeID=769&PageID=43423'},
+    'singkawang-history':{title:'從礦業移民到港口城鎮',tag:'歷史',body:'18世紀西婆羅洲金礦開發吸引廣東客家移民前來。山口洋曾是與內陸礦區往來的港口；即使後來採礦與社會環境改變，客家社群仍在這座城市延續生活。',source:'https://www.persee.fr/doc/arch_0044-8613_2006_num_72_1_4042'},
+    'lang-indo':{title:'印尼：語言政策如何影響下一代？',tag:'語言傳承',body:'課文記錄1966年至2000年前後的華文教育受限制時期。對部分華人家庭而言，原先在學校學習華文的途徑減少；國家語言印尼語以及地方語言，則在不同生活場合持續使用。客語能否繼續被孩子學會，也和家庭及社區的使用機會有關。',source:'https://english.hakka.gov.tw/Content/Content?LanguageType=ENG&NodeID=769&PageID=43445'},
+    'lang-taiwan':{title:'臺灣：從學校到家庭的語言環境',tag:'語言傳承',body:'過去臺灣推行國語政策，學校與公共領域的本土語言使用空間受到限制。如今學校開設客語課程，但孩子在家庭、朋友之間是否經常聽到或使用客語，仍會影響語言傳承。',source:'https://www.hakka.gov.tw/'},
+    'lang-family':{title:'家庭：有人和孩子講客語嗎？',tag:'日常生活',body:'學校能提供接觸與學習客語的機會；若家中也有人願意以客語聊天、講故事，孩子就有更多練習和使用語言的情境。不同家庭的語言選擇可能不一樣。'},
+    'lang-community':{title:'社區：客語在哪些地方出現？',tag:'日常生活',body:'市場、店家、廟會、社區活動及同儕聊天，都可能成為使用客語的場合。可以請學生想一想：自己在哪裡聽過客語？有沒有機會用客語回答？'},
+    'lf-arrival':{title:'18世紀：離開原鄉，來到西婆羅洲',tag:'蘭芳故事',body:'廣東客家人循海上商貿與移民路線來到西婆羅洲。當地礦產吸引移民，採金、農業與商業使華人聚落逐步發展。羅芳伯也是當時來到西婆羅洲的客家移民之一。',source:'https://journals.gmu.edu/whc/article/download/3678/2073?inline=1'},
+    'lf-mining':{title:'金礦與「公司」',tag:'蘭芳故事',body:'這裡的「公司」（kongsi）原是移民群體協作的組織形式，不是今天只做買賣的商業公司。礦工需要協調開採、勞動、資源分配，也得面對外部競爭與地方關係。',source:'https://journal-itb.org/sostek/volumes/2016/15/issues/2/benarkah-ada-republik-lanfang-kongsi-di-kalimantan-barat.html'},
+    'lf-1777':{title:'1777年：羅芳伯與蘭芳公司',tag:'蘭芳故事',body:'羅芳伯整合移民與採金組織，蘭芳公司在西婆羅洲曼多爾一帶形成具有自治性質的社群組織。它不只處理採金生產，也涉及人事選任、治安、糾紛與對外往來。',photo:'luo',source:'https://hakka.ncu.edu.tw/hakka_periodical/upload/2016/09/3-1-3%E5%AE%A2%E5%AE%B6%E4%BA%BA%E7%9A%84%E5%A4%A7%E4%BC%AF%E5%85%AC-%E8%98%AD%E8%8A%B3%E5%85%AC%E5%8F%B8%E7%9A%84%E7%BE%85%E8%8A%B3%E4%BC%AF%E5%8F%8A%E5%85%B6%E4%BA%8B%E6%A5%AD.pdf'},
+    'lf-govern':{title:'蘭芳公司為何被稱為「共和國」？',tag:'蘭芳故事',body:'蘭芳公司的組織具有集體議事、首領選任與地方治理功能，因此常被後世稱為「蘭芳共和國」。不過，它與現代民主共和國的制度並不相同；學者仍從當時的礦業社群、地方政治與殖民歷史來理解其性質。',source:'https://journals.gmu.edu/whc/article/download/3678/2073?inline=1'},
+    'lf-1884':{title:'1884年：自治組織走入歷史',tag:'蘭芳故事',body:'19世紀後期，礦業、地方政治與荷蘭殖民擴張持續改變西婆羅洲。蘭芳公司於1884年被荷蘭殖民勢力解散，但當地客家社群並未因此消失。',source:'https://journal-itb.org/sostek/volumes/2016/15/issues/2/benarkah-ada-republik-lanfang-kongsi-di-kalimantan-barat.html'}
+  };
+  function infoTile(id,kicker,title,summary,photoKey=''){
+    return `<button type="button" class="story-info-card" data-action="story-info" data-card="${id}" aria-label="了解${esc(title)}">
+      ${photoKey?`<div class="story-card-photo">${photo(photoKey)}</div>`:''}
+      <span class="micro-label">${esc(kicker)}</span><strong>${esc(title)}</strong><span>${esc(summary)}</span><span class="story-more">點擊了解更多 ＋</span>
+    </button>`;
+  }
+  function showStoryInfo(id){
+    const item=INFO_CARDS[id];if(!item)return;
+    openDialog(item.title,item.tag,`${item.photo?photo(item.photo,'story-detail-photo'):''}<p class="story-detail-text">${esc(item.body)}</p>${item.source?`<p class="story-source"><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">閱讀資料來源 ↗</a></p>`:''}`);
+  }
+  function showLanfangVideo(){
+    openDialog('蘭芳公司：18世紀的客家移民史','客家公共傳播基金會 × 臺灣吧・客語版',
+      `<div class="video-player-frame"><video id="lanfangVideo" controls playsinline preload="metadata" poster="assets/images/lanfang-video-cover.jpg" src="${esc(LANFANG_VIDEO)}">此瀏覽器無法播放此影片。</video></div>
+       <div class="video-player-bottom"><span>超狂的客家移民史：18世紀誕生於婆羅洲的「蘭芳公司」</span><a href="${esc(LANFANG_YOUTUBE)}" target="_blank" rel="noopener noreferrer">在YouTube觀看原始影片 ↗</a></div>`);
+    overlay.querySelector('.dialog')?.classList.add('video-dialog');
+  }
+  function policyStage(){
+    const poll=['家裡或親戚聚會','學校客語課','市場、商店或街上','社區活動與廟會','平常很少聽到'];
+    return `<section class="panel"><div class="micro-label">語言與生活</div><h2 class="question">有客家人居住的地方，客語就一定會代代相傳嗎？</h2><div class="story-grid two">
+      ${infoTile('lang-indo','印尼','華文教育的歷史變化','1960年代後期，學校與公共語言環境有哪些變化？')}
+      ${infoTile('lang-taiwan','臺灣','國語政策與本土語言','不同年代的語言政策，怎麼影響日常的語言選擇？')}
+      ${infoTile('lang-family','生活場景','家庭裡說什麼語言？','家人之間的語言習慣，會影響孩子接觸客語的機會。')}
+      ${infoTile('lang-community','生活場景','走進市場與社區','語言除了在課本裡，還能在哪些地方聽到？')}
+    </div></section>
+    <section class="panel soft"><span class="micro-label">大家想一想</span><h2>你平常在哪裡比較容易聽到客語？</h2><div class="poll">${poll.map((p,i)=>`<button class="${state.poll.includes(i)?'active':''}" data-action="poll" data-index="${i}">${p}</button>`).join('')}</div><div class="selection-output">${state.poll.length?`目前選擇：${state.poll.map(i=>poll[i]).join('、')}`:'可以複選'}</div></section>`;
+  }
   function audioStage(){
-    return `<section class="panel"><span class="micro-label">聆聽兩地客語</span><h2 class="question">你聽到了熟悉的客語聲音嗎？</h2><div class="grid2">${audioCard('tw','臺灣海陸客語','臺灣客語語音')}${audioCard('id','印尼山口洋客語','山口洋客語語音')}</div></section>
-    <section class="panel photo-context">${photo('singkawang','community-photo')}<div><span class="micro-label">印尼・西加里曼丹</span><h2>山口洋的客家社群</h2><p>客語、廟宇與節慶活動，延續在地客家社群的日常生活。</p></div></section><section class="panel soft"><div class="grid2"><div><div class="micro-label">聆聽問題</div><h2>哪些地方聽起來熟悉？</h2><p>語調、個別詞語，還是整句的大意？你注意到哪些熟悉的聲音？</p></div><div><div class="micro-label">連回課文</div><h2>海外也有客語生活</h2><p>早期限制政策不等於每一個客家社群都停止使用客語。家庭、社區與日常交往都可能影響語言延續。</p></div></div></section>`;
+    return `<section class="panel"><span class="micro-label">聆聽兩地客語</span><h2 class="question">聽聽看，是不是很熟悉呢？</h2><div class="grid2">${audioCard('tw','臺灣海陸客語','臺灣海陸客語語料')}${audioCard('id','山口洋河婆客語','印尼西加里曼丹・河婆客語語料')}</div></section>
+    <section class="panel singkawang-hero"><div class="singkawang-intro">${photo('singkawang','community-photo')}<div><span class="micro-label">印尼・西加里曼丹</span><h2>山口洋：客語、廟宇與生活文化</h2><p>山口洋曾與西婆羅洲的金礦移民、港口往來密切相關。今天仍能在城市生活、廟宇信仰與節慶活動中觀察客家文化的延續與變化。</p></div></div>
+      <div class="story-grid two">${infoTile('singkawang-language','聲音','河婆客語','認識山口洋客語的來源與日常使用。')}${infoTile('singkawang-history','歷史','從礦區到城市','港口、礦業與移民怎樣形塑社群？')}${infoTile('singkawang-temple','信仰','山口洋的廟宇','看看寺廟與社群生活的關係。','singkawang2')}${infoTile('singkawang-festival','節慶','Cap Go Meh元宵','山口洋的Tatung活動有什麼特色？','tatung')}</div></section>`;
   }
   function historyStage(){
-    const dat=[
-      {year:'1772年前後',title:'到婆羅洲尋找新生活',desc:'羅芳伯來到西加里曼丹，參與當地華人移民社群。採金、農業與商業，讓移民逐漸建立新的生活。',q:'想想看：一群人遠離原鄉，到新地方工作，除了賺錢，還需要解決哪些事情？'},
-      {year:'1777年',title:'蘭芳公司聯盟建立',desc:'羅芳伯在曼多爾一帶整合採金組織。這裡的「公司」並不等同今天只做買賣的股份有限公司，還涉及社群事務、治理及地方秩序。',q:'如果有許多人一起採金、住在同一地區，誰來處理糾紛與共同事務？'},
-      {year:'1884年',title:'蘭芳公司走入歷史',desc:'在礦業變化、地方衝突及荷蘭殖民勢力擴張等因素下，蘭芳公司於1884年被解散。',q:'我們能從這個故事，看到海外客家人在當地做過哪些努力？'}
+    const scenes=[
+      {year:'18世紀',title:'跨海遷移',text:'客家移民從中國東南沿海來到西婆羅洲。',key:'lf-arrival'},
+      {year:'18世紀後期',title:'採金與聚落',text:'礦業、農業與商業帶動聚落發展。',key:'lf-mining'},
+      {year:'1777年',title:'蘭芳公司',text:'羅芳伯整合採金社群，建立自治組織。',key:'lf-1777'},
+      {year:'1884年',title:'歷史轉折',text:'荷蘭殖民勢力解散蘭芳公司。',key:'lf-1884'}
     ];
-    const x=dat[state.lanfang];
-    return `<section class="panel"><div class="micro-label">歷史故事 · 三幕式導覽</div><h2>從採金移民到地方社群</h2><div class="meter">${dat.map((d,i)=>`<button data-action="history" data-index="${i}" class="${i===state.lanfang?'active':''}">${d.year}</button>`).join('')}</div>
-    <div class="histcard" style="margin-top:16px"><div class="year">${x.year}</div><h3>${x.title}</h3><p>${x.desc}</p><div class="answer-box" style="margin-top:16px">${x.q}</div></div></section>
-    <section class="panel photo-context">${photo('singkawang','history-photo')}<div><span class="micro-label">從過去走向現在</span><h2>西加里曼丹至今仍有活躍的客家社群</h2><p>這張照片是現代山口洋的廟宇景觀，不是18世紀蘭芳公司的歷史影像。</p></div></section><section class="panel"><h2>蘭芳公司做哪些事？</h2><div class="info-tiles"><div class="tile"><strong>⛏ 採金與經濟</strong>組織礦業生產，並發展農業與市場。</div><div class="tile"><strong>🏘 社群治理</strong>協調群體內部的共同事務與地方秩序。</div><div class="tile"><strong>🤝 對外關係</strong>與當地政治勢力及其他社群互動。</div></div><p class="muted">「蘭芳公司」兼具經濟與地方治理功能，其政治組織性質仍有不同學術詮釋。</p></section>`;
+    return `<section class="panel"><span class="micro-label">一段西婆羅洲客家人的歷史</span><h2>蘭芳公司：從移民採金到地方自治</h2>
+    <div class="lf-story" id="lanfangStory">
+      <div class="lf-story-head"><div><span>十八世紀・西婆羅洲</span><h3>跟著故事看蘭芳公司的形成</h3></div><button type="button" class="action" data-action="lanfang-play" id="lanfangPlay">▶ 播放短動畫</button></div>
+      <svg viewBox="0 0 960 245" role="img" aria-label="蘭芳公司發展示意動畫：從跨海移民、採金、建立聚落到1777年公司成立，並於1884年結束。">
+        <defs><linearGradient id="lfSea" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#153947"/><stop offset="1" stop-color="#276879"/></linearGradient></defs>
+        <rect width="960" height="245" rx="20" fill="url(#lfSea)"/>
+        <path d="M0 171 Q130 148 230 173 T470 176 T710 169 T960 171 V245 H0Z" fill="#4f8780" opacity=".44"/>
+        <path d="M0 188 Q145 174 248 191 T505 188 T760 188 T960 186" fill="none" stroke="#9bd2c8" stroke-width="3" opacity=".38"/>
+        <path d="M40 105 Q140 60 235 110" fill="none" stroke="#f1cc8e" stroke-width="3.2" stroke-dasharray="9 9" opacity=".9"/>
+        <g class="lf-animation-boat"><path d="M42 137 L112 137 L96 159 L60 159Z" fill="#f1c990"/><path d="M78 131 V85" stroke="#fff1cd" stroke-width="4"/><path d="M83 91 L83 130 L111 129Z" fill="#f8e3bb"/></g>
+        <g class="lf-animation-gold"><path d="M312 168 L343 100 L372 168Z" fill="#c5a47c" stroke="#dfc69b" stroke-width="2"/><path d="M347 102 L360 151 L340 140Z" fill="#e9c68d"/><circle cx="352" cy="84" r="10" fill="#ffcd78"/><circle cx="391" cy="133" r="7" fill="#ffcd78"/></g>
+        <g class="lf-animation-village"><path d="M517 143 L561 110 L605 143 V186 H517Z" fill="#f7d7a2"/><path d="M505 144 L561 99 L616 144" fill="none" stroke="#a96b51" stroke-width="8"/><rect x="544" y="153" width="28" height="33" fill="#996751"/><path d="M618 158 L640 137 L661 158 V189 H618Z" fill="#d3b18a"/></g>
+        <g class="lf-animation-badge"><circle cx="789" cy="140" r="48" fill="#f9cc81"/><circle cx="789" cy="140" r="42" fill="none" stroke="#b76e4d" stroke-width="2"/><text x="789" y="148" font-size="39" text-anchor="middle" font-weight="800" fill="#5c4634">蘭芳</text></g>
+        <g fill="#e2f3ec" font-size="20" text-anchor="middle" font-weight="700"><text x="102" y="224">遷移</text><text x="346" y="224">採金</text><text x="568" y="224">聚落</text><text x="789" y="224">公司</text></g>
+      </svg>
+      <div class="lf-story-steps">${scenes.map((it,i)=>`<button type="button" data-action="story-info" data-card="${it.key}"><span class="lf-step-n">${i+1}</span><strong>${it.year}</strong><span>${it.title}</span></button>`).join('')}</div>
+    </div>
+    <div class="story-grid three" style="margin-top:22px">
+      ${infoTile('lf-arrival','移民','為什麼渡海而來？','從廣東原鄉來到婆羅洲。')}
+      ${infoTile('lf-mining','採礦','金礦與公司組織','這裡的「公司」是怎麼運作的？')}
+      ${infoTile('lf-1777','1777年','羅芳伯與蘭芳公司','看羅芳伯的後世圖像，認識社群領袖。','luo')}
+      ${infoTile('lf-govern','地方自治','「蘭芳共和國」之稱','為什麼礦業組織也能管理地方事務？')}
+      ${infoTile('lf-1884','歷史轉折','蘭芳公司的結束','1884年之後，當地客家社群仍繼續生活。')}
+      ${infoTile('singkawang-history','今日西加里曼丹','從歷史走到山口洋','再看看後來的客家社群。','singkawang2')}
+      <button type="button" class="story-info-card lf-video-card" data-action="lanfang-video" aria-label="開啟蘭芳公司客語版動畫影片"><div class="story-card-photo"><img src="assets/images/lanfang-video-cover.jpg" alt="蘭芳公司客語版動畫影片畫面" loading="lazy"><span class="video-play-symbol" aria-hidden="true">▶</span></div><span class="micro-label">客傳會 × 臺灣吧</span><strong>蘭芳公司動畫｜客語版</strong><span>觀看羅芳伯與西婆羅洲的客家移民史。</span><span class="story-more">點擊觀看影片 ＋</span></button>
+    </div></section>`;
+  }
+  // Separate photo albums let students compare two regional foods side by side.
+  // These are remote images with explicit links to the original source pages.
+  const FOOD_PHOTOS={
+    tw:[
+      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg/960px-%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg',label:'客家菜包',caption:'臺灣客家菜包：米皮包著炒香的蘿蔔絲等內餡',source:'客家委員會',page:'https://commons.wikimedia.org/wiki/File:%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg'},
+      {src:'https://img.ltn.com.tw/Upload/food/page/2014/08/13/140813-99-0-Tabkm.jpg',label:'豬籠粄',caption:'不同顏色的豬籠粄與切開的內餡',source:'自由時報食譜自由配',page:'https://food.ltn.com.tw/article/99'},
+      {src:'https://www.jdx32tw.com/archive/image/product1/images/1776763166838.webp',label:'客家菜包切面',caption:'草綠色米皮與菜包的鹹餡',source:'九鼎軒',page:'https://www.jdx32tw.com/product_d.php?id=139&lang=tw&tb=1'}
+    ],
+    id:[
+      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Choi_pan_1.jpg/960px-Choi_pan_1.jpg',label:'Choi Pan',caption:'Choi Pan搭配醬汁的吃法',source:'Sam Abdullah／Wikimedia Commons',page:'https://commons.wikimedia.org/wiki/File:Choi_pan_1.jpg'},
+      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Choi_Pan.jpg/720px-Choi_Pan.jpg',label:'Choi Pan',caption:'坤甸的Choi Pan與蘸醬',source:'Fitri Penyalai／Wikimedia Commons',page:'https://commons.wikimedia.org/wiki/File:Choi_Pan.jpg'},
+      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Choi_pan.jpg/720px-Choi_pan.jpg',label:'Choi Pan',caption:'印尼坤甸的Choi Pan',source:'Ayu (WMID)／Wikimedia Commons',page:'https://commons.wikimedia.org/wiki/File:Choi_pan.jpg'},
+      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Choi_pan_or_chai_kue.jpg/960px-Choi_pan_or_chai_kue.jpg',label:'Chai Kue',caption:'印尼Choi Pan／Chai Kue的不同擺盤',source:'Wikimedia Commons',page:'https://commons.wikimedia.org/wiki/File:Choi_pan_or_chai_kue.jpg'}
+    ]
+  };
+  let foodTicker=null;
+  function foodCarousel(kind){
+    const slides=FOOD_PHOTOS[kind];const ix=state.foodPos[kind]%slides.length;const slide=slides[ix];
+    return `<div class="food-carousel" data-food-carousel="${kind}" aria-label="${kind==='tw'?'臺灣菜包':'印尼Choi Pan'}圖片輪播">
+      <div class="food-slide-viewport">
+        <img class="food-slide-image" src="${esc(slide.src)}" alt="${esc(slide.caption)}" loading="eager" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.hidden=false">
+        <div class="food-image-error" hidden>照片載入失敗，請檢查網路連線。<a href="${esc(slide.page)}" target="_blank" rel="noopener noreferrer">查看原圖 ↗</a></div>
+        <button class="food-slide-arrow prev" data-action="food-prev" data-food="${kind}" type="button" aria-label="上一張照片">‹</button>
+        <button class="food-slide-arrow next" data-action="food-next" data-food="${kind}" type="button" aria-label="下一張照片">›</button>
+        <span class="food-slide-count">${ix+1}／${slides.length}</span>
+      </div>
+      <div class="food-slide-footer">
+        <div class="food-slide-caption"><strong>${esc(slide.label)}</strong><span>${esc(slide.caption)}</span><a href="${esc(slide.page)}" target="_blank" rel="noopener noreferrer">照片來源：${esc(slide.source)} ↗</a></div>
+        <div class="food-slide-controls"><div class="food-slide-dots" role="group" aria-label="選擇照片">${slides.map((_,i)=>`<button type="button" class="${i===ix?'active':''}" aria-label="顯示第${i+1}張照片" aria-pressed="${i===ix}" data-action="food-dot" data-food="${kind}" data-slide="${i}"></button>`).join('')}</div>
+          <button type="button" class="food-play-toggle" data-action="food-play" data-food="${kind}" aria-label="${state.foodPaused[kind]?'開始':'暫停'}自動輪播">${state.foodPaused[kind]?'▶ 播放':'Ⅱ 暫停'}</button></div>
+      </div>
+    </div>`;
+  }
+  function refreshFoodCarousel(kind){
+    const panel=body.querySelector(`[data-food-carousel="${kind}"]`);
+    if(panel)panel.outerHTML=foodCarousel(kind);
+  }
+  function startFoodTicker(){
+    if(foodTicker!==null)window.clearInterval(foodTicker);
+    foodTicker=null;
+    if(state.stage!==5)return;
+    foodTicker=window.setInterval(()=>{
+      if(state.stage!==5||!overlay.hidden||document.hidden)return;
+      for(const kind of ['tw','id']){
+        const panel=body.querySelector(`[data-food-carousel="${kind}"]`);
+        if(!panel||panel.matches(':hover')||state.foodPaused[kind])continue;
+        state.foodPos[kind]=(state.foodPos[kind]+1)%FOOD_PHOTOS[kind].length;
+        refreshFoodCarousel(kind);
+      }
+    },6500);
   }
   function dumplingSVG(which){
     const id=which==='tw'?'twfood':'idfood';
@@ -378,9 +564,12 @@
       '<path d="M65 151 Q75 107 112 111 Q149 119 163 156Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M137 156 Q146 102 192 109 Q222 114 239 158Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M226 157 Q228 121 263 117 Q288 124 300 156Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M85 141 Q114 123 144 143 M163 142 Q193 124 218 145 M247 144 Q270 134 287 148" fill="none" stroke="#bfd1bd" stroke-width="4"/>'}<circle cx="292" cy="180" r="10" fill="#588e61"/><circle cx="280" cy="187" r="8" fill="#65a66e"/><circle cx="311" cy="177" r="8" fill="#6a9a61"/></svg>`;
   }
   function foodStage(){
-    return `<section class="grid2"><div class="food-card"><div class="card-illustration">${photo('twfood','food-photo')}</div><div class="food-body"><span class="tag">臺灣客家</span><h3>菜包／豬籠粄</h3><p>常見鹹餡：蘿蔔絲、蘿蔔乾、香菇等，外皮以米製作。</p></div></div><div class="food-card"><div class="card-illustration">${photo('idfood','food-photo')}</div><div class="food-body"><span class="tag amber">印尼邦加</span><h3>Choi Pan／菜粄</h3><p>名稱是「菜粄」的在地羅馬字拼寫之一；常見涼薯、韭菜等餡料，也是鹹食。</p></div></div></section>
-    <section class="panel"><div class="micro-label">觀察實景照片</div><h2>找找看：相同在哪裡？不同在哪裡？</h2><div class="compare-line"><div><strong>共同點</strong><br>以米製外皮包餡，都是移民社群熟悉的粄食文化。</div><div><strong>差異</strong><br>餡料、調味、外形與搭配醬料可因地方而不同。</div></div><div class="answer-box" style="margin-top:14px">先觀察圖片，再在學習單各寫下一項相同與不同。</div></section>
-    <section class="panel soft"><h2>南洋米食都比較甜嗎？</h2><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但山口洋的Choi Pan常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></section>`;
+    return `<section class="grid2 food-comparison">
+      <div class="food-card">${foodCarousel('tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>菜包／豬籠粄</h3><p>常見鹹餡包含蘿蔔絲、香菇等，米製外皮可呈現不同形狀。</p></div></div>
+      <div class="food-card">${foodCarousel('id')}<div class="food-body"><span class="tag amber">印尼・西加里曼丹</span><h3>Choi Pan／菜粄</h3><p>常見涼薯、韭菜等餡料，通常搭配蒜酥或醬汁食用。</p></div></div>
+    </section>
+    <section class="panel"><div class="micro-label">觀察兩地粄食</div><h2>看一看：相同在哪裡？不同在哪裡？</h2><div class="compare-line"><div><strong>相似的地方</strong><br>米製外皮與包餡的做法，保留熟悉的客家米食特色。</div><div><strong>各地的變化</strong><br>外形、餡料、調味與食用方式，隨地方飲食文化發展。</div></div></section>
+    <section class="panel soft"><h2>南洋米食都比較甜嗎？</h2><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但Choi Pan通常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></section>`;
   }
   function festivalStage(){
     const f=[
@@ -401,13 +590,13 @@
     <div class="answer-box" style="margin-top:15px">${cards.find(c=>c.name===state.reflection).example}</div></section>
     <section class="panel soft"><div class="grid2"><div><div class="micro-label">課程總結</div><div class="lesson-outro">飄洋過海，客家文化在不同地方繼續生活。</div><p>臺灣與印尼的客家人有歷史連結，也有各自的社會環境與文化發展。</p></div><div><h2>收回學習單前</h2><p>選一個今天的實例，寫出你看到的文化現象與理由。</p><a href="worksheet.html" target="_blank" rel="noopener" class="action" style="display:inline-block;text-decoration:none;margin-top:10px">開啟可列印學習單 ↗</a></div></div></section>`;
   }
-  function updateAudioPlayers(){
-    // 音檔由瀏覽器原生audio控制播放；file選擇事件由document監聽。
-  }
+  function updateAudioPlayers(){}
   const vocabPinyin={
-    qishi:['hi24 she11','hi31 sii55'], zuji:['zu24 sid2','zu31 xid5'],liuli:['liu55 li33','liu11 liag5'],tusheng:['tu24 sen53 tu24 zhong24','tu31 sen24 tu31 zong31'],mxdd:['m55 hiau24 ded5','m11 hiau31 ded2'],shuru:['shu33 nen11 shu33','shu55 nen55 e31'],xi:['siag5','xiag2'],guimo:['gui53 mu55','gui24 mu11']
+    qishi:['hi24 she11','hi31 sii55'], jiedeng:['ziab5 den24','jiab2 den31'], zuoshengli:['zo11 sen53 li53','zo55 sen24 li24'], zuji:['zu24 sid2','zu31 xid5'],liuli:['liu55 li33','liu11 liag5'],tusheng:['tu24 sen53 tu24 zhong24','tu31 sen24 tu31 zong31'],mxdd:['m55 hiau24 ded5','m11 hiau31 ded2'],shuru:['shu33 nen11 shu33','shu55 nen55 e31'],xi:['siag5','xiag2'],guimo:['gui53 mu55','gui24 mu11']
   };
   function openDialog(title,tag,content){
+    stopDialogMedia();
+    overlay.querySelector('.dialog')?.classList.remove('video-dialog');
     document.getElementById('dialogTitle').textContent=title;
     document.getElementById('dialogTag').textContent=tag;
     document.getElementById('dialogContent').innerHTML=content;
@@ -417,26 +606,41 @@
     const w=DATA.vocab.find(x=>x.id===id);if(!w)return;
     const p=vocabPinyin[id];
     const lines=[['海陸腔',w.hailu,p[0],'hailu'],['四縣腔',w.sixian,p[1],'sixian']].map(x=>`<div class="dialog-dialect"><span><strong>${esc(x[0])}：</strong>${esc(x[1])}</span><small class="vocab-pinyin">${esc(formatPinyin(x[2],x[3]))}</small></div>`).join('');
-    openDialog(w.hailu===w.sixian?w.hailu:`${w.hailu}／${w.sixian}`,'詞彙解釋',`${lines}<p><strong>詞義：</strong>${esc(w.definition)}</p><p><strong>補充：</strong>${esc(w.note)}</p>`);
+    openDialog(w.hailu===w.sixian?w.hailu:`${w.hailu}／${w.sixian}`,'詞彙解釋',`${lines}<p class="vocab-definition"><strong>詞義：</strong>${esc(w.definition)}</p>`);
   }
   function showSources(){
-    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},...DATA.sources]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.tatung.page}" target="_blank" rel="noopener noreferrer">山口洋元宵Tatung・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
+    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},{label:'客家公共傳播基金會×臺灣吧｜蘭芳公司客語版動畫',url:LANFANG_YOUTUBE},...DATA.sources,...FOOD_PHOTOS.tw.map(x=>({label:'臺灣菜包照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.id.map(x=>({label:'印尼Choi Pan照片｜'+x.source,url:x.page}))]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.tatung.page}" target="_blank" rel="noopener noreferrer">山口洋元宵Tatung・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
   }
-  function closeDialog(){overlay.hidden=true;}
+  function stopDialogMedia(){overlay.querySelectorAll('video,audio').forEach(media=>{media.pause();});}
+  function closeDialog(){stopDialogMedia();overlay.hidden=true;overlay.querySelector('.dialog')?.classList.remove('video-dialog');}
   document.addEventListener('click',e=>{
     if(e.target===overlay){closeDialog();return;}
     const el=e.target.closest('[data-action]');if(!el)return;
     const action=el.dataset.action;
     if(action==='jump')goto(Number(el.dataset.index));
     if(action==='reveal'){state.reveal=!state.reveal;render();}
-    if(action==='map-view'){resetGeoCamera();state.mapView=el.dataset.view;state.place=state.mapView==='taiwan'?'hsinchu':'intro';render();}
-    if(action==='map-point'){if(state.mapView==='overview'&&el.dataset.place==='origin'){showMigrationChoice();}else{state.place=el.dataset.place;updateMapInfo();body.querySelectorAll('.county-pin').forEach(p=>p.classList.toggle('selected',p.dataset.place===state.place));body.querySelectorAll('.location-chips button').forEach(p=>p.classList.toggle('active',p.dataset.place===state.place));if(state.mapView==='taiwan'&&state.twZoom>1){const c=TW_COUNTIES.find(x=>x.id===state.place);if(c){state.twCenter={x:c.x,y:c.y};updateTaiwanZoom();}}}}
+    if(action==='map-view'){stopIndoCamera();resetGeoCamera();state.mapView=el.dataset.view;state.place=state.mapView==='taiwan'?'hsinchu':'intro';state.indoZoom=1;state.indoCenter={x:510,y:250};render();}
+    if(action==='map-point'){
+      if(performance.now()<ignoreMapClickUntil)return;
+      if(state.mapView==='overview'&&el.dataset.place==='origin'){showMigrationChoice();}
+      else{
+        state.place=el.dataset.place;updateMapInfo();
+        body.querySelectorAll('.county-pin').forEach(p=>p.classList.toggle('selected',p.dataset.place===state.place));
+        body.querySelectorAll('.location-chips button').forEach(p=>p.classList.toggle('active',p.dataset.place===state.place));
+        if(state.mapView==='taiwan'&&state.twZoom>1){const c=TW_COUNTIES.find(x=>x.id===state.place);if(c){state.twCenter={x:c.x,y:c.y};updateTaiwanZoom();}}
+        if(state.mapView==='indonesia'){focusIndonesia(state.place);if(!document.querySelector('[data-action="indo-reset"]')){
+          const viewport=document.querySelector('.map-panel .map-viewport');
+          if(viewport)viewport.insertAdjacentHTML('beforeend','<div class="geo-camera-controls"><button type="button" data-action="indo-reset">返回全圖</button></div>');
+        }}
+      }
+    }
     if(action==='migration-select'){
       state.migrationRoute=el.dataset.destination;
       state.place=state.migrationRoute==='taiwan'?'taiwan':'singkawang';
       resetGeoCamera();closeDialog();render();startGeoJourney();
     }
     if(action==='geo-reset'){resetGeoCamera();}
+    if(action==='indo-reset'){resetIndonesia();const controls=el.closest('.geo-camera-controls');if(controls)controls.remove();}
     if(action==='geo-replay'){resetGeoCamera();render();startGeoJourney();}
     if(action==='map-zoom'){
       const level=el.dataset.zoom;
@@ -456,20 +660,26 @@
     if(action==='vocab')showVocab(el.dataset.vocab);
     if(action==='poll'){const i=Number(el.dataset.index);state.poll=state.poll.includes(i)?state.poll.filter(x=>x!==i):[...state.poll,i];render();}
     if(action==='history'){state.lanfang=Number(el.dataset.index);render();}
+    if(action==='story-info'){showStoryInfo(el.dataset.card);}
+    if(action==='lanfang-video'){showLanfangVideo();}
+    if(action==='lanfang-play'){const story=document.getElementById('lanfangStory');if(story){story.classList.remove('is-playing');void story.offsetWidth;story.classList.add('is-playing');el.textContent='↻ 重播動畫';}}
+    if(action==='food-next'||action==='food-prev'||action==='food-dot'){
+      const kind=el.dataset.food;if(!FOOD_PHOTOS[kind])return;
+      const n=FOOD_PHOTOS[kind].length;
+      state.foodPos[kind]=action==='food-dot'?Number(el.dataset.slide):(state.foodPos[kind]+(action==='food-next'?1:n-1))%n;
+      refreshFoodCarousel(kind);
+    }
+    if(action==='food-play'){
+      const kind=el.dataset.food;if(!FOOD_PHOTOS[kind])return;
+      state.foodPaused[kind]=!state.foodPaused[kind];refreshFoodCarousel(kind);
+    }
     if(action==='reflect'){state.reflection=el.dataset.value;render();}
   });
-  document.addEventListener('change',e=>{
-    if(!e.target.matches('[data-audio]'))return;
-    const kind=e.target.dataset.audio;
-    const file=e.target.files&&e.target.files[0];if(!file)return;
-    if(state.audioTemporary[kind]&&state.audio[kind]) URL.revokeObjectURL(state.audio[kind]);
-    state.audio[kind]=URL.createObjectURL(file);state.audioTemporary[kind]=true;render();
-  });
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){closeDialog();document.getElementById('sidebar').classList.remove('open');return;}
-    if(!overlay.hidden||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
-    if((e.key==='Enter'||e.key===' ') && e.target.matches('.map-svg .pin')){e.preventDefault();if(state.mapView==='overview'&&e.target.dataset.place==='origin'){showMigrationChoice();}else{state.place=e.target.dataset.place;updateMapInfo();body.querySelectorAll('.county-pin').forEach(p=>p.classList.toggle('selected',p.dataset.place===state.place));if(state.mapView==='taiwan'&&state.twZoom>1){const c=TW_COUNTIES.find(x=>x.id===state.place);if(c){state.twCenter={x:c.x,y:c.y};updateTaiwanZoom();}}}return;}
-    if(e.key==='ArrowRight' || e.key==='PageDown'){e.preventDefault();goto(state.stage+1);}
+    if(e.key==='Escape'){if(transitionOverlay&&!transitionOverlay.hidden){closeJourneyTransition();return;}closeDialog();document.getElementById('sidebar').classList.remove('open');return;}
+    if(!overlay.hidden||(transitionOverlay&&!transitionOverlay.hidden)||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
+    if((e.key==='Enter'||e.key===' ') && e.target.matches('.map-svg .pin')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));return;}
+    if(e.key==='ArrowRight' || e.key==='PageDown'){e.preventDefault();goto(state.stage+1,true);}
     if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goto(state.stage-1);}
     if(e.key.toLowerCase()==='f'){document.getElementById('fullscreenToggle').click();}
   });
@@ -477,7 +687,7 @@
   document.getElementById('pinyinToggle').addEventListener('click',()=>{state.pinyin=!state.pinyin;render();});
   document.getElementById('toneModeToggle').addEventListener('click',()=>{state.toneMode=state.toneMode==='value'?'shape':'value';render();});
   document.getElementById('fontToggle').addEventListener('click',()=>{state.fontUp=state.fontUp>1?1:1.27;render();});
-  document.getElementById('nextBtn').addEventListener('click',()=>goto(state.stage===7?0:state.stage+1));
+  document.getElementById('nextBtn').addEventListener('click',()=>goto(state.stage===7?0:state.stage+1,true));
   document.getElementById('prevBtn').addEventListener('click',()=>goto(state.stage-1));
   document.getElementById('mapHome').addEventListener('click',()=>goto(0));
   document.getElementById('viewSources').addEventListener('click',showSources);

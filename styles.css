@@ -306,3 +306,132 @@ html,body{font-size:18px}
 .geo-camera-controls button:hover{background:#316673;}
 .map-panel .map-svg.map-geo{will-change:contents;}
 @media(max-width:650px){.geo-camera-controls{right:5px;top:5px;gap:4px;}.geo-camera-controls button{font-size:12px;padding:6px 8px;}}
+
+
+/* beta V6.1.1：導覽列整合至頁首，不占用投影畫面底部空間 */
+.topbar {
+  position:relative;
+  z-index:15;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-rows:auto auto;
+  align-items:center;
+  column-gap:16px;
+  row-gap:7px;
+  min-height:0;
+  padding:8px clamp(14px,2vw,26px) 9px;
+}
+.topbar-heading { display:flex; gap:9px; min-width:0; align-items:center; }
+.topbar-identity { min-width:0; display:flex; flex-direction:column; gap:2px; }
+.topbar .breadcrumb {font-size:13px; line-height:1.25; display:flex; align-items:center; flex-wrap:wrap; column-gap:0; }
+.topbar .breadcrumb .site-full-name {font-size:13px; }
+.topbar .dot {margin:0 6px;}
+.topbar .site-credit {
+  flex:none; padding:0; text-align:left; font-size:10px; line-height:1.25;
+  color:#708691; white-space:nowrap;
+}
+.top-pager { grid-column:2;grid-row:1;display:flex;align-items:center;gap:5px;white-space:nowrap;min-width:0; }
+.top-pager button {min-height:31px;border-radius:8px;font-size:12px;font-weight:700;padding:5px 9px;line-height:1.35;}
+.top-pager-home {color:#2b6978;background:#edf5f4;border:1px solid #d4e6e6;}
+.top-pager-step {color:#2f6777;background:#fff;border:1px solid #cfdee1;}
+.top-pager-step.next-step {color:#fff;background:#216d7d;border-color:#216d7d;}
+.top-pager-progress {min-width:54px;display:flex;align-items:center;justify-content:center;gap:5px;flex-direction:column;}
+.top-pager-progress .progress-text {font-size:11px;line-height:1.1;font-variant-numeric:tabular-nums;font-weight:800;color:#586e7a;}
+.top-pager-progress .progress-track {display:block;width:48px;max-width:none;height:3px;}
+.topbar .top-actions {grid-column:1 / -1;grid-row:2;display:flex;justify-content:flex-end;gap:5px;align-items:center;flex-wrap:wrap;}
+.topbar .top-actions .top-button {font-size:12px;padding:7px 9px;}
+.topbar .top-actions .dialect {font-size:12px;padding:6px 10px;}
+.topbar .top-actions .icon-button {padding:5px 8px;min-width:33px;}
+.topbar .top-actions .tool-launchers {gap:4px;padding-left:8px;}
+/* 大螢幕保持工具列精簡；小螢幕導覽控制獨立成一行，避免壓住文字 */
+@media(max-width:1060px){
+  .topbar{grid-template-columns:minmax(0,1fr) auto;column-gap:8px;}
+  .topbar .breadcrumb .site-full-name{display:none;}
+  .top-pager button{padding:5px 7px;}
+}
+@media(max-width:750px){
+  .topbar{grid-template-columns:minmax(0,1fr);row-gap:7px;padding:8px 12px;}
+  .topbar-heading{grid-column:1;grid-row:1;}
+  .top-pager{grid-column:1;grid-row:2;justify-content:flex-end;flex-wrap:wrap;}
+  .topbar .top-actions{grid-column:1;grid-row:3;justify-content:flex-start;width:100%;}
+  .topbar .site-credit{font-size:10px;white-space:normal;}
+}
+@media(max-width:400px){
+  .top-pager{gap:3px;justify-content:space-between;}
+  .top-pager button{font-size:11px;padding:5px 5px;}
+  .top-pager-progress{min-width:43px;}
+  .top-pager-progress .progress-track{width:39px;}
+}
+@media print{.topbar{display:none!important}}
+
+/* beta V6.1.1：地圖聚焦、拖曳與課程過場 */
+.map-svg.map-taiwan{touch-action:none;}
+.map-viewport.zoomable-map .map-svg.map-taiwan{cursor:grab;}
+.map-viewport.zoomable-map .map-svg.map-taiwan:active{cursor:grabbing;}
+.journey-overlay[hidden]{display:none!important;}
+.journey-overlay{position:fixed;inset:0;z-index:100;background:rgba(6,28,39,.95);display:grid;place-items:center;padding:18px;color:#fff;}
+.journey-scene{position:relative;width:min(100%,960px);min-height:min(78vh,670px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,29px);text-align:center;overflow:hidden;padding:clamp(20px,4vw,48px);border:1px solid #4c7d8b;border-radius:25px;background:radial-gradient(ellipse at 70% 60%,#21596d 0%,#123c4d 52%,#0b2835 100%);box-shadow:0 18px 80px #020e16a5;}
+.journey-kicker{color:#ffd399;letter-spacing:.16em;font-size:clamp(13px,1.3vw,17px);font-weight:800;}
+.journey-scene h2{margin:10px 0 0;font-size:clamp(25px,3.6vw,45px);line-height:1.48;letter-spacing:.025em;}
+.journey-history{animation:journeyReveal .9s ease both;}
+.journey-flight{width:min(86%,700px);height:80px;position:relative;display:flex;align-items:center;justify-content:center;}
+.journey-trail{position:absolute;left:4%;right:4%;top:55%;height:2px;border-top:3px dashed #f7c983;opacity:.6;}
+.journey-plane{position:absolute;left:5%;top:3%;font-size:65px;filter:drop-shadow(0 0 18px #e6b67b80);color:#ffe5a8;transform:rotate(5deg);animation:journeyFly 3.5s cubic-bezier(.18,.25,.7,1) both;}
+.journey-now{animation:journeyReveal .9s ease 2.8s both;}
+.journey-now p{font-size:clamp(18px,2.4vw,27px);margin:12px 0 0;color:#c9e7e8;}
+.journey-now h2{color:#ffe2a8;}
+.journey-buttons{display:flex;justify-content:center;gap:12px;align-items:center;flex-wrap:wrap;margin-top:4px;animation:journeyReveal .6s ease 3.4s both;}
+.journey-buttons button{cursor:pointer;border:1px solid #78949b;color:#e5eeee;border-radius:11px;background:transparent;font-size:18px;font-weight:750;padding:11px 21px;}
+.journey-buttons #journeyStart{background:#f2c17b;color:#143440;border-color:#f2c17b;}
+.journey-buttons button:focus-visible{outline:3px solid white;outline-offset:3px;}
+.journey-scene.journey-playing .journey-history{animation:journeyReveal .9s ease both;}
+.journey-scene.journey-playing .journey-plane{animation:journeyFly 3.5s cubic-bezier(.18,.25,.7,1) both;}
+.journey-scene.journey-playing .journey-now{animation:journeyReveal .9s ease 2.8s both;}
+.journey-scene.journey-playing .journey-buttons{animation:journeyReveal .6s ease 3.4s both;}
+@keyframes journeyFly{0%{left:2%;opacity:0;transform:translateY(18px) rotate(-8deg)}10%{opacity:1}80%{opacity:1}100%{left:89%;opacity:0;transform:translateY(-17px) rotate(8deg)}}
+@keyframes journeyReveal{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+@media(max-width:650px){.journey-flight{height:45px}.journey-plane{font-size:42px}.journey-scene{min-height:70vh;padding:24px 14px}.journey-buttons button{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.journey-history,.journey-plane,.journey-now,.journey-buttons,.journey-scene.journey-playing .journey-history,.journey-scene.journey-playing .journey-plane,.journey-scene.journey-playing .journey-now,.journey-scene.journey-playing .journey-buttons{animation:none!important;opacity:1!important}.journey-plane{left:50%}}
+
+/* beta V6.2.0: 蘭芳公司客語版動畫影片卡與內建播放器 */
+.lf-video-card .story-card-photo{position:relative;overflow:hidden}
+.lf-video-card .story-card-photo img{height:100%;width:100%;object-fit:cover;display:block}
+.video-play-symbol{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:68px;height:68px;border-radius:50%;background:#133a45dc;border:2px solid #f3eddb;color:white;font-size:25px;box-shadow:0 6px 18px #08232f70}
+.dialog.video-dialog{width:min(980px,96vw);max-height:95vh;overflow:auto;padding:clamp(16px,2vw,30px)}
+.dialog.video-dialog h2{font-size:clamp(23px,2.1vw,31px);margin-bottom:12px}
+.video-player-frame{background:#0b202a;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.video-player-frame video{width:100%;max-height:min(66vh,630px);height:auto;display:block;aspect-ratio:16/9;background:#10191c}
+.video-player-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;padding-top:14px;font-size:15px;line-height:1.5}
+.video-player-bottom span{color:#3f5c68;font-weight:600}
+.video-player-bottom a{display:inline-block;border-radius:8px;padding:10px 14px;background:#e8f1f0;color:#175767;font-weight:800;text-decoration:none}
+.video-player-bottom a:hover{background:#cce5e2}
+@media(max-width:700px){.video-player-bottom{font-size:14px}.video-play-symbol{width:55px;height:55px}.dialog.video-dialog{width:98vw}}
+
+/* beta V6.2.0: 臺灣客家菜包／印尼Choi Pan雙欄相片幻燈片 */
+.food-comparison{align-items:stretch;gap:clamp(14px,2vw,26px)}
+.food-comparison .food-card{min-width:0;box-shadow:0 8px 24px rgba(14,50,58,.09)}
+.food-carousel{background:#143a47;color:white;overflow:hidden}
+.food-slide-viewport{aspect-ratio:16/10;min-height:clamp(240px,27vw,370px);position:relative;display:flex;align-items:center;justify-content:center;background:#173746}
+.food-slide-image{display:block;width:100%;height:100%;position:absolute;inset:0;object-fit:cover;object-position:center center}
+.food-image-error{width:100%;padding:30px;text-align:center;color:#fff;font-size:18px}
+.food-image-error a{display:block;color:#f8c984;margin-top:12px}
+.food-slide-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:46px;height:62px;border:0;background:#092a39ae;color:white;font-size:43px;font-weight:400;line-height:1;cursor:pointer;transition:background .2s ease}
+.food-slide-arrow:hover,.food-slide-arrow:focus-visible{background:#0f4355}
+.food-slide-arrow.prev{left:0;border-radius:0 14px 14px 0}
+.food-slide-arrow.next{right:0;border-radius:14px 0 0 14px}
+.food-slide-count{position:absolute;right:14px;bottom:12px;z-index:2;background:#072b3ac2;border-radius:18px;padding:5px 11px;font-size:15px;letter-spacing:.03em;font-variant-numeric:tabular-nums}
+.food-slide-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:13px 16px 15px;flex-wrap:wrap;background:#183f4b}
+.food-slide-caption{min-width:180px;flex:1;display:flex;flex-direction:column;gap:3px;line-height:1.35}
+.food-slide-caption strong{font-size:18px;color:#ffe1a0}
+.food-slide-caption span{font-size:15px;color:#ecf4f3}
+.food-slide-caption a{font-size:12px;color:#b9d5da;text-decoration:underline;text-underline-offset:3px}
+.food-slide-controls{display:flex;align-items:center;gap:10px}
+.food-slide-dots{display:flex;gap:6px;align-items:center}
+.food-slide-dots button{width:13px;height:13px;border-radius:50%;background:#698b95;border:1px solid #bed4d8;cursor:pointer;padding:0}
+.food-slide-dots button.active{background:#ffd28c;border-color:#ffd28c;transform:scale(1.12)}
+.food-play-toggle{border:1px solid #97b5bd;background:#234f5b;color:#fff;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer}
+.food-card .food-body{padding:18px 22px 22px}
+.food-card .food-body h3{font-size:clamp(23px,2.3vw,30px)}
+.food-card .food-body p{font-size:17px;line-height:1.7}
+@media(max-width:1000px){.food-comparison{grid-template-columns:1fr}.food-slide-viewport{min-height:300px}}
+@media(max-width:600px){.food-slide-viewport{min-height:230px}.food-slide-arrow{width:42px;height:55px;font-size:37px}.food-slide-footer{align-items:flex-start}.food-slide-caption{flex-basis:100%}}

@@ -171,57 +171,61 @@ window.LESSON_DATA = {
       "id": "qishi",
       "hailu": "起勢",
       "sixian": "起勢",
-      "definition": "開始、起頭。",
-      "note": "「對爪哇島起勢」就是從爪哇島開始旅程。"
+      "definition": "開始、起頭。"
+    },
+    {
+      "id": "jiedeng",
+      "hailu": "接等",
+      "sixian": "接等",
+      "definition": "接著。"
     },
     {
       "id": "zuji",
       "hailu": "祖籍",
       "sixian": "祖籍",
-      "definition": "祖先原來的籍貫或家鄉。",
-      "note": "課文列舉梅縣、大埔、蕉嶺等原鄉，可連結地圖中的移民路線。"
+      "definition": "祖先原來的籍貫或家鄉。"
     },
     {
       "id": "liuli",
       "hailu": "流利",
       "sixian": "流掠",
-      "definition": "說話順暢、熟練。",
-      "note": "兩腔在這裡採用不同漢字：海陸「流利」、四縣「流掠」。"
+      "definition": "說話順暢、熟練。"
     },
     {
       "id": "tusheng",
       "hailu": "土生土長",
       "sixian": "土生土長",
-      "definition": "在同一個地方出生並長大。",
-      "note": "用來理解海外客家後代在當地成長的生活經驗。"
+      "definition": "在同一個地方出生並長大。"
     },
     {
       "id": "mxdd",
       "hailu": "毋曉得",
       "sixian": "毋曉得",
-      "definition": "不知道、不會。",
-      "note": "請從課文判斷：這裡說的是不會中文、華語，還是完全不會客語？不要混為一談。"
+      "definition": "不知道、不會。"
     },
     {
       "id": "shuru",
       "hailu": "樹乳樹",
       "sixian": "樹乳仔",
-      "definition": "橡膠樹，可以採集乳膠。",
-      "note": "反映部分海外客家移民在農場的工作。"
+      "definition": "橡膠樹，可以採集乳膠。"
+    },
+    {
+      "id": "zuoshengli",
+      "hailu": "做生理",
+      "sixian": "做生理",
+      "definition": "經商。"
     },
     {
       "id": "xi",
       "hailu": "錫",
       "sixian": "錫",
-      "definition": "一種金屬，可用於合金、鍍層等。",
-      "note": "課文提到邦加的錫礦產業。"
+      "definition": "一種金屬，可用於合金、鍍層等。"
     },
     {
       "id": "guimo",
       "hailu": "規模",
       "sixian": "規模",
-      "definition": "事物或組織的大小、範圍。",
-      "note": "「規模盡大」形容蘭芳公司具有相當大的組織規模。"
+      "definition": "事物或組織的大小、範圍。"
     }
   ],
   "sources": [

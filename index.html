@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f2835">
   <meta name="description" content="高中客語第八課〈行讀客家世界：印尼客家之旅〉互動教學網站。海陸與四縣課文、移民歷史、語言傳承、蘭芳公司、飲食與元宵。">
-  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V6.1.0</title>
+  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V6.2.0</title>
   <link rel="stylesheet" href="styles.css">
   <script src="content.js" defer></script>
   <script src="app.js" defer></script>
@@ -28,8 +28,22 @@
 
     <div class="workspace">
       <header class="topbar">
-        <button type="button" id="mobileMenu" class="icon-button mobile-only" aria-label="切換章節選單">☰</button>
-        <div class="breadcrumb"><span>高中客語</span><span class="dot">·</span><strong class="site-full-name">飄洋過海尋客家：印尼客家文化之旅</strong><span class="dot">·</span><strong id="stepLabel">認識印尼</strong></div>
+        <div class="topbar-heading">
+          <button type="button" id="mobileMenu" class="icon-button mobile-only" aria-label="切換章節選單">☰</button>
+          <div class="topbar-identity">
+            <div class="breadcrumb"><span>高中客語</span><span class="dot">·</span><strong class="site-full-name">飄洋過海尋客家：印尼客家文化之旅</strong><span class="dot">·</span><strong id="stepLabel">認識印尼</strong></div>
+            <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V6.2.0</strong></div>
+          </div>
+        </div>
+        <nav class="top-pager" aria-label="課程站別導覽">
+          <button type="button" id="mapHome" class="top-pager-home" title="返回第一站地圖">⌖ 返回地圖</button>
+          <div class="top-pager-progress" aria-label="目前教學站別">
+            <span id="progressText" class="progress-text">01 / 08</span>
+            <div class="progress-track" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
+          </div>
+          <button type="button" id="prevBtn" class="top-pager-step" title="上一站">← 上一步</button>
+          <button type="button" id="nextBtn" class="top-pager-step next-step" title="下一站">下一步 →</button>
+        </nav>
         <div class="top-actions">
           <div class="dialect-switch" role="group" aria-label="課文腔調">
             <button type="button" class="dialect active" data-dialect="hailu" aria-pressed="true">海陸</button>
@@ -57,21 +71,20 @@
         <div class="stage-body" id="stageBody" aria-live="polite"></div>
       </main>
 
-      <footer class="toolbar">
-        <div class="toolbar-left">
-          <button type="button" id="mapHome" class="toolbar-quiet">⌖ 返回地圖</button>
-          <span id="progressText" class="progress-text">01 / 08</span>
-          <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
-        </div>
-        <div class="toolbar-right">
-          <button type="button" id="prevBtn" class="outline-button">← 上一步</button>
-          <button type="button" id="nextBtn" class="primary-button">下一步 →</button>
-        </div>
-        <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V6.1.0</strong></div>
-      </footer>
     </div>
   </div>
 
+  <div id="journeyOverlay" class="journey-overlay" role="dialog" aria-modal="true" aria-label="前往印尼的旅程" hidden>
+    <section class="journey-scene">
+      <div class="journey-history">
+        <div class="journey-kicker">十八世紀・移民的故事</div>
+        <h2>客家人從中國東南沿海出發，<br>來到印尼開展新生活。</h2>
+      </div>
+      <div class="journey-flight" aria-hidden="true"><span class="journey-trail"></span><span class="journey-plane">✈</span></div>
+      <div class="journey-now"><div class="journey-kicker">現在・我們的旅程</div><p>今天，讓我們搭上飛機，去看看印尼的客家文化！</p><h2>前往印尼，找尋客家，開始探險！</h2></div>
+      <div class="journey-buttons"><button type="button" id="journeySkip">略過動畫</button><button type="button" id="journeyStart">開始探險 →</button></div>
+    </section>
+  </div>
   <div id="dialogOverlay" class="dialog-overlay" hidden>
     <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
       <div class="dialog-top"><div class="micro-label" id="dialogTag">詞彙註解</div><button type="button" id="dialogClose" class="icon-button" aria-label="關閉">×</button></div>
