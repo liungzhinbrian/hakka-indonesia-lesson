@@ -19,6 +19,7 @@
   const BUILTIN_AUDIO = {tw:'assets/audio/台灣海陸客語語料.wav', id:'assets/audio/山口洋客語語料.wav'};
   const LANFANG_VIDEO = 'assets/video/lanfang-hakka-animation.mp4';
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
+  const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
   const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodPos:{tw:0,id:0},foodPaused:{tw:false,id:false},reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
@@ -53,12 +54,12 @@
     idfood: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Choipan.jpg/960px-Choipan.jpg', page:'https://commons.wikimedia.org/wiki/File:Choipan.jpg', credit:'Cun Cun', alt:'印尼邦加客家菜粄' },
     lantern: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Taiwan_Lantern_Festival_in_Taipei_2023.jpg/960px-Taiwan_Lantern_Festival_in_Taipei_2023.jpg', page:'https://commons.wikimedia.org/wiki/File:Taiwan_Lantern_Festival_in_Taipei_2023.jpg', credit:'HC Lin', alt:'臺灣元宵花燈' },
     dragon: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Taiwan_Bombing_Dragon-3.jpg/960px-Taiwan_Bombing_Dragon-3.jpg', page:'https://commons.wikimedia.org/wiki/File:Taiwan_Bombing_Dragon-3.jpg', credit:'Wikimedia Commons', alt:'苗栗𪹚龍' },
-    tatung: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tatung.jpg/960px-Tatung.jpg', page:'https://commons.wikimedia.org/wiki/File:Tatung.jpg', credit:'Rudi Sugianto', alt:'山口洋元宵Tatung' },
+    beipu: { url:'assets/images/beipu-yuhanghuo.jpg', page:'', credit:'授課教師提供', alt:'北埔油笐火活動夜景' },
     singkawang: { url:'https://commons.wikimedia.org/wiki/Special:FilePath/Singkawang_temple_101221-10576.jpg?width=960', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10576.jpg', credit:'Wibowo Djatmiko', alt:'山口洋三教合一廟宇夜景' },
     singkawang2: {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Singkawang_temple_101221-10563.JPG?width=960', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10563.JPG', credit:'Wibowo Djatmiko', alt:'山口洋廟宇實景'},
     luo: {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Luo_Fangbo.jpg?width=700',page:'https://commons.wikimedia.org/wiki/File:Luo_Fangbo.jpg',credit:'Wikimedia Commons／羅芳伯後世圖像',alt:'羅芳伯的後世畫像'},
   };
-  function photo(key, cls=''){ const x=PHOTO_SOURCES[key];return `<figure class="real-photo ${cls}"><img src="${x.url}" alt="${x.alt}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.classList.add('photo-failed')"><figcaption><a href="${x.page}" target="_blank" rel="noopener noreferrer">圖片來源：${x.credit} ↗</a></figcaption></figure>`; }
+  function photo(key, cls=''){ const x=PHOTO_SOURCES[key];if(!x)return ''; const credit=x.page?`<a href="${esc(x.page)}" target="_blank" rel="noopener noreferrer">圖片來源：${esc(x.credit)} ↗</a>`:`<span>圖片來源：${esc(x.credit)}</span>`;return `<figure class="real-photo ${cls}"><img src="${esc(x.url)}" alt="${esc(x.alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.classList.add('photo-failed')"><figcaption>${credit}</figcaption></figure>`; }
   function navRender(){
     nav.innerHTML = STAGES.map((s,i)=>`<button type="button" class="nav-step ${i===state.stage?'active':''}" data-action="jump" data-index="${i}" ${i===state.stage?'aria-current="step"':''}><span class="n">${String(i+1).padStart(2,'0')}</span><span><strong>${esc(s.name)}</strong><small>${esc(s.sub)}</small></span></button>`).join('');
   }
@@ -428,7 +429,7 @@
   const INFO_CARDS={
     'singkawang-language':{title:'山口洋的河婆客語',tag:'語言',body:'山口洋（Singkawang）位於印尼西加里曼丹。當地不少客家人使用河婆客語，與廣東揭西一帶的河婆話具有歷史聯繫。客語在家人、鄰里、市場及不同世代間的使用情況，也反映當地社群的生活環境。',source:'https://english.hakka.gov.tw/Content/Content?LanguageType=ENG&NodeID=769&PageID=43423'},
     'singkawang-temple':{title:'廟宇：地方社群相聚的空間',tag:'信仰',body:'山口洋的廟宇既是信仰活動場所，也與地方節慶、社會網絡及社群記憶相連。不同祖籍、語言與信仰背景的人，都可能參與當地的活動。',photo:'singkawang2',source:'https://www.cambridge.org/core/journals/modern-asian-studies/article/in-the-shadow-of-the-bri-the-figurative-infrastructures-of-chinese-religion-along-the-maritime-silk-road/E2A66B6F830D3719DAC334145712F195'},
-    'singkawang-festival':{title:'Cap Go Meh：山口洋的元宵',tag:'節慶',body:'山口洋的農曆正月十五以Cap Go Meh慶典聞名，活動中可見Tatung遊行、廟宇信仰及各種地方文化元素。這也是學生觀察海外客家文化與不同族群互動的具體例子。',photo:'tatung',source:'https://english.hakka.gov.tw/Content/Content?LanguageType=ENG&NodeID=769&PageID=43423'},
+    'singkawang-festival':{title:'Cap Go Meh：山口洋的元宵',tag:'節慶',body:'山口洋的農曆正月十五以Cap Go Meh慶典聞名，活動中可見Tatung遊行、廟宇信仰及各種地方文化元素。這也是學生觀察海外客家文化與不同族群互動的具體例子。',source:'https://english.hakka.gov.tw/Content/Content?LanguageType=ENG&NodeID=769&PageID=43423'},
     'singkawang-history':{title:'從礦業移民到港口城鎮',tag:'歷史',body:'18世紀西婆羅洲金礦開發吸引廣東客家移民前來。山口洋曾是與內陸礦區往來的港口；即使後來採礦與社會環境改變，客家社群仍在這座城市延續生活。',source:'https://www.persee.fr/doc/arch_0044-8613_2006_num_72_1_4042'},
     'lang-indo':{title:'印尼：語言政策如何影響下一代？',tag:'語言傳承',body:'課文記錄1966年至2000年前後的華文教育受限制時期。對部分華人家庭而言，原先在學校學習華文的途徑減少；國家語言印尼語以及地方語言，則在不同生活場合持續使用。客語能否繼續被孩子學會，也和家庭及社區的使用機會有關。',source:'https://english.hakka.gov.tw/Content/Content?LanguageType=ENG&NodeID=769&PageID=43445'},
     'lang-taiwan':{title:'臺灣：從學校到家庭的語言環境',tag:'語言傳承',body:'過去臺灣推行國語政策，學校與公共領域的本土語言使用空間受到限制。如今學校開設客語課程，但孩子在家庭、朋友之間是否經常聽到或使用客語，仍會影響語言傳承。',source:'https://www.hakka.gov.tw/'},
@@ -447,6 +448,7 @@
     </button>`;
   }
   function showStoryInfo(id){
+    if(id==='singkawang-festival'){showFestivalVideo();return;}
     const item=INFO_CARDS[id];if(!item)return;
     openDialog(item.title,item.tag,`${item.photo?photo(item.photo,'story-detail-photo'):''}<p class="story-detail-text">${esc(item.body)}</p>${item.source?`<p class="story-source"><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">閱讀資料來源 ↗</a></p>`:''}`);
   }
@@ -454,6 +456,14 @@
     openDialog('蘭芳公司：18世紀的客家移民史','客家公共傳播基金會 × 臺灣吧・客語版',
       `<div class="video-player-frame"><video id="lanfangVideo" controls playsinline preload="metadata" poster="assets/images/lanfang-video-cover.jpg" src="${esc(LANFANG_VIDEO)}">此瀏覽器無法播放此影片。</video></div>
        <div class="video-player-bottom"><span>超狂的客家移民史：18世紀誕生於婆羅洲的「蘭芳公司」</span><a href="${esc(LANFANG_YOUTUBE)}" target="_blank" rel="noopener noreferrer">在YouTube觀看原始影片 ↗</a></div>`);
+    overlay.querySelector('.dialog')?.classList.add('video-dialog');
+  }
+  function showFestivalVideo(){
+    // 使用官方嵌入播放器播放，並保留新視窗連結；關閉彈窗會卸載 iframe。
+    openDialog('山口洋元宵節：Cap Go Meh','印尼・西加里曼丹',
+      `<div class="festival-video-intro">走進山口洋的元宵慶典，觀察遊行、廟宇與地方社群的參與。</div>
+       <div class="video-player-frame festival-video-frame"><iframe title="山口洋元宵節 Cap Go Meh 影片" src="https://www.youtube-nocookie.com/embed/FEBVKPOcH7k?start=70&rel=0" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+       <div class="video-player-bottom"><span>山口洋元宵慶典影片</span><a href="${esc(FESTIVAL_YOUTUBE)}" target="_blank" rel="noopener noreferrer">在YouTube開啟影片 ↗</a></div>`);
     overlay.querySelector('.dialog')?.classList.add('video-dialog');
   }
   function policyStage(){
@@ -469,7 +479,7 @@
   function audioStage(){
     return `<section class="panel"><span class="micro-label">聆聽兩地客語</span><h2 class="question">聽聽看，是不是很熟悉呢？</h2><div class="grid2">${audioCard('tw','臺灣海陸客語','臺灣海陸客語語料')}${audioCard('id','山口洋河婆客語','印尼西加里曼丹・河婆客語語料')}</div></section>
     <section class="panel singkawang-hero"><div class="singkawang-intro">${photo('singkawang','community-photo')}<div><span class="micro-label">印尼・西加里曼丹</span><h2>山口洋：客語、廟宇與生活文化</h2><p>山口洋曾與西婆羅洲的金礦移民、港口往來密切相關。今天仍能在城市生活、廟宇信仰與節慶活動中觀察客家文化的延續與變化。</p></div></div>
-      <div class="story-grid two">${infoTile('singkawang-language','聲音','河婆客語','認識山口洋客語的來源與日常使用。')}${infoTile('singkawang-history','歷史','從礦區到城市','港口、礦業與移民怎樣形塑社群？')}${infoTile('singkawang-temple','信仰','山口洋的廟宇','看看寺廟與社群生活的關係。','singkawang2')}${infoTile('singkawang-festival','節慶','Cap Go Meh元宵','山口洋的Tatung活動有什麼特色？','tatung')}</div></section>`;
+      <div class="story-grid two">${infoTile('singkawang-language','聲音','河婆客語','認識山口洋客語的來源與日常使用。')}${infoTile('singkawang-history','歷史','從礦區到城市','港口、礦業與移民怎樣形塑社群？')}${infoTile('singkawang-temple','信仰','山口洋的廟宇','看看寺廟與社群生活的關係。','singkawang2')}${infoTile('singkawang-festival','節慶影片','Cap Go Meh元宵','點擊觀看山口洋元宵活動影片。')}</div></section>`;
   }
   function historyStage(){
     const scenes=[
@@ -514,10 +524,8 @@
       {src:'https://www.jdx32tw.com/archive/image/product1/images/1776763166838.webp',label:'客家菜包切面',caption:'草綠色米皮與菜包的鹹餡',source:'九鼎軒',page:'https://www.jdx32tw.com/product_d.php?id=139&lang=tw&tb=1'}
     ],
     id:[
-      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Choi_pan_1.jpg/960px-Choi_pan_1.jpg',label:'Choi Pan',caption:'Choi Pan搭配醬汁的吃法',source:'Sam Abdullah／Wikimedia Commons',page:'https://commons.wikimedia.org/wiki/File:Choi_pan_1.jpg'},
-      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Choi_Pan.jpg/720px-Choi_Pan.jpg',label:'Choi Pan',caption:'坤甸的Choi Pan與蘸醬',source:'Fitri Penyalai／Wikimedia Commons',page:'https://commons.wikimedia.org/wiki/File:Choi_Pan.jpg'},
-      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Choi_pan.jpg/720px-Choi_pan.jpg',label:'Choi Pan',caption:'印尼坤甸的Choi Pan',source:'Ayu (WMID)／Wikimedia Commons',page:'https://commons.wikimedia.org/wiki/File:Choi_pan.jpg'},
-      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Choi_pan_or_chai_kue.jpg/960px-Choi_pan_or_chai_kue.jpg',label:'Chai Kue',caption:'印尼Choi Pan／Chai Kue的不同擺盤',source:'Wikimedia Commons',page:'https://commons.wikimedia.org/wiki/File:Choi_pan_or_chai_kue.jpg'}
+      {src:'assets/images/choi-pan-bowl.jpg',label:'Choi Pan',caption:'在蒸盤中鋪上葉片，擺放白色菜粄與蒜酥。',source:'授課教師提供',page:''},
+      {src:'assets/images/choi-pan-table.jpg',label:'Choi Pan與醬料',caption:'桌上菜粄、佐料與醬汁的實際食用場景。',source:'授課教師提供',page:''}
     ]
   };
   let foodTicker=null;
@@ -526,13 +534,13 @@
     return `<div class="food-carousel" data-food-carousel="${kind}" aria-label="${kind==='tw'?'臺灣菜包':'印尼Choi Pan'}圖片輪播">
       <div class="food-slide-viewport">
         <img class="food-slide-image" src="${esc(slide.src)}" alt="${esc(slide.caption)}" loading="eager" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.hidden=false">
-        <div class="food-image-error" hidden>照片載入失敗，請檢查網路連線。<a href="${esc(slide.page)}" target="_blank" rel="noopener noreferrer">查看原圖 ↗</a></div>
+        <div class="food-image-error" hidden>照片暫時無法顯示。${slide.page?`<a href="${esc(slide.page)}" target="_blank" rel="noopener noreferrer">查看原圖 ↗</a>`:""}</div>
         <button class="food-slide-arrow prev" data-action="food-prev" data-food="${kind}" type="button" aria-label="上一張照片">‹</button>
         <button class="food-slide-arrow next" data-action="food-next" data-food="${kind}" type="button" aria-label="下一張照片">›</button>
         <span class="food-slide-count">${ix+1}／${slides.length}</span>
       </div>
       <div class="food-slide-footer">
-        <div class="food-slide-caption"><strong>${esc(slide.label)}</strong><span>${esc(slide.caption)}</span><a href="${esc(slide.page)}" target="_blank" rel="noopener noreferrer">照片來源：${esc(slide.source)} ↗</a></div>
+        <div class="food-slide-caption"><strong>${esc(slide.label)}</strong><span>${esc(slide.caption)}</span>${slide.page?`<a href="${esc(slide.page)}" target="_blank" rel="noopener noreferrer">照片來源：${esc(slide.source)} ↗</a>`:`<span class="food-local-credit">照片來源：${esc(slide.source)}</span>`}</div>
         <div class="food-slide-controls"><div class="food-slide-dots" role="group" aria-label="選擇照片">${slides.map((_,i)=>`<button type="button" class="${i===ix?'active':''}" aria-label="顯示第${i+1}張照片" aria-pressed="${i===ix}" data-action="food-dot" data-food="${kind}" data-slide="${i}"></button>`).join('')}</div>
           <button type="button" class="food-play-toggle" data-action="food-play" data-food="${kind}" aria-label="${state.foodPaused[kind]?'開始':'暫停'}自動輪播">${state.foodPaused[kind]?'▶ 播放':'Ⅱ 暫停'}</button></div>
       </div>
@@ -575,10 +583,10 @@
     const f=[
       {icon:'🏮',photo:'lantern',title:'臺灣：元宵花燈',desc:'看花燈、賞燈會，是熟悉的元宵活動之一。'},
       {icon:'🐉',photo:'dragon',title:'苗栗：𪹚龍',desc:'苗栗客庄具有地方特色的元宵民俗活動。'},
-      {icon:'🔥',title:'北埔：油笐火',desc:'人們以火把參與地方慶典，與北埔的地方記憶相連。', link:'https://www.hakka.gov.tw/chhakka/app/data/view?id=25&module=hotnews&serno=2184b505-30da-4372-92d2-c345d0c144a3'},
-      {icon:'🎭',photo:'tatung',title:'山口洋：Cap Go Meh',desc:'元宵慶典包含Tatung遊行，展現多族群互動的地方文化。'}
+      {icon:'🔥',photo:'beipu',title:'北埔：油笐火',desc:'點燃火把、走入街道，感受北埔的元宵風景。'},
+      {icon:'▶',video:true,title:'山口洋：Cap Go Meh',desc:'點擊觀看山口洋元宵慶典影片，觀察地方節慶活動。'}
     ];
-    return `<section class="panel"><div class="micro-label">快速觀察</div><h2>同樣是元宵，活動為什麼不一樣？</h2><div class="grid4">${f.map(x=>`<div class="festival-card">${x.photo?photo(x.photo,'festival-photo'):`<div class="festival-symbol" aria-hidden="true">${x.icon}</div>`}<h3>${x.title}</h3><p>${x.desc}</p>${x.link?`<a class="festival-source" href="${x.link}" target="_blank" rel="noopener noreferrer">查看活動照片 ↗</a>`:''}</div>`).join('')}</div><div class="answer-box" style="margin-top:17px">選一個例子：它和你熟悉的元宵節有哪些相同或不同？</div></section>`;
+    return `<section class="panel"><div class="micro-label">快速觀察</div><h2>同樣是元宵，活動為什麼不一樣？</h2><div class="grid4">${f.map(x=>`<div class="festival-card">${x.video?`<button type="button" class="festival-video-tile" data-action="festival-video" aria-label="觀看山口洋元宵影片"><span class="festival-video-play" aria-hidden="true">▶</span><span>觀看慶典影片</span></button>`:x.photo?photo(x.photo,'festival-photo'):`<div class="festival-symbol" aria-hidden="true">${x.icon}</div>`}<h3>${x.title}</h3><p>${x.desc}</p>${x.link?`<a class="festival-source" href="${x.link}" target="_blank" rel="noopener noreferrer">查看活動照片 ↗</a>`:''}</div>`).join('')}</div><div class="answer-box" style="margin-top:17px">選一個例子：它和你熟悉的元宵節有哪些相同或不同？</div></section>`;
   }
   function endingStage(){
     const cards=[
@@ -600,6 +608,7 @@
     document.getElementById('dialogTitle').textContent=title;
     document.getElementById('dialogTag').textContent=tag;
     document.getElementById('dialogContent').innerHTML=content;
+    document.getElementById('dialogContent').scrollTop=0;
     overlay.hidden=false;document.getElementById('dialogClose').focus();
   }
   function showVocab(id){
@@ -609,9 +618,9 @@
     openDialog(w.hailu===w.sixian?w.hailu:`${w.hailu}／${w.sixian}`,'詞彙解釋',`${lines}<p class="vocab-definition"><strong>詞義：</strong>${esc(w.definition)}</p>`);
   }
   function showSources(){
-    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},{label:'客家公共傳播基金會×臺灣吧｜蘭芳公司客語版動畫',url:LANFANG_YOUTUBE},...DATA.sources,...FOOD_PHOTOS.tw.map(x=>({label:'臺灣菜包照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.id.map(x=>({label:'印尼Choi Pan照片｜'+x.source,url:x.page}))]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.tatung.page}" target="_blank" rel="noopener noreferrer">山口洋元宵Tatung・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
+    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},{label:'客家公共傳播基金會×臺灣吧｜蘭芳公司客語版動畫',url:LANFANG_YOUTUBE},...DATA.sources,...FOOD_PHOTOS.tw.map(x=>({label:'臺灣菜包照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.id.filter(x=>x.page).map(x=>({label:'印尼Choi Pan照片｜'+x.source,url:x.page}))]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${FESTIVAL_YOUTUBE}" target="_blank" rel="noopener noreferrer">山口洋元宵Cap Go Meh・影片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
   }
-  function stopDialogMedia(){overlay.querySelectorAll('video,audio').forEach(media=>{media.pause();});}
+  function stopDialogMedia(){overlay.querySelectorAll('video,audio').forEach(media=>{media.pause();});overlay.querySelectorAll('iframe').forEach(frame=>{frame.src='about:blank';});}
   function closeDialog(){stopDialogMedia();overlay.hidden=true;overlay.querySelector('.dialog')?.classList.remove('video-dialog');}
   document.addEventListener('click',e=>{
     if(e.target===overlay){closeDialog();return;}
@@ -662,7 +671,8 @@
     if(action==='history'){state.lanfang=Number(el.dataset.index);render();}
     if(action==='story-info'){showStoryInfo(el.dataset.card);}
     if(action==='lanfang-video'){showLanfangVideo();}
-    if(action==='lanfang-play'){const story=document.getElementById('lanfangStory');if(story){story.classList.remove('is-playing');void story.offsetWidth;story.classList.add('is-playing');el.textContent='↻ 重播動畫';}}
+    if(action==='festival-video'){showFestivalVideo();}
+    if(action==='lanfang-play'){const story=document.getElementById('lanfangStory');if(story){story.classList.remove('is-playing');void story.offsetWidth;story.classList.add('is-playing');el.textContent='↻ 重播動畫';el.setAttribute('aria-label','重播蘭芳公司動畫');}}
     if(action==='food-next'||action==='food-prev'||action==='food-dot'){
       const kind=el.dataset.food;if(!FOOD_PHOTOS[kind])return;
       const n=FOOD_PHOTOS[kind].length;
