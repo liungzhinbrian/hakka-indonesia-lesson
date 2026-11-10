@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>版本更新紀錄｜飄洋過海尋客家｜beta V8.0.1</title>
+<style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#1d404d;background:#eff5f5}
+*{box-sizing:border-box}body{margin:0}header{background:#153f4e;color:white;padding:22px max(20px,calc((100vw - 1080px)/2));display:flex;gap:18px;align-items:center;flex-wrap:wrap}header a{color:#d5f4f5;text-decoration:underline}header strong{font-size:20px}main{max-width:1080px;margin:24px auto 55px;padding:24px 35px 38px;background:white;border:1px solid #d4e2e4;box-shadow:0 7px 36px #153f4e12;border-radius:18px}
+h1{font-size:clamp(25px,3vw,37px);line-height:1.4}h2{font-size:clamp(19px,2vw,24px);color:#176277;margin:32px 0 14px;padding-bottom:11px;border-bottom:1px solid #d5e3e6}p,li,blockquote{font-size:16px;line-height:1.88}ul{padding-left:1.7em}li{margin-bottom:8px}blockquote{background:#eef5f4;border-left:4px solid #3d8790;padding:12px 18px;margin:16px 0;border-radius:4px;color:#285764}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#e9f2f3;border-radius:4px;padding:1px 5px;color:#235e6c}footer{margin-top:28px;border-top:1px solid #e0ecee;padding-top:16px;color:#607780;font-size:14px}a{color:#175f72}@media(max-width:680px){main{margin:0;border-radius:0;padding:22px 20px}}
+</style></head><body><header><strong>飄洋過海尋客家</strong><span>beta V8.0.1</span><a href="index.html">返回教學網站</a><a href="CHANGELOG.md" download>下載Markdown日誌</a></header><main><h1>版本更新紀錄｜飄洋過海尋客家：印尼客家文化之旅</h1>
+<p>本檔依舊版<code>CHANGELOG.md</code>、網站程式碼註記及先前開發討論整理，按版本由新至舊排列。發布日期僅在有可確認資訊時標示；修正歷史條目的整理方式，不代表重發舊版。</p>
+<blockquote><strong>完整性說明</strong>：目前取得的是V7.0.3完整原始碼與既有更新日誌。早期V1～V3的確切版號、日期、逐版修改項目已無可核對的原始紀錄，故不杜撰；V4、V5.0僅能整理先前討論中可確認的概要。V6.2.1、V7.0.1與V7.0.2依原程式碼內版本註記補記。舊版原始紀錄完整保存在<code>docs/CHANGELOG_original_V7.0.3.md</code>，便於對照。</blockquote>
+<h2>beta V8.0.1｜2026-11-10</h2>
+<p><strong>詞彙卡同步抽籤、畫像修復與完整版本紀錄</strong></p>
+<ul>
+<li>詞彙學習彈窗右側新增可收合的學生「拉霸抽籤」，預設收合，授課時可視需要展開，詞彙漢字、拼音、揭曉及翻頁仍可同時操作。</li>
+<li>拉霸與上方原有輪盤抽籤共用名單、已抽名單及「抽過不重複」狀態；拉霸可直接修改學生名單、切換不重複與重新抽籤，下一次開啟輪盤即可看到同步結果。</li>
+<li>拉霸抽籤加入短暫跳動顯示；抽完後停止抽籤並提示重新抽籤。保留原輪盤動畫及計時器等功能。</li>
+<li>僅調整羅芳伯肖像：第三站「1777年：羅芳伯與蘭芳公司」資訊卡縮圖及詳情圖片改成完整顯示，避免裁去面部；其餘歷史照片的裁切方式維持原狀。</li>
+<li>首頁頁首及左側導覽列增加「版本更新紀錄」入口，新增可閱讀的<code>versions.html</code>；ZIP內保留<code>CHANGELOG.md</code>及舊版原始日誌備份。</li>
+<li>更新網站標題、頁首版本號、使用說明及版本日期。</li>
+<li>第八站移除詞彙總複習入口的多餘操作註解；「保留、改變、融合」三張卡片改為點擊才顯示定義及例子，避免答案預先露出。</li>
+<li>第八站移除「收回學習單前」提示與正文的學習單連結；學習單入口統一放在左側選單。</li>
+</ul>
+<h2>beta V7.0.3｜2026-11-10</h2>
+<ul>
+<li>第一站地圖視窗減少無效空白，放大地理主體；加寬國家概況欄，使人口數字不易折行。</li>
+<li>第八站新增完整28個文化詞彙總複習，使用既有大型詞彙視窗，支援上一詞、下一詞、隨機抽詞、先猜再揭曉及兩腔切換。</li>
+<li>詞彙彈窗新增獨立的調型／調值切換，漢字與拼音先顯示、華語詞義後揭曉。</li>
+<li>確認第一站的人口比較卡、收合導覽及文化比較逐步揭曉等前版功能繼續保留。</li>
+</ul>
+<h2>beta V7.0.2｜2026-11-10（依原程式碼版本註記）</h2>
+<ul>
+<li>投影導向：左側站別導覽預設收合，左上角按鈕覆蓋展開，選站、Esc或點背景可關閉；鍵盤M切換。</li>
+<li>第四站菜包／Choi Pan與粽子比較的結論採「逐步揭曉資訊卡」，方便先觀察、討論，再顯示說明。</li>
+<li>拼音調型符號透過CSS <code>unicode-range</code>優先採系統標楷體；拉丁字母繼續使用無襯線字型。</li>
+</ul>
+<h2>beta V7.0.1｜2026-11-10（依原程式碼版本註記）</h2>
+<ul>
+<li>第一站新增「臺灣客家人口（2021年）／印尼華人人口（2010年）」兩張並排比較卡，附資料來源及不可直接互相比較的範圍說明。</li>
+<li>印尼人口概況加入2026年官方推估數；2010年華人比例保留原年份，避免跨年份直接換算。</li>
+</ul>
+<h2>beta V7.0.0｜2026-11-10</h2>
+<ul>
+<li>文化詞彙改成各站可開啟的大型學習彈窗；先顯示漢字、拼音，答案在揭曉後出現；視窗內可切換客語腔調。</li>
+<li>文化詞彙依章節配置，完整保留28個詞彙。飲食詞彙於揭曉後顯示照片與來源，粄粽優先使用教師提供的剖面照片。</li>
+<li>第一站地圖與地點資訊改為16:9左右併排；擴充國家人口、語言與傳承語言概況。</li>
+<li>八站順序調整為：地圖、課文、移民與蘭芳、飲食、節慶、海外客語、語言傳承、統整；同步修正輪播、播放器與學習單順序。</li>
+<li>維持課堂五組分組及學習單無圖片、採調型拼音的設計。</li>
+</ul>
+<h2>beta V6.3.1｜2026-11-10</h2>
+<ul>
+<li>第一站地圖於大螢幕加大顯示範圍、精簡側欄比例。</li>
+<li>第三至第七站加入28個教師校訂文化詞彙，支援海陸／四縣、拼音與翻牌揭曉。</li>
+<li>加入客語聲調表、五度聲調線互動、聲母音值查詢，保留教師提供的聲調與連讀變調圖片。</li>
+<li>學習單選用8個詞彙，以雙腔調型拼音直接呈現；第六站增加教師提供的粄粽／邦加粽剖面照片。</li>
+<li>家庭語言卡增列2010與2020年地圖比較；元宵節資訊增加山口洋相關背景及達雅族參與。</li>
+<li>第一站進入第二站增設七幕約30秒的像素冒險，可暫停、重播、略過、按「開始探險！」繼續。</li>
+</ul>
+<h2>beta V6.2.4｜2026-11-10</h2>
+<ul>
+<li>元宵單元改為「臺灣元宵」與「山口洋元宵」兩個入口。</li>
+<li>臺灣元宵新增花燈／新埔迎天穿、苗栗𪹚龍、北埔油笐火等主題，支援照片切換與大圖檢視。</li>
+<li>修復教材字級按鈕被後續CSS覆蓋問題，讓課文、拼音及元宵內容可調整字級。</li>
+<li>教師提供的北埔油笐火照片納入網站素材；部分外部圖片保留來源連結。</li>
+</ul>
+<h2>beta V6.2.3｜2026-11-10</h2>
+<ul>
+<li>粽子比較新增臺灣客家粽與邦加Bakcang／Nyuk Cung雙照片輪播，並可與原菜粄比較分頁切換。</li>
+<li>補入粽葉、椰奶及餡料比較；對邦加做法加入適用範圍說明。</li>
+</ul>
+<h2>beta V6.2.2｜2026-11-09</h2>
+<ul>
+<li>修正蘭芳公司短動畫相關CSS及四階段操作；修復長文彈窗遭截斷、無法捲動。</li>
+<li>語言傳承資訊卡調整；移除不適合直接呈現的圖片，改用山口洋元宵影片卡。</li>
+<li>北埔油笐火及Choi Pan照片部分改為教師提供的本地檔案。</li>
+<li>將站內MP4影片與<code>assets/video/</code>移除，以降低上傳量；蘭芳公司影片改為網站內的YouTube嵌入，並保留外部觀看連結和關閉即停止播放。</li>
+</ul>
+<h2>beta V6.2.1｜2026-11-09（依原程式碼版本註記）</h2>
+<ul>
+<li>引入可點擊的歷史、生活、語言資訊卡；調整彈窗捲動區及蘭芳公司短動畫的介面樣式。具體變更範圍以原始CSS註記為據。</li>
+</ul>
+<h2>beta V6.2.0｜2026-11-09</h2>
+<ul>
+<li>整合頁首簡化導覽、地圖聚焦、遷移過場及部分詞彙短解。</li>
+<li>直接打包臺灣海陸及山口洋河婆客語WAV音訊，免選擇外部音檔。</li>
+<li>擴充蘭芳公司、山口洋與語言傳承互動資訊卡；曾加入站內影片版本，後續V6.2.2調整為YouTube嵌入。</li>
+<li>菜包／Choi Pan比較採左右實景照片幻燈片，支援手動切換、圓點換圖、6.5秒自動輪播及暫停。</li>
+</ul>
+<h2>beta V6.1.1｜2026-11-09</h2>
+<ul>
+<li>將返回地圖、站別、上一步、下一步移至頁首；縮小版本署名並移除底部固定工具列。</li>
+<li>保留地圖、拼音、教學內容與課堂工具。</li>
+</ul>
+<h2>beta V6.1.0｜2026-11-09</h2>
+<ul>
+<li>印尼五處客家聚居地加入擴散光點與選取效果。</li>
+<li>臺灣客家人口地圖加入放大、縮小、還原及縣市定位。</li>
+<li>「往南洋移民」改為由廣東、福建前往山口洋、邦加、雅加達、泗水的四條路線；路線描繪時視角隨目的地聚焦。</li>
+<li>臺灣與南洋路線互斥，不再繪製臺灣至印尼直線；可返回全圖或重播路線。</li>
+<li>第二站恢復原教材14段課文順序，移除額外自行加上的分段標題。</li>
+</ul>
+<h2>beta V6.0.2｜2026-11-09</h2>
+<ul>
+<li>印尼聚居地加入光暈動畫；臺灣縣市地圖加入縮放與定位；移民路線開始改為四條南洋路徑。</li>
+<li>第二站改回原有14段課文順序。這一版內容大多併入後續V6.1.0。</li>
+</ul>
+<h2>beta V6.0.1｜2026-11-09</h2>
+<ul>
+<li>修復倒數計時器60秒誤設為60毫秒的錯誤。</li>
+<li>將碼錶、倒數計時器、輪盤抽籤整合至<code>app.js</code>與<code>styles.css</code>，移除額外<code>tools.js</code>／<code>tools.css</code>引用。</li>
+<li>驗證八站、雙腔及拼音切換、地圖互動和六種計時預設。</li>
+</ul>
+<h2>beta V6.0｜2026-11-09</h2>
+<ul>
+<li>新增碼錶、倒數計時器、學生抽籤輪盤。</li>
+<li>臺灣客家人口分布增加縣市資料卡、比例與動態光暈。</li>
+<li>東亞／東南亞地圖加入點擊原鄉選擇遷移方向；同步更新標題與網頁設計署名。</li>
+</ul>
+<h2>beta V5.0｜2026-11-09（先前討論摘要）</h2>
+<ul>
+<li>將雙腔課文拼音的數字調值改採上標，加入調型／調值呈現切換。</li>
+<li>採用beta V5.0作為後續網站版本更新的基準。</li>
+</ul>
+<h2>V4階段｜日期與完整小版本未核實（先前討論摘要）</h2>
+<ul>
+<li>納入實景圖片、調整臺灣客家人口分布圖，刪去不適合直接給學生觀看的教師提示內容。</li>
+</ul>
+<h2>初期試作階段｜V1～V3細節待補（尚無逐版檔案）</h2>
+<ul>
+<li>形成地圖探索式互動網站、分站導覽、雙腔課文與文化內容雛形。</li>
+<li>決定以地圖探索為主軸，兼顧教師「下一步」導覽；規劃取代傳統PPTX的投影式教學。</li>
+<li><strong>暫不列出無法核實的V1、V2、V3日期或功能明細</strong>；待取得當時ZIP／HTML再逐版補登。</li>
+</ul><footer>網頁設計／原始程式碼設計：曾櫳震老師｜版本紀錄整理至2026-11-10。</footer></main></body></html>

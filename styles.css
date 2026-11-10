@@ -691,3 +691,59 @@ html,body{font-size:18px}
 .cv-tone-switch button.active{background:#116b80;color:white;border-color:#116b80}
 @media(max-width:1250px) and (min-width:981px){.intro-layout{grid-template-columns:minmax(0,1.65fr) minmax(375px,1fr)!important}}
 @media(max-width:980px){.finale-vocab-intro{display:block}.finale-vocab-intro .culture-vocab-open{margin-top:14px;white-space:normal}}
+
+/* beta V8.0.1 — 羅芳伯肖像完整顯示（不影響其他圖片） */
+.story-card-photo.portrait-thumbnail{height:192px;background:#edf2ef}
+.story-card-photo.portrait-thumbnail .real-photo{height:100%;min-height:0;background:#edf2ef;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px;gap:3px}
+.story-card-photo.portrait-thumbnail .real-photo img{object-fit:contain;object-position:center;width:100%;height:calc(100% - 25px);flex:1;min-height:0;aspect-ratio:auto;transform:none}
+.story-card-photo.portrait-thumbnail .real-photo figcaption{position:static;flex:none;background:transparent;color:#4c6771;padding:0;font-size:10px;text-align:center;line-height:1.3}.story-card-photo.portrait-thumbnail .real-photo figcaption a{color:#286979;text-decoration:underline}
+.real-photo.story-detail-portrait{min-height:0;max-height:none;width:min(100%,590px);padding:8px 12px 12px;margin:0 auto 16px;border-radius:14px;background:#f1f4f1;overflow:visible;display:flex;flex-direction:column;align-items:center;gap:8px}
+.real-photo.story-detail-portrait img{width:auto;max-width:100%;height:auto;max-height:min(50vh,465px);min-height:0;object-fit:contain;object-position:center;aspect-ratio:auto;transform:none}
+.real-photo.story-detail-portrait figcaption{position:static;background:transparent;color:#4e6770;text-align:center;padding:0;font-size:13px;line-height:1.5}
+.real-photo.story-detail-portrait figcaption a{color:#176979;text-decoration:underline}
+/* beta V8.0.1 — 詞彙卡與學生拉霸共存；預設收合，不遮擋詞彙 */
+.cv-modal{width:min(1340px,96vw)}
+.cv-modal-body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;min-height:0;align-items:stretch}
+.cv-main-column{min-width:0;display:flex;flex-direction:column;gap:13px}
+.cv-slot-panel{width:128px;min-width:0;border-radius:16px;border:1px solid #cbdfe0;background:#f3f8f8;padding:12px;display:flex;flex-direction:column;gap:10px;transition:width .18s ease}
+.cv-slot-panel.expanded{width:255px;background:#edf5f6}
+.cv-slot-toggle{width:100%;border:1px solid #a8c8cf;background:white;color:#1b5867;border-radius:10px;font-size:15px;font-weight:800;padding:13px 8px;cursor:pointer;line-height:1.5}
+.cv-slot-toggle span{display:block;color:#478496}
+.cv-slot-details{display:flex;flex-direction:column;gap:10px;min-width:0}
+.cv-slot-details[hidden]{display:none}
+.cv-slot-tip{font-size:13px;line-height:1.6;color:#55727b;margin:0}
+.cv-slot-reels{display:flex;align-items:center;justify-content:center;border:3px solid #d4b885;box-shadow:inset 0 1px 8px #16434c20;background:#fff9ed;border-radius:11px;min-height:95px;padding:10px;overflow:hidden}
+.cv-slot-reel{font-size:clamp(26px,2.5vw,39px);font-weight:900;line-height:1.2;color:#91522a;max-width:100%;overflow-wrap:anywhere;text-align:center}
+.cv-slot-reel.rolling{animation:cvSlotBounce .15s ease-in-out infinite alternate;color:#166b79}
+@keyframes cvSlotBounce{from{transform:translateY(-5px);opacity:.65}to{transform:translateY(5px);opacity:1}}
+.cv-slot-draw{background:#176c80;color:white;border:0;border-radius:11px;padding:13px 9px;font-size:20px;font-weight:800;cursor:pointer}
+.cv-slot-draw:disabled{cursor:not-allowed;opacity:.55}
+.cv-slot-status{font-size:13px;color:#436775;line-height:1.5;text-align:center;margin:0;overflow-wrap:anywhere}
+.cv-slot-reset{border:1px solid #a8c8cf;border-radius:9px;background:#fff;color:#2a6070;padding:9px;font-weight:700;cursor:pointer}
+.cv-slot-settings{border-top:1px solid #c4dada;padding-top:10px;color:#325966;font-size:13px;line-height:1.5}
+.cv-slot-settings summary{cursor:pointer;font-weight:800;list-style:revert}
+.cv-slot-settings label{display:block;margin:10px 0 5px}
+.cv-slot-settings textarea{width:100%;min-width:0;resize:vertical;background:white;color:#183a46;border:1px solid #a8c8cf;border-radius:9px;padding:8px;font-size:14px;line-height:1.6}
+.cv-slot-settings button{width:100%;padding:8px;background:white;border-radius:8px;border:1px solid #9fc1c6;color:#205d6f;font-weight:750;cursor:pointer}
+.cv-slot-settings label.cv-slot-checkbox{display:flex;align-items:flex-start;gap:7px;cursor:pointer}
+.cv-slot-checkbox input{width:17px;height:17px;flex:none;margin-top:2px}
+.site-credit .version-history-link{color:#1a6c7c;text-decoration:underline;text-underline-offset:2px;font-weight:650}
+@media(max-width:920px){.cv-modal{width:98vw}.cv-modal-body{gap:9px}.cv-slot-panel{width:110px;padding:8px}.cv-slot-panel.expanded{width:208px}.cv-slot-toggle{font-size:13px;padding:9px 3px}.cv-slot-draw{font-size:17px}.cv-slot-reel{font-size:27px}}
+@media(max-width:640px){.cv-modal-body{display:flex;flex-direction:column}.cv-slot-panel,.cv-slot-panel.expanded{width:100%}.cv-slot-toggle span{display:inline}.cv-slot-reels{min-height:65px}.cv-slot-details{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cv-slot-tip,.cv-slot-reels,.cv-slot-status,.cv-slot-settings{grid-column:1/-1}.cv-slot-settings textarea{max-height:75px}.cv-slot-settings label{margin-top:4px}}
+@media(prefers-reduced-motion:reduce){.cv-slot-reel.rolling{animation:none}.cv-slot-panel{transition:none}}
+
+/* beta V8.0.1 — 第八站文化統整：資訊卡點擊才揭曉說明及實例 */
+.reflection-grid{align-items:start}
+.reflection-reveal{border:1px solid #d7e5e5;border-radius:15px;background:#f7fafa;min-width:0;overflow:hidden;box-shadow:0 3px 12px #16384d08}
+.reflection-reveal summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:24px 22px;min-height:100px;cursor:pointer;list-style:none;color:#235d67}
+.reflection-reveal summary::-webkit-details-marker{display:none}
+.reflection-reveal summary:focus-visible{outline:3px solid #2e8493;outline-offset:-4px}
+.reflection-reveal summary strong{font-size:clamp(22px,2.1vw,30px);line-height:1.5}
+.reflection-expand-icon{font-size:26px;color:#428b97;font-weight:600;line-height:1}
+.reflection-reveal[open]{background:#eaf6f3;border-color:#8abbb0}
+.reflection-reveal[open] .reflection-expand-icon{font-size:0}
+.reflection-reveal[open] .reflection-expand-icon::after{content:'−';font-size:26px}
+.reflection-reveal-body{border-top:1px solid #c9e1de;padding:4px 22px 22px}
+#stageBody .reflection-reveal-body p{font-size:calc(18px * var(--fontup,1));line-height:1.75;color:#325a62;margin:13px 0 0}
+#stageBody .reflection-reveal-body p:last-child{font-weight:650;color:#1c6671}
+@media(max-width:900px){.reflection-reveal summary{min-height:75px;padding:15px 18px}.reflection-reveal-body{padding:4px 18px 18px}}

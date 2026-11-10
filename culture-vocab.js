@@ -1,4 +1,4 @@
-/* V7.0.0：文化詞彙彈出式學習視窗。原始調值由教師校訂，依網站切換調值／調型。 */
+/* V8.0.1：文化詞彙彈出式學習視窗。原始調值由教師校訂，依網站切換調值／調型。 */
 (()=>{'use strict';
 const D={
  2:[['移民','移民','Rhi55 min55','I11 min11','移民'],['南洋','南洋','Nam55 rhong55','Nam11 iong11','南洋（指東南亞地區）'],['做生理','做生理','Zo11 sen53 li53','Zo55 sen11 li24','經商'],['組織','組織','Zu24 zhib5','Zu31 ziib2','組織'],['採礦','採礦','Cai24 kong11','Cai31 kong55','採礦'],['金','金','Gim53','Gim24','金'],['錫','錫','Siag5','Siag2','錫']],
@@ -24,7 +24,7 @@ const IMAGE_INFO={
 };
 const overlay=document.getElementById('cultureVocabOverlay');
 if(!overlay)return;
-let activeStage=3,idx=0,shown=false,dialect='hailu',lastFocus=null,notationMode='shape';
+let activeStage=3,idx=0,shown=false,dialect='hailu',lastFocus=null,notationMode='shape',slotRolling=false,slotTimer=null;
 const words=()=>D[activeStage]||[];
 const current=()=>words()[idx];
 const fmt=(src)=>String(src).replace(/([a-z]+)(53|55|24|11|33|31|5|2)(?=[^a-z0-9]|$)/gi,(raw,syllable,tone)=>{
@@ -49,14 +49,61 @@ function draw(){const w=current();if(!w)return;
 window.renderCultureVocab=function(host,stage){const list=D[stage]||[];if(!list.length)return;
  host.insertAdjacentHTML('beforeend',`<section class="culture-vocab-launch"><div><span class="micro-label">語言學習 × 文化探索</span><strong>客語詞彙・一起讀、一起猜！</strong></div><button type="button" class="culture-vocab-open" data-cv-open="${stage}">📖 猜一猜詞彙（${list.length}詞）</button></section>`);
 };
+// 小型拉霸與輪盤共用資料。收合不影響詞彙卡的朗讀、翻牌和切換。
+const slotPanel=overlay.querySelector('#cvSlotPanel');
+const slotDetails=overlay.querySelector('#cvSlotDetails');
+const slotToggle=overlay.querySelector('#cvSlotToggle');
+const slotResult=overlay.querySelector('#cvSlotResult');
+const slotStatus=overlay.querySelector('#cvSlotStatus');
+const slotDraw=overlay.querySelector('#cvSlotDraw');
+const slotNames=overlay.querySelector('#cvSlotNames');
+const slotExclude=overlay.querySelector('#cvSlotExclude');
+function drawService(){return window.ClassroomDraw;}
+function stopSlotAnimation(){if(slotTimer!==null){clearInterval(slotTimer);slotTimer=null;}slotRolling=false;slotResult.classList.remove('rolling');}
+function syncSlot(withNames=false){
+ const snapshot=drawService()?.snapshot();if(!snapshot)return;
+ if(!slotRolling)slotResult.textContent=snapshot.last||'—';
+ slotStatus.textContent=`${snapshot.names.length}人・已抽${snapshot.picked.length}人・可抽${snapshot.remaining}人`;
+ slotDraw.disabled=slotRolling||snapshot.spinning||snapshot.remaining===0;
+ slotDraw.textContent=snapshot.remaining===0?'已全部抽完':slotRolling?'抽籤中……':'拉霸抽籤';
+ if(withNames && document.activeElement!==slotNames)slotNames.value=snapshot.names.join('\n');
+ if(document.activeElement!==slotExclude)slotExclude.checked=snapshot.exclude;
+}
+function expandSlot(expanded){
+ slotPanel.classList.toggle('expanded',expanded);slotDetails.hidden=!expanded;
+ slotToggle.setAttribute('aria-expanded',String(expanded));slotToggle.innerHTML=expanded?'▣ 收合拉霸 <span aria-hidden="true">−</span>':'▣ 抽籤拉霸 <span aria-hidden="true">＋</span>';
+ if(expanded)syncSlot(true);
+}
+function pullSlot(){
+ const svc=drawService();if(!svc||slotRolling)return;
+ const selected=svc.drawQuick();
+ if(!selected.ok){slotStatus.textContent=selected.reason;syncSlot();return;}
+ const names=svc.snapshot().names;
+ slotRolling=true;slotResult.classList.add('rolling');syncSlot();
+ let tick=0;slotResult.textContent='···';
+ slotTimer=setInterval(()=>{
+   tick++;
+   if(names.length)slotResult.textContent=names[Math.floor(Math.random()*names.length)];
+   if(tick>=13){stopSlotAnimation();slotResult.textContent=selected.winner;syncSlot();}
+ },75);
+}
+window.addEventListener('classroom-draw-change',()=>{if(!overlay.hidden&&slotDetails&&!slotDetails.hidden)syncSlot();});
 function open(stage){if(!D[stage])return;activeStage=stage;idx=0;shown=false;lastFocus=document.activeElement;
  const topDial=document.querySelector('[data-dialect].active')?.dataset.dialect;
- dialect=topDial==='sixian'?'sixian':'hailu';notationMode=document.getElementById('toneModeToggle')?.textContent?.includes('調型')?'shape':'value';overlay.hidden=false;document.body.classList.add('cv-dialog-open');draw();overlay.querySelector('#cvReveal')?.focus();
+ dialect=topDial==='sixian'?'sixian':'hailu';notationMode=document.getElementById('toneModeToggle')?.textContent?.includes('調型')?'shape':'value';overlay.hidden=false;document.body.classList.add('cv-dialog-open');stopSlotAnimation();expandSlot(false);draw();overlay.querySelector('#cvReveal')?.focus();
  document.querySelectorAll('.food-photo-frame').forEach(x=>x.setAttribute('data-paused-by-vocab','true'));
 }
-function close(){overlay.hidden=true;document.body.classList.remove('cv-dialog-open');lastFocus?.focus?.();}
+function close(){stopSlotAnimation();overlay.hidden=true;document.body.classList.remove('cv-dialog-open');lastFocus?.focus?.();}
 document.addEventListener('click',e=>{const op=e.target.closest('[data-cv-open]');if(op){open(+op.dataset.cvOpen);return;}
  if(overlay.hidden)return;
+ const slotAction=e.target.closest('[data-slot-action]')?.dataset.slotAction;
+ if(slotAction){
+   if(slotAction==='toggle')expandSlot(slotDetails.hidden);
+   if(slotAction==='draw')pullSlot();
+   if(slotAction==='reset'){stopSlotAnimation();drawService()?.reset();syncSlot();}
+   if(slotAction==='save-names'){stopSlotAnimation();drawService()?.setNames(slotNames.value);syncSlot(true);}
+   return;
+ }
  const d=e.target.closest('[data-cv-dialect]');if(d){dialect=d.dataset.cvDialect;shown=false;draw();return;}
  const tone=e.target.closest('[data-cv-tone]');if(tone){notationMode=tone.dataset.cvTone;draw();return;}
  const act=e.target.closest('[data-cv-action]')?.dataset.cvAction;
@@ -67,6 +114,7 @@ document.addEventListener('click',e=>{const op=e.target.closest('[data-cv-open]'
  if(act==='random'){if(words().length>1)idx=(idx+1+Math.floor(Math.random()*(words().length-1)))%words().length;shown=false;}
  draw();
 });
+slotExclude.addEventListener('change',()=>{drawService()?.setExclude(slotExclude.checked);syncSlot();});
 overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
 document.addEventListener('keydown',e=>{if(overlay.hidden)return;
  if(e.key==='Escape'){e.preventDefault();close();}

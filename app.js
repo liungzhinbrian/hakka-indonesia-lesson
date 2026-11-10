@@ -18,7 +18,7 @@
   const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu.wav', id:'assets/audio/singkawang-hopo.wav'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
-  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false},reflection:'保留',festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false},festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -471,7 +471,7 @@
   };
   function infoTile(id,kicker,title,summary,photoKey=''){
     return `<button type="button" class="story-info-card" data-action="story-info" data-card="${id}" aria-label="了解${esc(title)}">
-      ${photoKey?`<div class="story-card-photo">${photo(photoKey)}</div>`:''}
+      ${photoKey?`<div class="story-card-photo ${photoKey==='luo'?'portrait-thumbnail':''}">${photo(photoKey)}</div>`:''}
       <span class="micro-label">${esc(kicker)}</span><strong>${esc(title)}</strong><span>${esc(summary)}</span><span class="story-more">點擊了解更多 ＋</span>
     </button>`;
   }
@@ -482,7 +482,7 @@
       return;
     }
     const item=INFO_CARDS[id];if(!item)return;
-    openDialog(item.title,item.tag,`${item.photo?photo(item.photo,'story-detail-photo'):''}<p class="story-detail-text">${esc(item.body)}</p>${item.source?`<p class="story-source"><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">閱讀資料來源 ↗</a></p>`:''}`);
+    openDialog(item.title,item.tag,`${item.photo?photo(item.photo, item.photo==='luo'?'story-detail-photo story-detail-portrait':'story-detail-photo'):''}<p class="story-detail-text">${esc(item.body)}</p>${item.source?`<p class="story-source"><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">閱讀資料來源 ↗</a></p>`:''}`);
   }
   function showLanfangVideo(){
     openDialog('蘭芳公司：18世紀的客家移民史','客家公共傳播基金會 × 臺灣吧・客語版',
@@ -669,9 +669,11 @@
       {name:'改變',desc:'生活環境、材料、語言使用情境產生變化',example:'臺灣與印尼菜粄的內餡、做法有各自的在地特色。'},
       {name:'融合',desc:'與其他族群、地方文化相遇並交流',example:'山口洋元宵活動展現不同族群的共同參與。'}
     ];
-    return `<section class="panel finale-vocab-intro"><div><span class="micro-label">最後一站・客語總複習</span><h2>28個文化詞彙，還記得多少？</h2><p>全班看客語漢字與拼音，先讀一讀、猜猜意思；點擊揭曉後，再隨機抽下一詞。</p></div><button type="button" class="culture-vocab-open" data-cv-open="7">📖 開始28詞總複習</button></section><section class="panel"><div class="micro-label">最後的文化提問</div><h2 class="question">你今天最有印象的是哪一個例子？<br>它讓你想到「保留、改變」還是「融合」？</h2><div class="grid3">${cards.map(c=>`<button type="button" class="reflection ${state.reflection===c.name?'active':''}" data-action="reflect" data-value="${c.name}" style="text-align:left"><strong>${c.name}</strong><p>${c.desc}</p></button>`).join('')}</div>
-    <div class="answer-box" style="margin-top:15px">${cards.find(c=>c.name===state.reflection).example}</div></section>
-    <section class="panel soft"><div class="grid2"><div><div class="micro-label">課程總結</div><div class="lesson-outro">飄洋過海，客家文化在不同地方繼續生活。</div><p>臺灣與印尼的客家人有歷史連結，也有各自的社會環境與文化發展。</p></div><div><h2>收回學習單前</h2><p>選一個今天的實例，寫出你看到的文化現象與理由。</p><a href="worksheet.html" target="_blank" rel="noopener" class="action" style="display:inline-block;text-decoration:none;margin-top:10px">開啟可列印學習單 ↗</a></div></div></section>`;
+    return `<section class="panel finale-vocab-intro"><div><span class="micro-label">最後一站・客語總複習</span><h2>28個文化詞彙，還記得多少？</h2></div><button type="button" class="culture-vocab-open" data-cv-open="7">📖 開始28詞總複習</button></section>
+    <section class="panel"><div class="micro-label">最後的文化提問</div><h2 class="question">你今天最有印象的是哪一個例子？<br>它讓你想到「保留、改變」還是「融合」？</h2>
+      <div class="grid3 reflection-grid">${cards.map(c=>`<details class="reflection-reveal"><summary><strong>${c.name}</strong><span class="reflection-expand-icon" aria-hidden="true">＋</span></summary><div class="reflection-reveal-body"><p>${c.desc}</p><p>${c.example}</p></div></details>`).join('')}</div>
+    </section>
+    <section class="panel soft"><div class="micro-label">課程總結</div><div class="lesson-outro">飄洋過海，客家文化在不同地方繼續生活。</div><p>臺灣與印尼的客家人有歷史連結，也有各自的社會環境與文化發展。</p></section>`;
   }
   function updateAudioPlayers(){}
   const vocabPinyin={
@@ -771,7 +773,6 @@
       const kind=el.dataset.food;if(!FOOD_PHOTOS[kind])return;
       state.foodPaused[kind]=!state.foodPaused[kind];refreshFoodCarousel(kind);
     }
-    if(action==='reflect'){state.reflection=el.dataset.value;render();}
   });
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){if(transitionOverlay&&!transitionOverlay.hidden){closeJourneyTransition();return;}closeDialog();closeNavigation(true);return;}
@@ -893,6 +894,36 @@
       });
     }catch(_){}
   }
+  // V8.0.1：詞彙卡旁的抽籤拉霸與既有輪盤共用同一份名單及抽中紀錄。
+  function drawSnapshot(){return {names:[...wheel.names],picked:[...wheel.picked],exclude:wheel.exclude,spinning:wheel.spinning,last:wheel.last,remaining:getPool().length};}
+  function notifyDraw(){window.dispatchEvent(new CustomEvent('classroom-draw-change',{detail:drawSnapshot()}));}
+  function updateWheelNames(raw){
+    if(wheel.spinning)return false;
+    const names=parseNames(raw);wheel.names=names;wheel.picked=wheel.picked.filter(n=>names.includes(n));wheel.last='';wheel.rotation=0;
+    if(active==='spinner'&&!overlay.hidden)render();notifyDraw();return true;
+  }
+  function updateWheelExclude(checked){
+    if(wheel.spinning)return false;
+    wheel.exclude=Boolean(checked);wheel.rotation=0;wheel.last='';
+    if(active==='spinner'&&!overlay.hidden)render();notifyDraw();return true;
+  }
+  function resetWheel(){
+    if(wheel.spinning)return false;
+    wheel.picked=[];wheel.rotation=0;wheel.last='';
+    if(active==='spinner'&&!overlay.hidden)render();notifyDraw();return true;
+  }
+  window.ClassroomDraw=Object.freeze({
+    snapshot:drawSnapshot,
+    drawQuick(){
+      if(wheel.spinning)return {ok:false,reason:'輪盤旋轉中'};
+      const pool=getPool();if(!pool.length)return {ok:false,reason:wheel.names.length?'已全部抽完':'請先設定名單'};
+      const winner=pool[randomIndex(pool.length)];wheel.last=winner;wheel.picked.push(winner);
+      if(active==='spinner'&&!overlay.hidden)render();notifyDraw();return {ok:true,winner};
+    },
+    reset:resetWheel,
+    setNames:updateWheelNames,
+    setExclude:updateWheelExclude
+  });
   document.addEventListener('click',e=>{
     const launch=e.target.closest('[data-tool]');if(launch){openTool(launch.dataset.tool);return;}
     if(e.target===overlay||e.target.closest('#toolClose')){closeTool();return;}
@@ -907,7 +938,7 @@
       render();
     }
     if(op==='timer-reset'){timer.running=false;timer.remaining=timer.seconds*1000;timer.finished=false;render();}
-    if(op==='wheel-clear'){if(wheel.spinning)return;wheel.picked=[];wheel.rotation=0;wheel.last='';render();}
+    if(op==='wheel-clear')resetWheel();
     if(op==='wheel-spin')spin();
   });
   document.addEventListener('input',e=>{
@@ -918,14 +949,15 @@
     const result=document.getElementById('wheelResult');if(result)result.textContent='按「開始抽籤」旋轉輪盤';
     const picked=document.getElementById('pickedNames');if(picked){picked.replaceChildren(...wheel.picked.map(name=>{const span=document.createElement('span');span.textContent=name;return span;}));if(!wheel.picked.length)picked.textContent='尚無紀錄';}
     const status=document.getElementById('wheelStatus');if(status)status.textContent=`${names.length}人｜已抽${wheel.picked.length}人｜可抽${getPool().length}人`;
+    notifyDraw();
   });
   document.addEventListener('change',e=>{
     if(e.target.id!=='wheelExclude'||wheel.spinning)return;
-    wheel.exclude=e.target.checked;wheel.rotation=0;wheel.last='';render();
+    updateWheelExclude(e.target.checked);
   });
   function spin(){
     if(wheel.spinning)return;const pool=getPool();if(!pool.length){const r=document.getElementById('wheelResult');if(r)r.textContent='已全部抽完，請按「重新抽籤」。';return;}
-    wheel.spinning=true;
+    wheel.spinning=true;notifyDraw();
     const canvas=document.getElementById('wheelCanvas');
     // 上一次結果先保留在輪盤上；只有下一次開始抽籤才重新分配剩餘名單。
     if(canvas){canvas.style.transition='none';canvas.style.transform='rotate(0deg)';}
@@ -939,7 +971,7 @@
     if(canvas){canvas.style.transition='transform 4.4s cubic-bezier(.12,.72,.12,1)';canvas.style.transform=`rotate(${wheel.rotation}deg)`;}
     const spinButton=document.querySelector('[data-util="wheel-spin"]');if(spinButton){spinButton.disabled=true;spinButton.textContent='抽籤中……';}
     window.setTimeout(()=>{
-      wheel.last=result;wheel.picked.push(result);wheel.spinning=false;
+      wheel.last=result;wheel.picked.push(result);wheel.spinning=false;notifyDraw();
       // 停在抽中的名字上，讓全班能看清楚結果；不立即重畫成剩餘名單。
       if(active==='spinner'&&!overlay.hidden){
         const resultBox=document.getElementById('wheelResult');
