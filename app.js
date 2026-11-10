@@ -380,7 +380,7 @@
       <div class="location-chips"><button data-action="map-point" data-place="singkawang">山口洋</button><button data-action="map-point" data-place="pontianak">坤甸</button><button data-action="map-point" data-place="bangka">邦加</button><button data-action="map-point" data-place="jakarta">雅加達</button><button data-action="map-point" data-place="surabaya">泗水</button></div>
       <p class="prompt-side">這些客家社群都在同一座島上嗎？</p></aside>`;
     }
-    return `<aside class="panel intro-side country-facts"><div class="micro-label">認識印尼 Indonesia</div><h2>千島之國，多語社會</h2>
+    return `<aside class="panel intro-side country-facts overview-side"><div class="micro-label">認識印尼 Indonesia</div><h2>千島之國，多語社會</h2>
       <div class="country-numbers"><div><span>印尼總人口（2026年推估）</span><strong>約2.87億</strong></div><div><span>華人占比（2010年普查）</span><strong>約1.2%</strong></div></div>
       <div class="population-compare" aria-label="臺灣客家人口與印尼華人人口比較">
         <div class="population-compare-title">人數比一比：比例小，不代表人數少</div>
@@ -391,9 +391,9 @@
         <p class="population-compare-note">兩組資料年份與族群定義不同；「印尼華人」不等於「印尼客家人」。</p>
       </div>
       <p class="country-language"><b>國家官方語言：</b>印尼語（Bahasa Indonesia）</p>
-      <div class="country-heritage"><b>印尼華人保留的部分傳承語言</b><div class="heritage-tags"><span>福建話（閩南語）</span><span>潮汕話（閩語）</span><span>廣府話（粵語）</span><span>客語</span></div></div>
+      <div class="country-heritage"><b class="heritage-title">印尼華人保留的部分傳承語言</b><div class="heritage-tags"><span>福建話（閩南語）</span><span>潮汕話（閩語）</span><span>廣府話（粵語）</span><span>客語</span></div></div>
       <p class="source-mini">資料：<a href="https://www.bps.go.id/en/statistics-table/2/MTk3NSMy/mid-year-population-" target="_blank" rel="noopener">印尼統計局（2026年人口推估）</a>、<a href="https://www.atlantis-press.com/article/25889515.pdf" target="_blank" rel="noopener">印尼2010年族群普查</a>、<a href="https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=56071&amp;pid=253058" target="_blank" rel="noopener">臺灣客委會2021年調查</a>。不宜將2010年1.2%直接套用於2026年總人口。</p>
-      <div class="map-info map-info-side" id="mapInfo" aria-live="polite"></div>
+      <div class="map-info map-info-side overview-map-info" id="mapInfo" aria-live="polite"></div>
       </aside>`;
   }
   function updateMapInfo(){
@@ -847,7 +847,10 @@
        <div class="wheel-surround"><div class="wheel-pointer" aria-hidden="true"></div><canvas id="wheelCanvas" width="640" height="640" aria-label="旋轉抽籤輪盤"></canvas><div class="wheel-hub" aria-hidden="true">客</div></div>
        <div id="wheelResult" class="wheel-result" aria-live="polite">${wheel.last?`抽中：${escapeHTML(wheel.last)}`:'按「開始抽籤」旋轉輪盤'}</div>
        <div class="tool-actions"><button class="tool-primary" data-util="wheel-spin" ${wheel.spinning?'disabled':''}>${wheel.spinning?'抽籤中……':'開始抽籤'}</button><button class="tool-secondary" data-util="wheel-clear">重新抽籤</button></div></div>
-       <div class="wheel-settings"><label for="wheelNames">學生姓名／座號（一行一人，也可用逗號分隔）</label>
+       <div class="wheel-settings"><label for="wheelRosterFile" class="roster-file-label">從本機匯入學生名單（CSV／TXT）</label>
+       <input type="file" id="wheelRosterFile" class="roster-file-input" accept=".csv,.txt,text/csv,text/plain" ${wheel.spinning?'disabled':''} aria-describedby="wheelImportStatus">
+       <p id="wheelImportStatus" class="roster-file-status" role="status">只在這個瀏覽器分頁處理，不上傳名單到網站。</p>
+       <label for="wheelNames">學生姓名／座號（一行一人，也可用逗號分隔）</label>
        <textarea id="wheelNames" rows="10" placeholder="01\n02\n03\n04" ${wheel.spinning?'disabled':''}>${escapeHTML(wheel.names.join('\n'))}</textarea>
        <label class="wheel-check"><input id="wheelExclude" type="checkbox" ${wheel.exclude?'checked':''} ${wheel.spinning?'disabled':''}/>抽過的人暫不重複</label>
        <p id="wheelStatus" class="wheel-status">${wheel.names.length}人｜已抽${wheel.picked.length}人｜可抽${getPool().length}人</p>
@@ -858,6 +861,49 @@
   }
   function escapeHTML(s){return String(s).replace(/[&<>"']/g,k=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[k]));}
   function parseNames(input){return [...new Set(input.split(/[\n,，、;；]+/).map(s=>s.trim()).filter(Boolean))].slice(0,120);}
+  // 從授課電腦本機讀取，不上傳，也不保存到公開程式碼或 localStorage。
+  function parseRosterText(source){
+    const lines=String(source).replace(/^\uFEFF/,'').split(/\r?\n/);
+    const output=[];
+    for(let i=0;i<lines.length;i++){
+      const line=lines[i].trim();
+      if(!line || /^班級\s*[-,，\t]\s*姓名$/.test(line) || /^學生班級\s*[-,，\t]\s*姓名$/.test(line))continue;
+      const m=line.match(/^"?(\d{3})"?\s*[-－—,，\t]\s*"?([^",，\t]+?)"?$/);
+      if(!m)throw new Error(`第${i+1}行格式不符，請使用「101-姓名」或「班級,姓名」。`);
+      const name=m[2].trim();
+      if(!name)throw new Error(`第${i+1}行缺少姓名。`);
+      output.push(`${m[1]}－${name}`);
+    }
+    const names=[...new Set(output)];
+    if(!names.length)throw new Error('檔案內沒有可辨識的學生名單。');
+    if(names.length>120)throw new Error('目前最多可匯入120位學生。');
+    return names;
+  }
+  function importRosterText(source){
+    if(wheel.spinning)throw new Error('輪盤旋轉中，請等抽籤結束再匯入。');
+    const names=parseRosterText(source);
+    wheel.names=names;wheel.picked=[];wheel.last='';wheel.rotation=0;
+    if(active==='spinner'&&!overlay.hidden)render();
+    notifyDraw();
+    return names.length;
+  }
+  document.addEventListener('change',async e=>{
+    const input=e.target;
+    if(input.id!=='wheelRosterFile'&&input.id!=='cvSlotRosterFile')return;
+    const target=input.id==='wheelRosterFile'?'wheelImportStatus':'cvSlotImportStatus';
+    const file=input.files?.[0];if(!file)return;
+    let msg='';
+    try{
+      if(!/\.(csv|txt)$/i.test(file.name))throw new Error('請選擇CSV或TXT文字檔。');
+      if(file.size>1024*1024)throw new Error('名單檔案過大（限制1MB）。');
+      const count=importRosterText(await file.text());
+      const slotNames=document.getElementById('cvSlotNames');
+      if(slotNames)slotNames.value=wheel.names.join('\n');
+      msg=`匯入成功：${count}位學生，已重設抽籤紀錄。`;
+    }catch(error){msg=`無法匯入：${error.message}`;}
+    const feedback=document.getElementById(target);if(feedback)feedback.textContent=msg;
+    input.value='';
+  });
   function getPool(){return wheel.exclude?wheel.names.filter(n=>!wheel.picked.includes(n)):wheel.names;}
   function drawWheel(){
     const canvas=document.getElementById('wheelCanvas'); if(!canvas)return;
@@ -922,6 +968,7 @@
     },
     reset:resetWheel,
     setNames:updateWheelNames,
+    importRosterText,
     setExclude:updateWheelExclude
   });
   document.addEventListener('click',e=>{
