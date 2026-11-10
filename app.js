@@ -113,27 +113,38 @@
     if(state.stage===5) updateAudioPlayers();
     closeNavigation();
   }
-  function goto(i,transition=false){
-    if(transition && state.stage===0 && i===1){openJourneyTransition();return;}
+  function goto(i){
     stopIndoCamera();resetGeoCamera();state.stage=Math.max(0,Math.min(7,i));
     render();window.scrollTo({top:0,behavior:'instant'});main.scrollTop=0;
   }
+  // 開場主題動畫不再綁定第一站的「下一步」，教師可從任何站別叫出並返回原位。
   const transitionOverlay=document.getElementById('journeyOverlay');
-  function openJourneyTransition(){
-    if(!transitionOverlay){goto(1);return;}
-    const frame=document.getElementById('journeyPixelFrame');
-    frame.src='journey-pixel.html?embed=1&play='+Date.now();
+  const journeyLaunch=document.getElementById('themeAnimationBtn');
+  const journeyFrame=document.getElementById('journeyPixelFrame');
+  let journeyReturnFocus=null;
+  function openJourneyAnimation(){
+    if(!transitionOverlay||!journeyFrame)return;
+    if(!transitionOverlay.hidden)return;
+    journeyReturnFocus=document.activeElement;
+    closeNavigation();
     transitionOverlay.hidden=false;
+    journeyFrame.src='journey-pixel.html?embed=1&play='+Date.now();
     document.getElementById('journeySkip')?.focus();
   }
-  function closeJourneyTransition(){
-    if(transitionOverlay)transitionOverlay.hidden=true;
-    const frame=document.getElementById('journeyPixelFrame');if(frame)frame.removeAttribute('src');
-    goto(1,false);
+  function closeJourneyAnimation(){
+    if(!transitionOverlay||transitionOverlay.hidden)return;
+    transitionOverlay.hidden=true;
+    journeyFrame?.removeAttribute('src'); // 關閉即停止播放，重開從第一幕開始。
+    const target=journeyReturnFocus;
+    journeyReturnFocus=null;
+    (target?.isConnected?target:journeyLaunch)?.focus();
   }
-  window.addEventListener('message',e=>{if(e.origin!==location.origin)return;if(e.data?.type==='hakkaJourneyStart'&&!transitionOverlay.hidden)closeJourneyTransition();});
-  document.getElementById('journeyStart')?.addEventListener('click',closeJourneyTransition);
-  document.getElementById('journeySkip')?.addEventListener('click',closeJourneyTransition);
+  window.addEventListener('message',e=>{
+    if(e.source!==journeyFrame?.contentWindow || e.origin!==location.origin)return;
+    if(e.data?.type==='hakkaJourneyClose'&&!transitionOverlay.hidden)closeJourneyAnimation();
+  });
+  journeyLaunch?.addEventListener('click',openJourneyAnimation);
+  document.getElementById('journeySkip')?.addEventListener('click',closeJourneyAnimation);
 
   function introStage(){
     return `<section class="intro-layout">${mapComponent()}${mapSidePanel()}</section>`;
@@ -367,10 +378,11 @@
   function mapSidePanel(){
     if(state.mapView==='taiwan'){
       const top=[...TW_COUNTIES].sort((a,b)=>b.ratio-a.ratio).slice(0,5);
-      return `<aside class="panel intro-side distribution-panel"><span class="micro-label">客委會｜2021年調查</span><h2>客家人口比例</h2>
-        <div class="map-info map-info-side" id="mapInfo" aria-live="polite"></div><div class="county-ratios">${top.map(c=>`<button type="button" class="ratio-row ratio-button" data-action="map-point" data-place="${c.id}"><span>${c.name}</span><span class="ratio-track"><span style="width:${c.ratio}%"></span></span><strong>${c.ratio}%</strong></button>`).join('')}</div>
-        <h3 class="location-list-title">選擇縣市</h3>
-        <div class="location-chips county-chips">${TW_COUNTIES.map(c=>`<button type="button" class="${state.place===c.id?'active':''}" data-action="map-point" data-place="${c.id}">${c.name}</button>`).join('')}</div>
+      return `<aside class="panel intro-side distribution-panel tw-distribution"><div class="micro-label">客委會｜2021年調查</div><h2>客家人口比例</h2>
+        <section class="distribution-section selected-county-section" aria-label="選定縣市詳細資料"><div class="map-info map-info-side" id="mapInfo" aria-live="polite"></div></section>
+        <section class="distribution-section county-ranking" aria-label="客家人口比例排行"><h3>各縣市比例排行</h3><div class="county-ratios">${top.map(c=>`<button type="button" class="ratio-row ratio-button" data-action="map-point" data-place="${c.id}"><span>${c.name}</span><span class="ratio-track"><span style="width:${c.ratio}%"></span></span><strong>${c.ratio}%</strong></button>`).join('')}</div></section>
+        <section class="distribution-section county-picker" aria-label="選擇縣市"><h3 class="location-list-title">選擇縣市</h3>
+        <div class="location-chips county-chips">${TW_COUNTIES.map(c=>`<button type="button" class="${state.place===c.id?'active':''}" data-action="map-point" data-place="${c.id}">${c.name}</button>`).join('')}</div></section>
         <p class="prompt-side">為什麼客家人口較多的地區，仍然需要客語課？</p>
       </aside>`;
     }
@@ -775,11 +787,11 @@
     }
   });
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){if(transitionOverlay&&!transitionOverlay.hidden){closeJourneyTransition();return;}closeDialog();closeNavigation(true);return;}
+    if(e.key==='Escape'){if(transitionOverlay&&!transitionOverlay.hidden){closeJourneyAnimation();return;}closeDialog();closeNavigation(true);return;}
     if(!overlay.hidden||(transitionOverlay&&!transitionOverlay.hidden)||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
     if((e.key==='Enter'||e.key===' ') && e.target.matches('.map-svg .pin')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));return;}
     if(e.key.toLowerCase()==='m' && !e.ctrlKey&&!e.altKey&&!e.metaKey){e.preventDefault();toggleNavigation();return;}
-    if(e.key==='ArrowRight' || e.key==='PageDown'){e.preventDefault();goto(state.stage+1,true);}
+    if(e.key==='ArrowRight' || e.key==='PageDown'){e.preventDefault();goto(state.stage+1);}
     if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goto(state.stage-1);}
     if(e.key.toLowerCase()==='f'){document.getElementById('fullscreenToggle').click();}
   });
@@ -787,7 +799,7 @@
   document.getElementById('pinyinToggle').addEventListener('click',()=>{state.pinyin=!state.pinyin;render();});
   document.getElementById('toneModeToggle').addEventListener('click',()=>{state.toneMode=state.toneMode==='value'?'shape':'value';render();});
   document.getElementById('fontToggle').addEventListener('click',()=>{state.fontUp=state.fontUp>1?1:1.27;render();});
-  document.getElementById('nextBtn').addEventListener('click',()=>goto(state.stage===7?0:state.stage+1,true));
+  document.getElementById('nextBtn').addEventListener('click',()=>goto(state.stage===7?0:state.stage+1));
   document.getElementById('prevBtn').addEventListener('click',()=>goto(state.stage-1));
   document.getElementById('mapHome').addEventListener('click',()=>goto(0));
   document.getElementById('viewSources').addEventListener('click',showSources);

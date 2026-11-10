@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f2835">
   <meta name="description" content="高中客語第八課〈行讀客家世界：印尼客家之旅〉互動教學網站。海陸與四縣課文、移民歷史、語言傳承、蘭芳公司、飲食與元宵。">
-  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V8.0.2</title>
+  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V8.0.4</title>
   <link rel="stylesheet" href="styles.css">
   <script src="content.js" defer></script>
   <script src="culture-vocab.js" defer></script>
@@ -34,9 +34,10 @@
       <header class="topbar">
         <div class="topbar-heading">
           <button type="button" id="mobileMenu" class="icon-button" aria-label="開啟章節導覽" aria-expanded="false" aria-controls="sidebar" title="開啟章節導覽（M）">☰</button>
+          <button type="button" id="themeAnimationBtn" class="top-button theme-animation-launch" title="播放／重播開場主題動畫" aria-haspopup="dialog" aria-controls="journeyOverlay">▶ 主題動畫</button>
           <div class="topbar-identity">
             <div class="breadcrumb"><span>高中客語</span><span class="dot">·</span><strong class="site-full-name">飄洋過海尋客家：印尼客家文化之旅</strong><span class="dot">·</span><strong id="stepLabel">認識印尼</strong></div>
-            <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V8.0.2</strong>｜<a class="version-history-link" href="versions.html" target="_blank" rel="noopener">版本更新紀錄 ↗</a></div>
+            <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V8.0.4</strong>｜<a class="version-history-link" href="versions.html" target="_blank" rel="noopener">版本更新紀錄 ↗</a></div>
           </div>
         </div>
         <nav class="top-pager" aria-label="課程站別導覽">
@@ -79,8 +80,11 @@
     </div>
   </div>
 
-  <div id="journeyOverlay" class="journey-overlay" role="dialog" aria-modal="true" aria-label="前往印尼的30秒像素冒險" hidden>
-    <section class="journey-embedded-wrap"><iframe id="journeyPixelFrame" title="歷史移民與現代探險：30秒像素過場" data-src="journey-pixel.html?embed=1" allowfullscreen></iframe><button id="journeySkip" class="journey-fallback-skip" type="button">略過動畫，前往第二站</button><button id="journeyStart" class="journey-fallback-start" type="button">開始探險！</button></section>
+  <div id="journeyOverlay" class="journey-overlay" role="dialog" aria-modal="true" aria-label="飄洋過海尋客家主題動畫" hidden>
+    <section class="journey-embedded-wrap">
+      <div class="journey-modal-top"><strong>飄洋過海尋客家｜主題動畫</strong><button id="journeySkip" type="button" class="journey-modal-close" aria-label="關閉主題動畫，返回原本課程">× 關閉動畫</button></div>
+      <iframe id="journeyPixelFrame" title="歷史移民與現代探險：七幕像素主題動畫" data-src="journey-pixel.html?embed=1" allowfullscreen></iframe>
+    </section>
   </div>
   <div id="dialogOverlay" class="dialog-overlay" hidden>
     <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
