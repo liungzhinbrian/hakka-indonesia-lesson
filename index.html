@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f2835">
   <meta name="description" content="高中客語第八課〈行讀客家世界：印尼客家之旅〉互動教學網站。海陸與四縣課文、移民歷史、語言傳承、蘭芳公司、飲食與元宵。">
-  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V6.3.1</title>
+  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V7.0.0</title>
   <link rel="stylesheet" href="styles.css">
   <script src="content.js" defer></script>
   <script src="culture-vocab.js" defer></script>
@@ -34,7 +34,7 @@
           <button type="button" id="mobileMenu" class="icon-button mobile-only" aria-label="切換章節選單">☰</button>
           <div class="topbar-identity">
             <div class="breadcrumb"><span>高中客語</span><span class="dot">·</span><strong class="site-full-name">飄洋過海尋客家：印尼客家文化之旅</strong><span class="dot">·</span><strong id="stepLabel">認識印尼</strong></div>
-            <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V6.3.1</strong></div>
+            <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V7.0.0</strong></div>
           </div>
         </div>
         <nav class="top-pager" aria-label="課程站別導覽">
@@ -99,6 +99,14 @@
       <div class="phonology-actions"><button data-phon-tab="tones" class="active" aria-pressed="true">聲調</button><button data-phon-tab="consonants" aria-pressed="false">聲母</button><button data-phon-tab="references" aria-pressed="false">原始圖表</button><button data-phon-tab="sandhi" aria-pressed="false">連讀變調</button></div>
       <div class="phonology-dialects"><button data-phon-dialect="hailu" class="active" aria-pressed="true">海陸腔</button><button data-phon-dialect="sixian" aria-pressed="false">四縣腔</button></div>
       <div id="phonologyContent"></div>
+    </section>
+  </div>
+  <div id="cultureVocabOverlay" class="culture-vocab-overlay" hidden>
+    <section class="cv-modal" role="dialog" aria-modal="true" aria-labelledby="cvTitle">
+      <header class="cv-modal-head"><div><div class="micro-label">客語時間！拿出學習單，一起讀、一起猜！</div><h2 id="cvTitle">客語詞彙學習</h2></div><button type="button" class="cv-close" data-cv-action="close" aria-label="關閉詞彙學習視窗">×</button></header>
+      <div class="cv-modal-top"><span id="cvProgress"></span><div class="cv-dialects"><button type="button" data-cv-dialect="hailu">海陸腔</button><button type="button" data-cv-dialect="sixian">四縣腔</button></div></div>
+      <div class="cv-word-area"><div id="cvHan" class="cv-han"></div><div id="cvPinyin" class="cv-pinyin"></div><div id="cvGuess" class="cv-guess">猜猜看，這個詞是什麼意思？</div><div id="cvMeaning" class="cv-meaning" hidden></div><div id="cvImage" class="cv-image" hidden></div></div>
+      <footer class="cv-modal-actions"><button id="cvReveal" type="button" class="cv-reveal" data-cv-action="reveal">揭曉華語詞義</button><div class="cv-nav"><button type="button" data-cv-action="prev">← 上一詞</button><button type="button" data-cv-action="next">下一詞 →</button><button type="button" data-cv-action="random">隨機抽一詞</button></div></footer>
     </section>
   </div>
   <noscript><p class="noscript">本教學網站需要啟用JavaScript，才能使用章節導覽與課文切換。</p></noscript>

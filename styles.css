@@ -580,3 +580,51 @@ html,body{font-size:18px}
 
 /* 七幕三十秒像素冒險過場 */
 .journey-embedded-wrap{width:min(100%,1120px);max-height:98vh;display:flex;flex-direction:column;align-items:stretch;gap:5px}.journey-embedded-wrap iframe{width:100%;height:min(82vh,800px);background:#0d2835;border:1px solid #497584;border-radius:15px}.journey-fallback-skip,.journey-fallback-start{display:inline-block;align-self:center;background:#17394d;color:white;border:1px solid #6b91a0;border-radius:8px;padding:8px 16px;cursor:pointer}.journey-fallback-start{display:none}.journey-overlay{padding:5px!important}@media(max-width:650px){.journey-embedded-wrap iframe{height:88vh}}
+
+/* V7：16:9教室投影優先。地點介紹固定在地圖右欄，不再放在地圖下方。 */
+@media(min-width:1100px){
+ .intro-layout{display:grid;grid-template-columns:minmax(0,3fr) minmax(245px,.92fr)!important;gap:12px!important;align-items:stretch}
+ .intro-layout .map-panel{padding:10px 13px!important;min-width:0}
+ .intro-layout .map-panel .map-header h2{font-size:clamp(20px,1.7vw,27px);margin:2px 0}
+ .intro-layout .map-tabs{margin:6px 0;gap:5px}
+ .intro-layout .map-tab{padding:7px 10px;font-size:14px}
+ .intro-layout .map-viewport{height:clamp(385px,64vh,675px);min-height:0!important}
+ .intro-layout .map-svg.map-geo,.intro-layout .map-svg.map-indonesia{width:100%;height:100%;max-height:none!important;object-fit:contain}
+ .intro-layout .map-svg.map-taiwan{height:100%!important;max-height:100%!important}
+ .intro-layout .intro-side{padding:14px!important;gap:9px;min-height:0;max-height:min(78vh,800px);overflow:auto}
+ .intro-layout .location-chips{gap:5px}
+ .intro-layout .location-chips button{font-size:14px;padding:7px}
+}
+.map-info-side{margin:8px 0 0;background:#eaf4f3;color:#194653;border-radius:12px;padding:15px!important;min-height:110px;line-height:1.6}
+.map-info-side strong{display:block;color:#124b60;font-size:clamp(20px,1.7vw,27px)}
+.map-info-side .county-info{display:grid;gap:8px}.map-info-side .county-info-number{flex-wrap:wrap}
+.country-facts .country-numbers{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.country-facts .country-numbers>div{background:#e9f3f1;border-radius:10px;padding:10px;display:grid;gap:5px}
+.country-facts .country-numbers span{font-size:13px;color:#51727d}
+.country-facts .country-numbers strong{font-size:clamp(21px,2.1vw,29px);color:#144a5c}
+.country-facts .country-language,.country-facts .country-heritage{font-size:15px;line-height:1.6}
+.country-facts .heritage-tags{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
+.country-facts .heritage-tags span{background:#f1f8f7;padding:7px 6px;border-radius:8px;font-size:13px;color:#205867}
+.country-facts .source-mini{font-size:12px;color:#637a80;line-height:1.5}
+/* 站內只留一個清楚的詞彙入口，避免佔用教材畫面 */
+.culture-vocab-launch{margin:15px 0;padding:14px 20px;background:#e7f3f1;border:1px solid #accdce;border-radius:15px;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.culture-vocab-launch>div{display:grid;gap:3px}.culture-vocab-launch strong{font-size:calc(21px * var(--fontup,1));color:#174b5a}
+.culture-vocab-open{background:#176b7d;color:white;border:0;border-radius:12px;font-size:calc(20px * var(--fontup,1));padding:12px 25px;font-weight:800;cursor:pointer}
+.culture-vocab-open:hover{background:#0f5366}
+.culture-vocab-overlay{position:fixed;inset:0;z-index:150;display:grid;place-items:center;background:#0c2534dd;padding:18px;backdrop-filter:blur(3px)}
+.culture-vocab-overlay[hidden]{display:none}.cv-dialog-open{overflow:hidden}
+.cv-modal{background:white;color:#173b47;width:min(1100px,94vw);max-height:94vh;overflow:auto;border-radius:24px;padding:clamp(18px,2.6vw,32px);box-shadow:0 28px 95px #06192388;display:flex;flex-direction:column;gap:13px}
+.cv-modal-head,.cv-modal-top{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.cv-modal-head h2{font-size:clamp(24px,2.6vw,38px);margin:4px 0}.cv-modal-head .micro-label{color:#23778a;font-size:17px}
+.cv-close{border:0;background:#e6f2f2;color:#194e5c;border-radius:50%;font-size:32px;width:52px;height:52px;cursor:pointer}
+.cv-modal-top{font-size:17px;color:#647d84}
+.cv-dialects{display:flex;gap:8px}.cv-dialects button{padding:11px 20px;background:#edf5f5;border:1px solid #9ebfc2;border-radius:10px;color:#1f5a6a;font-size:18px;font-weight:800;cursor:pointer}.cv-dialects button.active{background:#176b7d;color:white}
+.cv-word-area{background:#edf6f4;border-radius:19px;padding:18px 20px;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center}
+.cv-han{font-size:clamp(49px,6vw,86px);font-weight:850;line-height:1.18;overflow-wrap:anywhere}.cv-pinyin{font-size:clamp(27px,3.3vw,45px);font-family:Arial,'Noto Sans',sans-serif;color:#23778b;line-height:1.45}
+.cv-guess{margin-top:8px;color:#647c83;font-size:20px}.cv-meaning{border-top:2px dashed #bdd4d7;width:min(600px,90%);padding:9px 0 0;font-size:clamp(29px,3.3vw,44px);font-weight:850;color:#184d60}
+.cv-meaning[hidden],.cv-guess[hidden],.cv-image[hidden]{display:none}
+.cv-image{width:min(450px,100%)}.cv-image figure{margin:5px auto 0}.cv-image img{max-width:100%;max-height:26vh;min-height:110px;object-fit:contain;border-radius:12px;display:block;margin:auto;background:white}.cv-image figcaption{color:#607b82;font-size:13px;line-height:1.5;margin-top:6px}.cv-image a{color:#176e83}
+.cv-modal-actions{display:grid;grid-template-columns:1fr;gap:10px}.cv-reveal{border:0;background:#176b7d;color:#fff;border-radius:12px;padding:14px 20px;font-size:23px;font-weight:800;cursor:pointer}
+.cv-nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.cv-nav button{border:1px solid #9dbdc4;background:#fff;border-radius:10px;padding:11px 18px;color:#1e5a6d;font-size:18px;font-weight:750;cursor:pointer}
+.cv-modal button:focus-visible{outline:3px solid #ef9f3c;outline-offset:3px}
+@media(max-width:800px){.cv-modal{max-height:96vh}.cv-modal-head .micro-label{font-size:13px}.cv-word-area{min-height:220px}.cv-han{font-size:52px}.cv-pinyin{font-size:28px}.cv-nav button{font-size:14px;padding:9px}.country-facts .country-numbers strong{font-size:21px}}

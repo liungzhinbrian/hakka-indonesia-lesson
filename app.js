@@ -6,16 +6,15 @@
   const DATA = window.LESSON_DATA;
   if (!DATA) { document.getElementById('stageBody').textContent='找不到content.js，請確認檔案放在同一資料夾。'; return; }
   const STAGES = [
-    {name:'認識印尼',sub:'人口、語言與移民路線',time:'0～5分鐘',heading:'千島之國，客家在哪裡？',lead:'從原鄉到南洋，客家人如何在新的環境中延續自己的語言與生活？'},
-    {name:'課文閱讀',sub:'雙腔課文、10個詞彙',time:'5～14分鐘',heading:'行讀客家世界：印尼客家之旅',lead:'看課本、朗讀重點句，點擊詞彙可開啟註解。'},
-    {name:'語言傳承',sub:'政策與生活經驗',time:'14～20分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從課文中的印尼語言政策，連結臺灣的歷史與學生生活。'},
-    {name:'海外客語',sub:'聽見山口洋',time:'20～24分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'聽聽看，是不是很熟悉呢？'},
-    {name:'蘭芳公司',sub:'羅芳伯與海外移民',time:'24～32分鐘',heading:'蘭芳公司，真的只是一間公司嗎？',lead:'從採金移民到地方組織，認識18世紀海外客家人的歷史。'},
-    {name:'尋找客家味',sub:'菜粄與粽子',time:'32～39分鐘',heading:'熟悉的客家味，到了印尼有什麼不一樣？',lead:'從菜粄與粽子的材料、外形、餡料，觀察移民文化的延續與變化。'},
-    {name:'元宵文化',sub:'花燈、𪹚龍與油笐火',time:'39～42分鐘',heading:'元宵節，原來可以這樣過！',lead:'從臺灣客庄到印尼山口洋，看看節慶如何展現地方特色。'},
-    {name:'文化統整',sub:'保留、改變、融合',time:'42～45分鐘',heading:'飄洋過海之後，客家文化變了嗎？',lead:'回顧今天的探索，從一個具體案例說明你的觀察。'}
-  ];
-  /* 固定播放教師提供的臺灣海陸及山口洋河婆客語語料。 */
+    {name:'認識印尼',sub:'地圖與移民路線',time:'0～5分鐘',heading:'千島之國，客家在哪裡？',lead:'從原鄉到南洋，客家人如何在新的環境中延續自己的語言與生活？'},
+    {name:'課文閱讀',sub:'雙腔課文與詞彙',time:'5～10分鐘',heading:'行讀客家世界：印尼客家之旅',lead:'從課文認識印尼客家人的移民與生活。'},
+    {name:'移民與蘭芳',sub:'採礦、經商、組織',time:'10～17分鐘',heading:'客家人為何來到南洋？',lead:'從移民、採礦到蘭芳公司，認識海外客家人的歷史。'},
+    {name:'尋找客家味',sub:'菜粄與粽子',time:'17～25分鐘',heading:'熟悉的客家味，到了印尼有什麼不一樣？',lead:'比較臺灣與印尼的菜粄和粽子，觀察飲食文化的延續與變化。'},
+    {name:'元宵文化',sub:'臺灣與山口洋',time:'25～32分鐘',heading:'元宵節，原來可以這樣過！',lead:'從臺灣客庄到印尼山口洋，看看節慶如何展現地方特色。'},
+    {name:'海外客語',sub:'聽見山口洋',time:'32～36分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'聽聽臺灣海陸客語與山口洋河婆客語，有哪些熟悉或不同的地方。'},
+    {name:'語言傳承',sub:'政策、家庭與社區',time:'36～42分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從語言政策與家庭生活，認識海外客語的使用環境與傳承。'},
+    {name:'文化統整',sub:'保留、改變、融合',time:'42～45分鐘',heading:'飄洋過海之後，客家文化變了嗎？',lead:'回顧飲食、節慶與語言的線索，說明文化如何延續、改變與融合。'}
+  ];  /* 固定播放教師提供的臺灣海陸及山口洋河婆客語語料。 */
   const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu.wav', id:'assets/audio/singkawang-hopo.wav'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
@@ -84,13 +83,13 @@
     root.style.setProperty('--fontup',state.fontUp);
     document.querySelectorAll('[data-dialect]').forEach(el=>{const on=el.dataset.dialect===state.dialect;el.classList.toggle('active',on);el.setAttribute('aria-pressed',String(on));});
     navRender();
-    const fn=[introStage,readingStage,policyStage,audioStage,historyStage,foodStage,festivalStage,endingStage][state.stage];
+    const fn=[introStage,readingStage,historyStage,foodStage,festivalStage,audioStage,policyStage,endingStage][state.stage];
     body.innerHTML=fn();
     if(window.renderCultureVocab&&state.stage>=2&&state.stage<=6){window.renderCultureVocab(body,state.stage,state.dialect,state.toneMode,formatPinyin);}
     startFoodTicker();
     body.querySelectorAll(".teacher-note,.read-tip,.map-note").forEach(el=>el.remove());
     if(state.stage===0){updateMapInfo();if(state.mapView==='taiwan'){updateTaiwanZoom();bindTaiwanPan();}}
-    if(state.stage===3) updateAudioPlayers();
+    if(state.stage===5) updateAudioPlayers();
     document.getElementById('sidebar').classList.remove('open');
   }
   function goto(i,transition=false){
@@ -342,14 +341,13 @@
          ${state.mapView==='overview'&&state.migrationRoute?`<div class="geo-camera-controls" role="group" aria-label="遷移路線檢視"><button type="button" data-action="geo-replay">重播路線</button><button type="button" data-action="geo-reset">返回全圖</button></div>`:''}
          ${state.mapView==='indonesia'&&state.indoZoom>1?`<div class="geo-camera-controls"><button type="button" data-action="indo-reset">返回全圖</button></div>`:''}
        </div>
-       <div class="map-info" id="mapInfo" aria-live="polite"></div>
     </section>`;
   }
   function mapSidePanel(){
     if(state.mapView==='taiwan'){
       const top=[...TW_COUNTIES].sort((a,b)=>b.ratio-a.ratio).slice(0,5);
       return `<aside class="panel intro-side distribution-panel"><span class="micro-label">客委會｜2021年調查</span><h2>客家人口比例</h2>
-        <div class="county-ratios">${top.map(c=>`<button type="button" class="ratio-row ratio-button" data-action="map-point" data-place="${c.id}"><span>${c.name}</span><span class="ratio-track"><span style="width:${c.ratio}%"></span></span><strong>${c.ratio}%</strong></button>`).join('')}</div>
+        <div class="map-info map-info-side" id="mapInfo" aria-live="polite"></div><div class="county-ratios">${top.map(c=>`<button type="button" class="ratio-row ratio-button" data-action="map-point" data-place="${c.id}"><span>${c.name}</span><span class="ratio-track"><span style="width:${c.ratio}%"></span></span><strong>${c.ratio}%</strong></button>`).join('')}</div>
         <h3 class="location-list-title">選擇縣市</h3>
         <div class="location-chips county-chips">${TW_COUNTIES.map(c=>`<button type="button" class="${state.place===c.id?'active':''}" data-action="map-point" data-place="${c.id}">${c.name}</button>`).join('')}</div>
         <p class="prompt-side">為什麼客家人口較多的地區，仍然需要客語課？</p>
@@ -357,16 +355,16 @@
     }
     if(state.mapView==='indonesia'){
       return `<aside class="panel intro-side distribution-panel"><span class="micro-label">印尼客家聚落</span><h2>跨島嶼的客家生活</h2>
-      <p>從西加里曼丹的山口洋、坤甸，到邦加和爪哇島的城市，探索不同地方的客家社群。</p>
+      <div class="map-info map-info-side" id="mapInfo" aria-live="polite"></div><p>從西加里曼丹的山口洋、坤甸，到邦加和爪哇島的城市，探索不同地方的客家社群。</p>
       <div class="location-chips"><button data-action="map-point" data-place="singkawang">山口洋</button><button data-action="map-point" data-place="pontianak">坤甸</button><button data-action="map-point" data-place="bangka">邦加</button><button data-action="map-point" data-place="jakarta">雅加達</button><button data-action="map-point" data-place="surabaya">泗水</button></div>
       <p class="prompt-side">這些客家社群都在同一座島上嗎？</p></aside>`;
     }
-    return `<aside class="panel intro-side"><div class="micro-label">探索印尼</div><h2 class="question">印尼有多少人口？<br>有多少種地方語言？</h2>
-        <p class="muted">先猜一猜，再揭曉。</p>
-        <div class="stat"><div class="micro-label">印尼人口</div><div class="number">${state.reveal?'2.87億':'？'}</div><small>${state.reveal?'2026年年中估計':'猜猜看'}</small></div>
-        <div class="stat"><div class="micro-label">地方語言</div><div class="number">${state.reveal?'718種':'？'}</div><small>${state.reveal?'印尼教育部資料庫':'猜猜看'}</small></div>
-        <button class="action" data-action="reveal">${state.reveal?'收起數據':'揭曉答案'}</button>
-        <div class="choice-hint">點選地圖上的「廣東、福建原鄉」，展開遷移故事。</div>
+    return `<aside class="panel intro-side country-facts"><div class="micro-label">認識印尼 Indonesia</div><h2>千島之國，多語社會</h2>
+      <div class="country-numbers"><div><span>人口（2025年）</span><strong>約2.84億</strong></div><div><span>華人比例（2010年）</span><strong>約1.2%</strong></div></div>
+      <p class="country-language"><b>國家官方語言：</b>印尼語（Bahasa Indonesia）</p>
+      <div class="country-heritage"><b>印尼華人保留的部分傳承語言</b><div class="heritage-tags"><span>福建話（閩南語）</span><span>潮汕話（閩語）</span><span>廣府話（粵語）</span><span>客語</span></div></div>
+      <p class="source-mini">人口：2025年估計；華人比例：2010年人口普查。統計年份不同，不宜直接推算當年華人人數。</p>
+      <div class="map-info map-info-side" id="mapInfo" aria-live="polite"></div>
       </aside>`;
   }
   function updateMapInfo(){
@@ -570,9 +568,9 @@
   function startFoodTicker(){
     if(foodTicker!==null)window.clearInterval(foodTicker);
     foodTicker=null;
-    if(state.stage!==5)return;
+    if(state.stage!==3)return;
     foodTicker=window.setInterval(()=>{
-      if(state.stage!==5||!overlay.hidden||document.hidden)return;
+      if(state.stage!==3||!overlay.hidden||document.hidden)return;
       for(const kind of (state.foodTopic==='zongzi'?['zong_tw','zong_id']:['tw','id'])){
         const panel=body.querySelector(`[data-food-carousel="${kind}"]`);
         if(!panel||panel.matches(':hover')||state.foodPaused[kind])continue;
