@@ -11,7 +11,7 @@
     {name:'語言傳承',sub:'政策與生活經驗',time:'14～20分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從課文中的印尼語言政策，連結臺灣的歷史與學生生活。'},
     {name:'海外客語',sub:'聽見山口洋',time:'20～24分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'聽聽看，是不是很熟悉呢？'},
     {name:'蘭芳公司',sub:'羅芳伯與海外移民',time:'24～32分鐘',heading:'蘭芳公司，真的只是一間公司嗎？',lead:'從採金移民到地方組織，認識18世紀海外客家人的歷史。'},
-    {name:'尋找客家味',sub:'臺灣菜包與印尼菜粄',time:'32～39分鐘',heading:'看起來相似的粄，吃起來也一樣嗎？',lead:'從米食的名稱、食材與內餡，觀察文化在不同地方的延續與變化。'},
+    {name:'尋找客家味',sub:'菜粄與粽子',time:'32～39分鐘',heading:'熟悉的客家味，到了印尼有什麼不一樣？',lead:'從菜粄與粽子的材料、外形、餡料，觀察移民文化的延續與變化。'},
     {name:'元宵文化',sub:'花燈、𪹚龍與油笐火',time:'39～42分鐘',heading:'元宵節，原來可以這樣過！',lead:'從臺灣客庄到印尼山口洋，看看節慶如何展現地方特色。'},
     {name:'文化統整',sub:'保留、改變、融合',time:'42～45分鐘',heading:'飄洋過海之後，客家文化變了嗎？',lead:'回顧今天的探索，從一個具體案例說明你的觀察。'}
   ];
@@ -19,7 +19,7 @@
   const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu.wav', id:'assets/audio/singkawang-hopo.wav'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
-  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodPos:{tw:0,id:0},foodPaused:{tw:false,id:false},reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false},reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -525,12 +525,20 @@
     id:[
       {src:'assets/images/choi-pan-bowl.jpg',label:'Choi Pan',caption:'在蒸盤中鋪上葉片，擺放白色菜粄與蒜酥。',source:'授課教師提供',page:''},
       {src:'assets/images/choi-pan-table.jpg',label:'Choi Pan與醬料',caption:'桌上菜粄、佐料與醬汁的實際食用場景。',source:'授課教師提供',page:''}
+    ],
+    zong_tw:[
+      {src:'https://yuann.tw/archive/8309/33505685126_d741a1ce62_b.jpg',label:'臺灣客家粽',caption:'以粽葉包裹的客家鹹粽，觀察葉片、繩結與外形。',source:'隨裕而安・頭份客家粽',page:'https://yuann.tw/%E9%A0%AD%E4%BB%BD%E9%98%BF%E7%A7%80%E5%AB%82%E5%AE%A2%E5%AE%B6%E7%B2%BD-%E9%85%8D%E6%96%99%E7%B0%A1%E5%96%AE%E8%B6%85%E5%A5%BD%E5%90%83/'},
+      {src:'https://imgproxy.icook.network/safe/rt%3Afit/w%3A1242/el%3A0/q%3A80/plain/http%3A%2F%2Ftokyo-kitchen.icook.tw.s3.amazonaws.com%2Fuploads%2Frecipe%2Fcover%2F340450%2Fde34f58d0c3f6dd9.jpg',label:'客家粄粽',caption:'臺灣客家粄粽的包裹方式，與一般糯米鹹粽可再比較。',source:'愛料理・客家粿粽／粄粽',page:'https://icook.tw/recipes/340450'}
+    ],
+    zong_id:[
+      {src:'https://img-global.cpcdn.com/recipes/cfc394e40a979d05/680x781cq80/kue-bakcang-bangka-foto-resep-utama.jpg',label:'邦加Bakcang',caption:'邦加粽子的綠葉包裹外觀；當地有使用斑蘭葉的做法。',source:'Cookpad・Kue Bak Cang Bangka',page:'https://cookpad.com/id/resep/15368273'},
+      {src:'https://img-global.cpcdn.com/recipes/6a62aaba6964def1/1200x630cq80/photo.jpg',label:'邦加Nyuk Cung',caption:'觀察邦加粽子的葉材、外形與綁法。',source:'Cookpad・Bacang Bangka',page:'https://cookpad.com/id/resep/15141993'}
     ]
   };
   let foodTicker=null;
   function foodCarousel(kind){
     const slides=FOOD_PHOTOS[kind];const ix=state.foodPos[kind]%slides.length;const slide=slides[ix];
-    return `<div class="food-carousel" data-food-carousel="${kind}" aria-label="${kind==='tw'?'臺灣菜包':'印尼Choi Pan'}圖片輪播">
+    return `<div class="food-carousel" data-food-carousel="${kind}" aria-label="${({tw:'臺灣菜包',id:'印尼Choi Pan',zong_tw:'臺灣客家粽',zong_id:'印尼邦加粽子'}[kind]||'食物')}圖片輪播">
       <div class="food-slide-viewport">
         <img class="food-slide-image" src="${esc(slide.src)}" alt="${esc(slide.caption)}" loading="eager" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.hidden=false">
         <div class="food-image-error" hidden>照片暫時無法顯示。${slide.page?`<a href="${esc(slide.page)}" target="_blank" rel="noopener noreferrer">查看原圖 ↗</a>`:""}</div>
@@ -555,7 +563,7 @@
     if(state.stage!==5)return;
     foodTicker=window.setInterval(()=>{
       if(state.stage!==5||!overlay.hidden||document.hidden)return;
-      for(const kind of ['tw','id']){
+      for(const kind of (state.foodTopic==='zongzi'?['zong_tw','zong_id']:['tw','id'])){
         const panel=body.querySelector(`[data-food-carousel="${kind}"]`);
         if(!panel||panel.matches(':hover')||state.foodPaused[kind])continue;
         state.foodPos[kind]=(state.foodPos[kind]+1)%FOOD_PHOTOS[kind].length;
@@ -571,7 +579,13 @@
       '<path d="M65 151 Q75 107 112 111 Q149 119 163 156Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M137 156 Q146 102 192 109 Q222 114 239 158Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M226 157 Q228 121 263 117 Q288 124 300 156Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M85 141 Q114 123 144 143 M163 142 Q193 124 218 145 M247 144 Q270 134 287 148" fill="none" stroke="#bfd1bd" stroke-width="4"/>'}<circle cx="292" cy="180" r="10" fill="#588e61"/><circle cx="280" cy="187" r="8" fill="#65a66e"/><circle cx="311" cy="177" r="8" fill="#6a9a61"/></svg>`;
   }
   function foodStage(){
-    return `<section class="grid2 food-comparison">
+    const isZong=state.foodTopic==='zongzi';
+    const nav=`<nav class="food-topic-tabs" aria-label="選擇食物比較主題"><button class="${!isZong?'active':''}" type="button" data-action="food-topic" data-topic="caibao" aria-pressed="${!isZong}">菜包 × Choi Pan</button><button class="${isZong?'active':''}" type="button" data-action="food-topic" data-topic="zongzi" aria-pressed="${isZong}">臺灣客家粽 × 邦加粽子</button></nav>`;
+    if(isZong)return `${nav}<section class="grid2 food-comparison">
+      <div class="food-card">${foodCarousel('zong_tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>客家粽</h3><p>常以粽葉包裹糯米與鹹餡，餡料與作法依地方、家庭而不同。</p></div></div>
+      <div class="food-card">${foodCarousel('zong_id')}<div class="food-body"><span class="tag amber">印尼・邦加島</span><h3>Bakcang／Nyuk Cung</h3><p>邦加部分做法以斑蘭葉包裹，也有使用椰奶處理糯米、搭配肉類與蝦米等配料的食譜。</p></div></div>
+    </section><section class="panel"><div class="micro-label">觀察與比較</div><h2>相同的粽子，會因環境而改變哪些材料？</h2><div class="compare-line"><div><strong>共同的傳統</strong><br>包葉、糯米、內餡以及節慶飲食。</div><div><strong>在地的變化</strong><br>包裹葉材、調味材料、餡料與製作方式。</div></div></section>`;
+    return `${nav}<section class="grid2 food-comparison">
       <div class="food-card">${foodCarousel('tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>菜包／豬籠粄</h3><p>常見鹹餡包含蘿蔔絲、香菇等，米製外皮可呈現不同形狀。</p></div></div>
       <div class="food-card">${foodCarousel('id')}<div class="food-body"><span class="tag amber">印尼・西加里曼丹</span><h3>Choi Pan／菜粄</h3><p>常見涼薯、韭菜等餡料，通常搭配蒜酥或醬汁食用。</p></div></div>
     </section>
@@ -617,7 +631,7 @@
     openDialog(w.hailu===w.sixian?w.hailu:`${w.hailu}／${w.sixian}`,'詞彙解釋',`${lines}<p class="vocab-definition"><strong>詞義：</strong>${esc(w.definition)}</p>`);
   }
   function showSources(){
-    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},{label:'客家公共傳播基金會×臺灣吧｜蘭芳公司客語版動畫',url:LANFANG_YOUTUBE},...DATA.sources,...FOOD_PHOTOS.tw.map(x=>({label:'臺灣菜包照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.id.filter(x=>x.page).map(x=>({label:'印尼Choi Pan照片｜'+x.source,url:x.page}))]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${FESTIVAL_YOUTUBE}" target="_blank" rel="noopener noreferrer">山口洋元宵Cap Go Meh・影片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
+    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},{label:'客家公共傳播基金會×臺灣吧｜蘭芳公司客語版動畫',url:LANFANG_YOUTUBE},...DATA.sources,...FOOD_PHOTOS.tw.map(x=>({label:'臺灣菜包照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.id.filter(x=>x.page).map(x=>({label:'印尼Choi Pan照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.zong_tw.map(x=>({label:'臺灣客家粽照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.zong_id.map(x=>({label:'印尼邦加粽子照片｜'+x.source,url:x.page}))]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${FESTIVAL_YOUTUBE}" target="_blank" rel="noopener noreferrer">山口洋元宵Cap Go Meh・影片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
   }
   function stopDialogMedia(){overlay.querySelectorAll('video,audio').forEach(media=>{media.pause();});overlay.querySelectorAll('iframe').forEach(frame=>{frame.src='about:blank';});}
   function closeDialog(){stopDialogMedia();overlay.hidden=true;overlay.querySelector('.dialog')?.classList.remove('video-dialog');}
@@ -672,6 +686,10 @@
     if(action==='lanfang-video'){showLanfangVideo();}
     if(action==='festival-video'){showFestivalVideo();}
     if(action==='lanfang-play'){const story=document.getElementById('lanfangStory');if(story){story.classList.remove('is-playing');void story.offsetWidth;story.classList.add('is-playing');el.textContent='↻ 重播動畫';el.setAttribute('aria-label','重播蘭芳公司動畫');}}
+    if(action==='food-topic'){
+      const topic=el.dataset.topic;if(!['caibao','zongzi'].includes(topic))return;
+      state.foodTopic=topic;render();return;
+    }
     if(action==='food-next'||action==='food-prev'||action==='food-dot'){
       const kind=el.dataset.food;if(!FOOD_PHOTOS[kind])return;
       const n=FOOD_PHOTOS[kind].length;

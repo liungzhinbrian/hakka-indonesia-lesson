@@ -500,3 +500,10 @@ html,body{font-size:18px}
 @keyframes lf-step{0%{background:#fff;border-color:#d5e7e4}8%,25%{background:#ffe4aa;border-color:#eaa66d}35%,100%{background:#fff;border-color:#d5e7e4}}
 @media(max-width:700px){.lf-story-steps{grid-template-columns:repeat(2,minmax(0,1fr))}.lf-story-steps button{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.lf-story.is-playing .lf-animation-boat,.lf-story.is-playing .lf-animation-gold,.lf-story.is-playing .lf-animation-village,.lf-story.is-playing .lf-animation-badge,.lf-story.is-playing .lf-story-steps button{animation:none!important;opacity:1!important;transform:none!important}}
+
+/* V6.2.3: food comparison category selector */
+.food-topic-tabs{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 16px}
+.food-topic-tabs button{border:2px solid #a8c6c9;border-radius:14px;background:#fff;color:#24515b;font-size:clamp(16px,1.8vw,22px);font-weight:800;padding:12px 20px;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.food-topic-tabs button:hover,.food-topic-tabs button:focus-visible{border-color:#d59d59;transform:translateY(-1px)}
+.food-topic-tabs button.active{background:#235c69;border-color:#235c69;color:white}
+@media(max-width:640px){.food-topic-tabs{display:grid;grid-template-columns:1fr}.food-topic-tabs button{width:100%;padding:12px}}
