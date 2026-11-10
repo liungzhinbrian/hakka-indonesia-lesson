@@ -6,7 +6,7 @@
   const DATA = window.LESSON_DATA;
   if (!DATA) { document.getElementById('stageBody').textContent='找不到content.js，請確認檔案放在同一資料夾。'; return; }
   const STAGES = [
-    {name:'認識印尼',sub:'人口、語言與移民路線',time:'0～5分鐘',heading:'千島之國，客家在哪裡？',lead:'認識臺灣與印尼的位置，追尋客家人從廣東、福建遷往不同地區的故事。'},
+    {name:'認識印尼',sub:'人口、語言與移民路線',time:'0～5分鐘',heading:'千島之國，客家在哪裡？',lead:'從原鄉到南洋，客家人如何在新的環境中延續自己的語言與生活？'},
     {name:'課文閱讀',sub:'雙腔課文、10個詞彙',time:'5～14分鐘',heading:'行讀客家世界：印尼客家之旅',lead:'看課本、朗讀重點句，點擊詞彙可開啟註解。'},
     {name:'語言傳承',sub:'政策與生活經驗',time:'14～20分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從課文中的印尼語言政策，連結臺灣的歷史與學生生活。'},
     {name:'海外客語',sub:'聽見山口洋',time:'20～24分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'聽聽看，是不是很熟悉呢？'},
@@ -19,7 +19,7 @@
   const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu.wav', id:'assets/audio/singkawang-hopo.wav'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
-  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false},reflection:'保留',audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false},reflection:'保留',festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -86,6 +86,7 @@
     navRender();
     const fn=[introStage,readingStage,policyStage,audioStage,historyStage,foodStage,festivalStage,endingStage][state.stage];
     body.innerHTML=fn();
+    if(window.renderCultureVocab&&state.stage>=2&&state.stage<=6){window.renderCultureVocab(body,state.stage,state.dialect,state.toneMode,formatPinyin);}
     startFoodTicker();
     body.querySelectorAll(".teacher-note,.read-tip,.map-note").forEach(el=>el.remove());
     if(state.stage===0){updateMapInfo();if(state.mapView==='taiwan'){updateTaiwanZoom();bindTaiwanPan();}}
@@ -100,16 +101,17 @@
   const transitionOverlay=document.getElementById('journeyOverlay');
   function openJourneyTransition(){
     if(!transitionOverlay){goto(1);return;}
+    const frame=document.getElementById('journeyPixelFrame');
+    frame.src='journey-pixel.html?embed=1&play='+Date.now();
     transitionOverlay.hidden=false;
-    // 重播兩段影格動畫
-    const scene=transitionOverlay.querySelector('.journey-scene');
-    scene.classList.remove('journey-playing');void scene.offsetWidth;scene.classList.add('journey-playing');
-    document.getElementById('journeyStart')?.focus();
+    document.getElementById('journeySkip')?.focus();
   }
   function closeJourneyTransition(){
     if(transitionOverlay)transitionOverlay.hidden=true;
+    const frame=document.getElementById('journeyPixelFrame');if(frame)frame.removeAttribute('src');
     goto(1,false);
   }
+  window.addEventListener('message',e=>{if(e.origin!==location.origin)return;if(e.data?.type==='hakkaJourneyStart'&&!transitionOverlay.hidden)closeJourneyTransition();});
   document.getElementById('journeyStart')?.addEventListener('click',closeJourneyTransition);
   document.getElementById('journeySkip')?.addEventListener('click',closeJourneyTransition);
 
@@ -448,6 +450,10 @@
   }
   function showStoryInfo(id){
     if(id==='singkawang-festival'){showFestivalVideo();return;}
+    if(id==='lang-family'){
+      openDialog('家庭：有人和孩子講客語嗎？','日常生活',`<p class="story-detail-text">學校能提供接觸與學習客語的機會；若家中也有人願意以客語聊天、講故事，孩子就有更多練習和使用語言的情境。</p><p class="story-detail-text">請觀察2010年及2020年家庭主要使用語言的地域分布。圖例與普查統計口徑可能不同，不能直接把色塊變化當作語言人口增減。</p><div class="family-language-compare"><figure><a target="_blank" rel="noopener" href="assets/images/family-languages/taiwan-home-language-2010.webp"><img src="assets/images/family-languages/taiwan-home-language-2010.webp" alt="2010年臺灣家庭主要使用語言分布" loading="lazy"></a><figcaption>2010年家庭主要使用語言（點圖放大）</figcaption></figure><figure><a target="_blank" rel="noopener" href="assets/images/family-languages/taiwan-home-language-2020.png"><img src="assets/images/family-languages/taiwan-home-language-2020.png" alt="2020年臺灣家庭主要使用語言分布" loading="lazy"></a><figcaption>2020年家庭主要使用語言（點圖放大）</figcaption></figure></div>`);
+      return;
+    }
     const item=INFO_CARDS[id];if(!item)return;
     openDialog(item.title,item.tag,`${item.photo?photo(item.photo,'story-detail-photo'):''}<p class="story-detail-text">${esc(item.body)}</p>${item.source?`<p class="story-source"><a href="${esc(item.source)}" target="_blank" rel="noopener noreferrer">閱讀資料來源 ↗</a></p>`:''}`);
   }
@@ -460,7 +466,7 @@
   function showFestivalVideo(){
     // 使用官方嵌入播放器播放，並保留新視窗連結；關閉彈窗會卸載 iframe。
     openDialog('山口洋元宵節：Cap Go Meh','印尼・西加里曼丹',
-      `<div class="festival-video-intro">走進山口洋的元宵慶典，觀察遊行、廟宇與地方社群的參與。</div>
+      `<div class="festival-video-intro">相傳山口洋元宵乩童遊行與早期防疫祈福的民間故事有關；節慶也有達雅族人參與。觀看影片，觀察不同族群如何共同參與。</div>
        <div class="video-player-frame festival-video-frame"><iframe title="山口洋元宵節 Cap Go Meh 影片" src="https://www.youtube-nocookie.com/embed/FEBVKPOcH7k?start=70&rel=0" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
        <div class="video-player-bottom"><span>山口洋元宵慶典影片</span><a href="${esc(FESTIVAL_YOUTUBE)}" target="_blank" rel="noopener noreferrer">在YouTube開啟影片 ↗</a></div>`);
     overlay.querySelector('.dialog')?.classList.add('video-dialog');
@@ -527,10 +533,14 @@
       {src:'assets/images/choi-pan-table.jpg',label:'Choi Pan與醬料',caption:'桌上菜粄、佐料與醬汁的實際食用場景。',source:'授課教師提供',page:''}
     ],
     zong_tw:[
+      {src:'assets/images/user-zongzi/PANCHUNG(TW).jpg',label:'臺灣客家粽內餡',caption:'客家粽切面：觀察米皮與鹹餡。',source:'授課教師提供',page:''},
+      {src:'assets/images/user-zongzi/PANCHUNG2(TW).jpg',label:'臺灣客家粽剖面',caption:'臺灣客家粽切開後的內餡與包裹葉材。',source:'授課教師提供',page:''},
       {src:'https://yuann.tw/archive/8309/33505685126_d741a1ce62_b.jpg',label:'臺灣客家粽',caption:'以粽葉包裹的客家鹹粽，觀察葉片、繩結與外形。',source:'隨裕而安・頭份客家粽',page:'https://yuann.tw/%E9%A0%AD%E4%BB%BD%E9%98%BF%E7%A7%80%E5%AB%82%E5%AE%A2%E5%AE%B6%E7%B2%BD-%E9%85%8D%E6%96%99%E7%B0%A1%E5%96%AE%E8%B6%85%E5%A5%BD%E5%90%83/'},
       {src:'https://imgproxy.icook.network/safe/rt%3Afit/w%3A1242/el%3A0/q%3A80/plain/http%3A%2F%2Ftokyo-kitchen.icook.tw.s3.amazonaws.com%2Fuploads%2Frecipe%2Fcover%2F340450%2Fde34f58d0c3f6dd9.jpg',label:'客家粄粽',caption:'臺灣客家粄粽的包裹方式，與一般糯米鹹粽可再比較。',source:'愛料理・客家粿粽／粄粽',page:'https://icook.tw/recipes/340450'}
     ],
     zong_id:[
+      {src:'assets/images/user-zongzi/BAKCANG2(In).jpg',label:'邦加粽子內餡',caption:'印尼邦加粽子剖面與葉材，觀察糯米與肉餡。',source:'授課教師提供',page:''},
+      {src:'assets/images/user-zongzi/BAKCANG(In).jpg',label:'邦加粽子介紹圖',caption:'邦加粽子斑蘭葉包裹方式的宣傳示意圖（非實景照片）。',source:'授課教師提供・宣傳示意',page:''},
       {src:'https://img-global.cpcdn.com/recipes/cfc394e40a979d05/680x781cq80/kue-bakcang-bangka-foto-resep-utama.jpg',label:'邦加Bakcang',caption:'邦加粽子的綠葉包裹外觀；當地有使用斑蘭葉的做法。',source:'Cookpad・Kue Bak Cang Bangka',page:'https://cookpad.com/id/resep/15368273'},
       {src:'https://img-global.cpcdn.com/recipes/6a62aaba6964def1/1200x630cq80/photo.jpg',label:'邦加Nyuk Cung',caption:'觀察邦加粽子的葉材、外形與綁法。',source:'Cookpad・Bacang Bangka',page:'https://cookpad.com/id/resep/15141993'}
     ]
@@ -592,14 +602,40 @@
     <section class="panel"><div class="micro-label">觀察兩地粄食</div><h2>看一看：相同在哪裡？不同在哪裡？</h2><div class="compare-line"><div><strong>相似的地方</strong><br>米製外皮與包餡的做法，保留熟悉的客家米食特色。</div><div><strong>各地的變化</strong><br>外形、餡料、調味與食用方式，隨地方飲食文化發展。</div></div></section>
     <section class="panel soft"><h2>南洋米食都比較甜嗎？</h2><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但Choi Pan通常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></section>`;
   }
+  const FESTIVAL_PHOTOS={
+    lantern:[
+      {src:'https://image.nexttv.com.tw/material/news/img/2024/02/20240223204300YFPr.png',caption:'2024臺灣燈會・臺南主燈',source:'壹新聞',url:'https://www.nexttv.com.tw/NextTV/News/Home/Life/2024-02-23/1493940.html'},
+      {src:'https://media.taiwan.net.tw/zh-tw/Portal/Media/EncryptedCoverImage?f=AQAAANCMnd8BFdERjHoAwE%2FCl%2BsBAAAA9h6RcxMeWUyWMoY60yrloAAAAAACAAAAAAAQZgAAAAEAACAAAADGfh7uH%2BHHvjg16Oix5u6JqEOQHQ5W7koQud22oiAh8gAAAAAOgAAAAAIAACAAAAD24UAeVYNGtHtphJlL749Les5p%2Fa%2Bt9%2Bj%2FMm%2Bxd3m3HjAAAACgHnn71mE5RD5Ye%2FrV7drVT6QppQBBrJ%2BRqSCPlod%2FCI0AcFM1YMBXC0eDQngjkhlAAAAAj5q8onpBJC8sYA5rnTSbDZXCKcu4fa6dHNEkFpsbgaBHztf%2FMpRtiU508Kjss%2FfarWW%2FJ10RUzZ2WFREoCR6qg%3D%3D',caption:'2025臺灣燈會・光環境',source:'交通部觀光署',url:'https://media.taiwan.net.tw/zh-tw/portal/media/collection/47258_ph_20250324'},
+      {src:'https://s.yimg.com/ny/api/res/1.2/qYPUTKbRin.kAXHJN0lX2w--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTQ4MA--/https%3A/media.zenfs.com/zh-tw/libertytimes_786/031a3e659c0d6c028be08f9fc62fa15b',caption:'新埔花燈踩街迎天穿',source:'自由時報／Yahoo新聞',url:'https://www.hakka.gov.tw/chhakka/app/data/view?id=25&module=hotnews&serno=9a0eb6de-678f-4428-941f-6468de130f31'}
+    ],
+    dragon:[
+      {src:'https://resource.iyp.tw/static.iyp.tw/32272/files/926a1e2f-2442-412d-8760-8e2ed0841e17.jpg',caption:'2025苗栗𪹚龍・𪹚龍之夜',source:'苗栗時報',url:'https://www.miaoli-news.com.tw/news-detail-3842798.html'},
+      {src:'https://www.tristarnews.com.tw/upload/imgDB/20250206151605j339.jpg',caption:'苗栗𪹚龍・祥龍點睛',source:'三立星報',url:'https://n.yam.com/Article/20250206620196'},
+      {src:'https://pgw.udn.com.tw/gw/photo.php?exp=3600&sh=0&sw=0&u=https%3A%2F%2Fuc.udn.com.tw%2Fphoto%2F2025%2F02%2F07%2Fdraft%2F31456393.jpg&x=0&y=0',caption:'苗栗𪹚龍・舞龍隊伍',source:'聯合新聞網',url:'https://woman.udn.com/woman/story/123162/8534198'}
+    ],
+    beipu:[
+      {src:'assets/images/beipu-yuhanghuo.jpg',caption:'北埔油笐火・火把繞行',source:'授課教師提供',url:''},
+      {src:'https://www.lookit.tw/upload/51/TX4/8e8509af10514a86a4b1b80a1f0ad62e.jpg',caption:'北埔油笐火・老街夜景',source:'好想去喔',url:'https://www.lookit.tw/travel/40244'},
+      {src:'https://photo.settour.com.tw/900x600/https%3A/www.settour.com.tw/ss_img/info/location/HSZ/Z0/HSZ0000080/HSZ0000080_92428.jpg',caption:'北埔油笐火・慈天宮前',source:'東南旅遊',url:'https://trip.settour.com.tw/taiwan/product/GRT0000002444'}
+    ]
+  };
+  const FESTIVAL_TOPICS=[
+    {id:'lantern',title:'元宵花燈',subtitle:'臺灣燈會、新埔花燈迎天穿',desc:'從臺灣燈會的大型燈飾，到新埔花燈踩街迎天穿，看見不同地方的節慶創意。'},
+    {id:'dragon',title:'苗栗𪹚龍',subtitle:'龍藝、炮火與客庄元宵',desc:'苗栗以祥龍點睛、舞龍及𪹚龍活動，展現獨特的客庄元宵民俗。'},
+    {id:'beipu',title:'北埔油笐火',subtitle:'竹火把與老街夜巡',desc:'北埔居民在元宵夜舉起油笐火，走過老街與秀巒山，火光連成長龍。'}
+  ];
   function festivalStage(){
-    const f=[
-      {icon:'🏮',photo:'lantern',title:'臺灣：元宵花燈',desc:'看花燈、賞燈會，是熟悉的元宵活動之一。'},
-      {icon:'🐉',photo:'dragon',title:'苗栗：𪹚龍',desc:'苗栗客庄具有地方特色的元宵民俗活動。'},
-      {icon:'🔥',photo:'beipu',title:'北埔：油笐火',desc:'點燃火把、走入街道，感受北埔的元宵風景。'},
-      {icon:'▶',video:true,title:'山口洋：Cap Go Meh',desc:'點擊觀看山口洋元宵慶典影片，觀察地方節慶活動。'}
-    ];
-    return `<section class="panel"><div class="micro-label">快速觀察</div><h2>同樣是元宵，活動為什麼不一樣？</h2><div class="grid4">${f.map(x=>`<div class="festival-card">${x.video?`<button type="button" class="festival-video-tile" data-action="festival-video" aria-label="觀看山口洋元宵影片"><span class="festival-video-play" aria-hidden="true">▶</span><span>觀看慶典影片</span></button>`:x.photo?photo(x.photo,'festival-photo'):`<div class="festival-symbol" aria-hidden="true">${x.icon}</div>`}<h3>${x.title}</h3><p>${x.desc}</p>${x.link?`<a class="festival-source" href="${x.link}" target="_blank" rel="noopener noreferrer">查看活動照片 ↗</a>`:''}</div>`).join('')}</div><div class="answer-box" style="margin-top:17px">選一個例子：它和你熟悉的元宵節有哪些相同或不同？</div></section>`;
+    if(state.festivalView==='home'){
+      return `<section class="festival-hub"><button class="festival-entry" data-action="festival-view" data-view="tw"><span class="festival-entry-art" aria-hidden="true">🏮</span><span class="festival-entry-body"><span>臺灣客庄</span><strong>臺灣元宵</strong><small>元宵花燈・苗栗𪹚龍・北埔油笐火</small></span><span class="festival-entry-arrow">→</span></button><button class="festival-entry" data-action="festival-view" data-view="id"><span class="festival-entry-art" aria-hidden="true">🎬</span><span class="festival-entry-body"><span>印尼・西加里曼丹</span><strong>山口洋元宵</strong><small>Cap Go Meh・觀看慶典影片</small></span><span class="festival-entry-arrow">→</span></button></section>`;
+    }
+    if(state.festivalView==='id'){
+      return `<section class="panel festival-explore"><div class="festival-explore-head"><button class="festival-back" data-action="festival-view" data-view="home">← 選擇節慶</button><div><div class="micro-label">印尼・西加里曼丹</div><h2>山口洋元宵・Cap Go Meh</h2></div></div><p class="festival-explore-lead">每年農曆正月十五，山口洋的華人會慶祝元宵節（Cap Go Meh）。相傳早期當地曾發生疫情，人們透過乩童祈福、驅邪，逐漸形成大型乩童遊行的節慶特色。活動不只有華人參與，也能看到當地達雅族人的參與，呈現跨族群文化交流。觀看影片時，請觀察各種民俗活動與參與者。</p><button class="festival-main-video" data-action="festival-video"><span class="festival-big-play">▶</span><strong>觀看山口洋元宵節影片</strong><small>點擊開啟影片播放器</small></button></section>`;
+    }
+    const topic=FESTIVAL_TOPICS[state.festivalTopic];
+    const slides=FESTIVAL_PHOTOS[topic.id];
+    const n=(state.festivalPhoto[topic.id]||0)%slides.length;
+    const img=slides[n];
+    return `<section class="panel festival-explore"><div class="festival-explore-head"><button class="festival-back" data-action="festival-view" data-view="home">← 選擇節慶</button><div><div class="micro-label">臺灣元宵</div><h2>${topic.title}</h2></div></div><div class="festival-topic-tabs">${FESTIVAL_TOPICS.map((t,i)=>`<button data-action="festival-topic" data-index="${i}" class="${i===state.festivalTopic?'active':''}" aria-pressed="${i===state.festivalTopic}">${t.title}</button>`).join('')}</div><div class="festival-showcase"><div class="festival-stage-photo"><img src="${esc(img.src)}" alt="${esc(img.caption)}" loading="eager" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><div class="festival-photo-fallback" hidden>照片無法載入，請按左右箭頭查看其他照片。</div><button class="festival-nav-arrow left" data-action="festival-slide" data-move="prev" aria-label="上一張照片">‹</button><button class="festival-nav-arrow right" data-action="festival-slide" data-move="next" aria-label="下一張照片">›</button><span class="festival-slide-number">${n+1}／${slides.length}</span></div><div class="festival-photo-meta"><div><strong>${esc(img.caption)}</strong><span>${esc(topic.subtitle)}</span></div>${img.url?`<a href="${esc(img.url)}" target="_blank" rel="noopener noreferrer">圖片來源：${esc(img.source)} ↗</a>`:`<span>圖片來源：${esc(img.source)}</span>`}</div><div class="festival-slide-dots">${slides.map((_,i)=>`<button data-action="festival-slide" data-slide="${i}" class="${i===n?'active':''}" aria-label="第${i+1}張照片" aria-pressed="${i===n}"></button>`).join('')}</div></div><p class="festival-explore-lead">${topic.desc}</p></section>`;
   }
   function endingStage(){
     const cards=[
@@ -685,6 +721,15 @@
     if(action==='story-info'){showStoryInfo(el.dataset.card);}
     if(action==='lanfang-video'){showLanfangVideo();}
     if(action==='festival-video'){showFestivalVideo();}
+    if(action==='festival-view'){state.festivalView=el.dataset.view==='id'?'id':el.dataset.view==='tw'?'tw':'home';render();return;}
+    if(action==='festival-topic'){state.festivalTopic=Math.max(0,Math.min(2,Number(el.dataset.index)||0));render();return;}
+    if(action==='festival-slide'){
+      const key=FESTIVAL_TOPICS[state.festivalTopic].id;
+      const total=FESTIVAL_PHOTOS[key].length;
+      const direct=el.dataset.slide;
+      state.festivalPhoto[key]=direct!==undefined?Number(direct):(state.festivalPhoto[key]+(el.dataset.move==='next'?1:total-1))%total;
+      render();return;
+    }
     if(action==='lanfang-play'){const story=document.getElementById('lanfangStory');if(story){story.classList.remove('is-playing');void story.offsetWidth;story.classList.add('is-playing');el.textContent='↻ 重播動畫';el.setAttribute('aria-label','重播蘭芳公司動畫');}}
     if(action==='food-topic'){
       const topic=el.dataset.topic;if(!['caibao','zongzi'].includes(topic))return;

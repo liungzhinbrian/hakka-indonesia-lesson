@@ -507,3 +507,76 @@ html,body{font-size:18px}
 .food-topic-tabs button:hover,.food-topic-tabs button:focus-visible{border-color:#d59d59;transform:translateY(-1px)}
 .food-topic-tabs button.active{background:#235c69;border-color:#235c69;color:white}
 @media(max-width:640px){.food-topic-tabs{display:grid;grid-template-columns:1fr}.food-topic-tabs button{width:100%;padding:12px}}
+
+/* beta V6.2.4 — 元宵節雙入口、三組圖片輪播與投影字級修復 */
+.festival-hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.festival-entry{border:1px solid #d5e4e3;border-radius:24px;min-height:260px;display:flex;align-items:center;gap:20px;padding:30px;background:linear-gradient(130deg,#fff,#e9f5f1);color:#174556;text-align:left;box-shadow:0 12px 30px #16394317}
+.festival-entry:nth-child(2){background:linear-gradient(130deg,#fff,#fff0df)}
+.festival-entry:hover,.festival-entry:focus-visible{border-color:#e7a65a;box-shadow:0 15px 35px #16394328}
+.festival-entry-art{font-size:clamp(55px,7vw,92px);flex:0 0 auto}
+.festival-entry-body{display:grid;gap:10px;min-width:0}
+.festival-entry-body>span{font-size:17px;color:#b4773d;font-weight:800}
+.festival-entry-body strong{font-size:clamp(30px,3vw,43px);line-height:1.2}
+.festival-entry-body small{font-size:18px;color:#52727b;line-height:1.5}
+.festival-entry-arrow{margin-left:auto;font-size:30px}
+.festival-explore{padding:clamp(18px,3vw,32px)}
+.festival-explore-head{display:flex;align-items:center;gap:22px;margin-bottom:20px;flex-wrap:wrap}
+.festival-explore-head h2{font-size:clamp(28px,3vw,40px);margin:5px 0}
+.festival-back{border:1px solid #c7dcd9;border-radius:12px;color:#2c626d;background:#f0f7f5;font-size:17px;font-weight:750;padding:12px 17px}
+.festival-topic-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 20px}
+.festival-topic-tabs button{font-size:clamp(18px,1.8vw,23px);font-weight:800;color:#315d67;background:#edf5f3;border:2px solid #d5e6e2;border-radius:12px;padding:13px 24px}
+.festival-topic-tabs button.active{background:#236c78;color:#fff;border-color:#236c78}
+.festival-showcase{border:1px solid #c8dcd9;border-radius:18px;overflow:hidden;background:#153747}
+.festival-stage-photo{position:relative;background:#153747;height:clamp(330px,45vw,590px);display:grid;place-items:center}
+.festival-stage-photo img{width:100%;height:100%;object-fit:contain;display:block}
+.festival-stage-photo img[hidden]{display:none}
+.festival-photo-fallback{font-size:20px;color:#fff;padding:30px;text-align:center}
+.festival-nav-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;border:0;background:#082a39c9;color:#fff;font-size:52px;line-height:1;width:54px;height:74px;border-radius:12px}
+.festival-nav-arrow.left{left:10px}.festival-nav-arrow.right{right:10px}
+.festival-slide-number{position:absolute;right:14px;bottom:12px;border-radius:99px;background:#082a39d9;color:#fff;padding:6px 13px;font-size:18px}
+.festival-photo-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 22px;color:#e9f5f3;flex-wrap:wrap}
+.festival-photo-meta>div{display:grid;gap:3px}
+.festival-photo-meta strong{font-size:22px;color:#f8daa4}
+.festival-photo-meta span,.festival-photo-meta a{font-size:16px;color:#d7e6e7}
+.festival-slide-dots{display:flex;justify-content:center;align-items:center;gap:12px;padding:0 12px 20px}
+.festival-slide-dots button{width:18px;height:18px;border:1px solid #b5d1d2;border-radius:50%;background:#5d8491;padding:0}
+.festival-slide-dots button.active{background:#f8d49b;transform:scale(1.15)}
+.festival-explore-lead{font-size:clamp(20px,2vw,25px)!important;line-height:1.75!important;margin:20px 0 0}
+.festival-main-video{margin-top:24px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;width:100%;min-height:360px;border:0;border-radius:22px;color:#f9f3df;background:radial-gradient(circle at 50% 30%,#397a86,#153846 68%);font-size:24px}
+.festival-big-play{display:grid;place-items:center;width:105px;height:105px;border-radius:50%;background:#e7b477;color:#163e49;font-size:46px}
+.festival-main-video strong{font-size:clamp(24px,2.7vw,36px)}
+.festival-main-video small{font-size:18px;color:#d3e8e5}
+/* 字級切換過去只改課文字級，而且被後面的 !important 覆蓋；以較高特定性明確套用到主教材。 */
+#siteShell #stageBody .han-text{font-size:calc(29px * var(--fontup))!important}
+#siteShell #stageBody .pinyin-text{font-size:calc(20px * var(--fontup))!important}
+#siteShell #stageBody .reading-title-pinyin{font-size:calc(19px * var(--fontup))!important}
+#siteShell #stageBody .panel h2,#siteShell #stageBody .festival-explore h2{font-size:calc(25px * var(--fontup))!important}
+#siteShell #stageBody .panel h3{font-size:calc(21px * var(--fontup))!important}
+#siteShell #stageBody .panel p,#siteShell #stageBody .festival-explore-lead{font-size:calc(18px * var(--fontup))!important}
+#siteShell #stageBody .festival-entry-body strong{font-size:calc(35px * var(--fontup))!important}
+#siteShell #stageBody .festival-entry-body small{font-size:calc(18px * var(--fontup))!important}
+#siteShell #stageBody .festival-photo-meta strong{font-size:calc(22px * var(--fontup))!important}
+#siteShell #stageBody .festival-topic-tabs button{font-size:calc(21px * var(--fontup))!important}
+#siteShell #stageBody .story-info-card>strong{font-size:calc(24px * var(--fontup))!important}
+@media(max-width:900px){.festival-hub{grid-template-columns:1fr}.festival-entry{min-height:195px}.festival-stage-photo{height:clamp(270px,55vw,470px)}}
+@media(max-width:600px){.festival-entry{padding:18px;gap:13px}.festival-entry-art{font-size:52px}.festival-entry-body strong{font-size:26px}.festival-entry-body small{font-size:15px}.festival-stage-photo{height:290px}.festival-photo-meta{padding:14px}.festival-nav-arrow{height:60px;width:42px;font-size:39px}#siteShell #stageBody .han-text{font-size:calc(23px * var(--fontup))!important}}
+
+#siteShell .content-head h1{font-size:calc(36px * var(--fontup))!important}
+#siteShell .content-head p{font-size:calc(18px * var(--fontup))!important}
+#siteShell #stageBody .answer-box,#siteShell #stageBody .compare-line>div{font-size:calc(18px * var(--fontup))!important}
+#siteShell #stageBody .food-slide-caption strong{font-size:calc(18px * var(--fontup))!important}
+#siteShell #stageBody .food-card .food-body h3{font-size:calc(26px * var(--fontup))!important}
+
+/* V6.3.1: 語音互動工具與投影字級 */
+.phonology-overlay[hidden]{display:none!important}.phonology-overlay{position:fixed;inset:0;background:rgba(6,24,33,.76);z-index:3000;display:grid;place-items:center;padding:14px}.phonology-dialog{background:#f9fcfd;color:#183d48;border-radius:22px;box-shadow:0 30px 85px #08182088;width:min(1120px,98vw);max-height:96vh;overflow:auto;padding:22px 26px}.phonology-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #d7e5e8;padding-bottom:9px}.phonology-head h2{font-size:clamp(23px,2.6vw,34px);margin:3px 0}.phonology-close{border:0;background:#e4eff1;border-radius:50%;font-size:28px;width:42px;height:42px;cursor:pointer}.phonology-actions,.phonology-dialects,.phonology-tone-buttons{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}.phonology-actions button,.phonology-dialects button,.phonology-tone-buttons button,.phonology-all{border:1px solid #b4cbd0;background:white;color:#214b58;padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:700;font-size:15px}.phonology-actions button.active,.phonology-dialects button.active,.phonology-tone-buttons button.active,.phonology-all.active{background:#136e82;color:white;border-color:#136e82}.phonology-wrap{overflow-x:auto}.phonology-grid{border-collapse:separate;border-spacing:3px;width:100%;min-width:750px;table-layout:fixed}.phonology-grid th{background:#dcecef;padding:10px 4px;color:#204755;font-size:13px}.phonology-grid td{border-radius:8px;background:#f0f5f6;text-align:center;height:54px;padding:2px}.phonology-grid td:first-child{font-weight:750;background:#e1eeee;min-width:105px;font-size:14px}.phonology-grid button{width:100%;height:49px;border:1px solid #8cb9c4;border-radius:8px;background:#fff;color:#125568;cursor:pointer;font-size:19px;font-weight:800;line-height:1.2}.phonology-grid button:hover,.phonology-grid button.active{background:#116f84;color:#fff}.phonology-detail{background:#e8f3f6;border:1px solid #c8dfe6;border-radius:13px;padding:16px 19px;margin:14px 0;line-height:1.7}.phonology-detail strong{font-size:25px}.phonology-note{font-size:13px;color:#566d75;line-height:1.7}.phonology-tone-chart{width:100%;height:auto;max-height:440px;border:1px solid #d8e7e8;background:#fff;border-radius:12px}.phonology-tone-chart .tone-path{transition:opacity .22s;stroke-linecap:round;fill:none;stroke-width:4;stroke-dasharray:420;stroke-dashoffset:420;animation:drawTone .8s ease forwards}.phonology-tone-chart .tone-path.muted{stroke:#cbd5d9!important;opacity:.2;animation:none;stroke-dashoffset:0}.phonology-tone-chart .tone-path:not(.muted){filter:drop-shadow(0 1px 2px #aaa3)}@keyframes drawTone{to{stroke-dashoffset:0}}.phonology-ref-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.phonology-ref-grid figure{margin:0;background:white;border:1px solid #dce7e9;border-radius:12px;padding:9px}.phonology-ref-grid img{width:100%;height:auto;display:block}.phonology-ref-grid figcaption{font-size:13px;color:#44616a;padding-top:8px}.phonology-headerline{font-weight:800;color:#244956;margin:15px 0 6px}.phonology-consonant-key{font-size:14px;color:#31545f}.phonology-tone-stat{font-size:20px;font-weight:750;color:#17647a;text-align:center;padding:5px 0 0}.phonology-toolbarline{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px}.phonology-toggle{display:flex;align-items:center;gap:6px;font-size:13px}.phonology-toggle input{width:17px;height:17px}.phonology-small-table{border-collapse:collapse;width:100%;margin:10px 0}.phonology-small-table th,.phonology-small-table td{border:1px solid #bfd2d6;padding:9px 7px;text-align:center}.phonology-small-table th{background:#dcecef}.phonology-ref-note{color:#526c75;font-size:13px}.phonology-hidden{display:none!important}
+/* 第一站地圖：優先提供主視覺空間 */
+@media(min-width:1100px){.intro-layout{grid-template-columns:minmax(0,2.85fr) minmax(230px,.78fr)!important;gap:12px!important}.map-panel{padding:12px!important}.map-panel .map-svg.map-geo{max-height:80vh!important}.map-panel .map-svg.map-taiwan{height:min(80vh,820px)!important;max-height:820px!important}.map-panel .map-svg.map-indonesia{max-height:75vh!important}.map-viewport{min-height:530px!important}}
+@media(max-width:700px){.phonology-dialog{padding:12px}.phonology-ref-grid{grid-template-columns:1fr}.phonology-grid{min-width:690px}}
+/* 文化單元：詞義與拼音延後揭曉 */
+.culture-vocab-panel{margin:20px 0;padding:20px;background:#eaf4f3;color:#173d4d;border:1px solid #b8d7da;border-radius:19px}.culture-vocab-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.culture-vocab-top h2{margin:4px 0;font-size:calc(24px * var(--fontup,1))}.culture-vocab-top button,.culture-vocab-controls button{background:#fff;color:#146478;border:1px solid #acc8d2;border-radius:10px;padding:10px 16px;font-size:calc(15px * var(--fontup,1));cursor:pointer;font-weight:700}.culture-vocab-inner{margin:16px auto 0;border-radius:15px;padding:20px;background:white;max-width:700px;text-align:center}.culture-vocab-progress{color:#506e77;font-size:calc(14px * var(--fontup,1))}.culture-vocab-word{font-size:calc(43px * var(--fontup,1));font-weight:850;padding:16px 0}.culture-vocab-answer{border-top:1px dashed #accfd4;padding:12px 0;animation:cvFlip .38s ease}.culture-vocab-answer strong{font-size:calc(24px * var(--fontup,1))}.culture-vocab-answer div{font-size:calc(20px * var(--fontup,1));color:#2a758a;margin-top:5px}.culture-vocab-hint{color:#6f8690;font-size:calc(16px * var(--fontup,1));padding:10px}.culture-vocab-controls{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:14px}.culture-vocab-controls button.cv-main{background:#126b80;color:white}.culture-vocab-controls button:focus-visible{outline:3px solid #f39e36}@keyframes cvFlip{from{opacity:0;transform:rotateX(65deg)}to{opacity:1;transform:rotateX(0)}}
+
+/* 家庭語言兩期人口普查地圖 */
+.family-language-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}.family-language-compare figure{margin:0;border:1px solid #d8e6e7;border-radius:12px;padding:10px;min-width:0}.family-language-compare img{display:block;max-width:100%;width:100%;height:auto;max-height:460px;object-fit:contain}.family-language-compare figcaption{text-align:center;font-size:13px;margin-top:7px;color:#476670}@media(max-width:650px){.family-language-compare{grid-template-columns:1fr}}
+
+/* 七幕三十秒像素冒險過場 */
+.journey-embedded-wrap{width:min(100%,1120px);max-height:98vh;display:flex;flex-direction:column;align-items:stretch;gap:5px}.journey-embedded-wrap iframe{width:100%;height:min(82vh,800px);background:#0d2835;border:1px solid #497584;border-radius:15px}.journey-fallback-skip,.journey-fallback-start{display:inline-block;align-self:center;background:#17394d;color:white;border:1px solid #6b91a0;border-radius:8px;padding:8px 16px;cursor:pointer}.journey-fallback-start{display:none}.journey-overlay{padding:5px!important}@media(max-width:650px){.journey-embedded-wrap iframe{height:88vh}}
