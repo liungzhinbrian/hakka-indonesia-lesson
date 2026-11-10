@@ -18,7 +18,7 @@
   const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu.wav', id:'assets/audio/singkawang-hopo.wav'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
-  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:0,y:0,w:1020,h:680},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false},reflection:'保留',festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false},reflection:'保留',festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -255,7 +255,7 @@
     svg.addEventListener('pointerup',endDrag);svg.addEventListener('pointercancel',endDrag);svg.addEventListener('lostpointercapture',endDrag);
   }
   // 路線動畫與地圖鏡頭分開處理：目的地是實際標註位置，鏡頭只改變觀看範圍。
-  const GEO_FULL={x:0,y:0,w:1020,h:680};
+  const GEO_FULL={x:165,y:60,w:720,h:585};
   let geoFrame=0;
   function geoViewBox(){
     const b=state.geoCamera;
@@ -669,7 +669,7 @@
       {name:'改變',desc:'生活環境、材料、語言使用情境產生變化',example:'臺灣與印尼菜粄的內餡、做法有各自的在地特色。'},
       {name:'融合',desc:'與其他族群、地方文化相遇並交流',example:'山口洋元宵活動展現不同族群的共同參與。'}
     ];
-    return `<section class="panel"><div class="micro-label">最後的文化提問</div><h2 class="question">你今天最有印象的是哪一個例子？<br>它讓你想到「保留、改變」還是「融合」？</h2><div class="grid3">${cards.map(c=>`<button type="button" class="reflection ${state.reflection===c.name?'active':''}" data-action="reflect" data-value="${c.name}" style="text-align:left"><strong>${c.name}</strong><p>${c.desc}</p></button>`).join('')}</div>
+    return `<section class="panel finale-vocab-intro"><div><span class="micro-label">最後一站・客語總複習</span><h2>28個文化詞彙，還記得多少？</h2><p>全班看客語漢字與拼音，先讀一讀、猜猜意思；點擊揭曉後，再隨機抽下一詞。</p></div><button type="button" class="culture-vocab-open" data-cv-open="7">📖 開始28詞總複習</button></section><section class="panel"><div class="micro-label">最後的文化提問</div><h2 class="question">你今天最有印象的是哪一個例子？<br>它讓你想到「保留、改變」還是「融合」？</h2><div class="grid3">${cards.map(c=>`<button type="button" class="reflection ${state.reflection===c.name?'active':''}" data-action="reflect" data-value="${c.name}" style="text-align:left"><strong>${c.name}</strong><p>${c.desc}</p></button>`).join('')}</div>
     <div class="answer-box" style="margin-top:15px">${cards.find(c=>c.name===state.reflection).example}</div></section>
     <section class="panel soft"><div class="grid2"><div><div class="micro-label">課程總結</div><div class="lesson-outro">飄洋過海，客家文化在不同地方繼續生活。</div><p>臺灣與印尼的客家人有歷史連結，也有各自的社會環境與文化發展。</p></div><div><h2>收回學習單前</h2><p>選一個今天的實例，寫出你看到的文化現象與理由。</p><a href="worksheet.html" target="_blank" rel="noopener" class="action" style="display:inline-block;text-decoration:none;margin-top:10px">開啟可列印學習單 ↗</a></div></div></section>`;
   }

@@ -8,6 +8,8 @@ const D={
  6:[['語言','語言','Ngi53 ngien55','Ngi24 ngien11','語言'],['政策','政策','Zhin11 ced5','Ziin55 ced2','政策'],['屋下','屋下','Vug5 ha53','Vug2 ka24','家裡'],['學校','學校','Hog2 gau24','Hog5 gau31','學校'],['市場','市場','Shi33 chong55','Sii55 cong11','市場'],['街路','街路','Gai53 lu33','Gie11 lu55','街上／市區／鬧區'],['社區','社區','Sha33 ki53','Sa55 ki24','社區'],['宮廟／寺廟','宮廟／寺廟','Giung53 miau33 / si11 maiu33','Giung11 meu55 / sii55 meu55','宮廟／寺廟']]
 };
 
+// 第八站合併前面各文化單元的完整28詞；維持既有站別詞彙順序。
+D[7]=[...D[2],...D[3],...D[4],...D[5],...D[6]];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
 const TONES={hailu:{'53':'ˋ','55':'','24':'ˊ','11':'ˇ','33':'+','5':'','2':'ˋ'},sixian:{'24':'ˊ','11':'ˇ','31':'ˋ','55':'','2':'ˋ','5':''}};
@@ -22,11 +24,11 @@ const IMAGE_INFO={
 };
 const overlay=document.getElementById('cultureVocabOverlay');
 if(!overlay)return;
-let activeStage=3,idx=0,shown=false,dialect='hailu',lastFocus=null;
+let activeStage=3,idx=0,shown=false,dialect='hailu',lastFocus=null,notationMode='shape';
 const words=()=>D[activeStage]||[];
 const current=()=>words()[idx];
 const fmt=(src)=>String(src).replace(/([a-z]+)(53|55|24|11|33|31|5|2)(?=[^a-z0-9]|$)/gi,(raw,syllable,tone)=>{
- const mode=document.getElementById('toneModeToggle')?.textContent?.includes('調型')?'shape':'value';
+ const mode=notationMode;
  return syllable.toLowerCase()+(mode==='shape'?(TONES[dialect][tone]??tone):[...tone].map(d=>SUP[d]).join(''));
 });
 function draw(){const w=current();if(!w)return;
@@ -38,6 +40,7 @@ function draw(){const w=current();if(!w)return;
  overlay.querySelector('#cvMeaning').hidden=!shown;
  overlay.querySelector('#cvGuess').hidden=shown;
  overlay.querySelector('#cvReveal').textContent=shown?'蓋回答案':'揭曉華語詞義';
+ overlay.querySelectorAll('[data-cv-tone]').forEach(b=>{b.classList.toggle('active',b.dataset.cvTone===notationMode);b.setAttribute('aria-pressed',String(b.dataset.cvTone===notationMode))});
  overlay.querySelectorAll('[data-cv-dialect]').forEach(b=>{b.classList.toggle('active',b.dataset.cvDialect===dialect);b.setAttribute('aria-pressed',b.dataset.cvDialect===dialect)});
  const image=overlay.querySelector('#cvImage');
  if(im){image.hidden=!shown;image.innerHTML=shown?`<figure><img src="${esc(im.src)}" alt="${esc(w[0])}食物照片" loading="eager"><figcaption>${esc(im.note)} · ${im.url?`<a href="${im.url}" target="_blank" rel="noopener">${esc(im.credit)}</a>`:esc(im.credit)}</figcaption></figure>`:'';}
@@ -48,13 +51,14 @@ window.renderCultureVocab=function(host,stage){const list=D[stage]||[];if(!list.
 };
 function open(stage){if(!D[stage])return;activeStage=stage;idx=0;shown=false;lastFocus=document.activeElement;
  const topDial=document.querySelector('[data-dialect].active')?.dataset.dialect;
- dialect=topDial==='sixian'?'sixian':'hailu';overlay.hidden=false;document.body.classList.add('cv-dialog-open');draw();overlay.querySelector('#cvReveal')?.focus();
+ dialect=topDial==='sixian'?'sixian':'hailu';notationMode=document.getElementById('toneModeToggle')?.textContent?.includes('調型')?'shape':'value';overlay.hidden=false;document.body.classList.add('cv-dialog-open');draw();overlay.querySelector('#cvReveal')?.focus();
  document.querySelectorAll('.food-photo-frame').forEach(x=>x.setAttribute('data-paused-by-vocab','true'));
 }
 function close(){overlay.hidden=true;document.body.classList.remove('cv-dialog-open');lastFocus?.focus?.();}
 document.addEventListener('click',e=>{const op=e.target.closest('[data-cv-open]');if(op){open(+op.dataset.cvOpen);return;}
  if(overlay.hidden)return;
  const d=e.target.closest('[data-cv-dialect]');if(d){dialect=d.dataset.cvDialect;shown=false;draw();return;}
+ const tone=e.target.closest('[data-cv-tone]');if(tone){notationMode=tone.dataset.cvTone;draw();return;}
  const act=e.target.closest('[data-cv-action]')?.dataset.cvAction;
  if(act==='close'){close();return;}if(!act)return;
  if(act==='reveal')shown=!shown;
