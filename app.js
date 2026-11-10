@@ -58,6 +58,27 @@
     luo: {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Luo_Fangbo.jpg?width=700',page:'https://commons.wikimedia.org/wiki/File:Luo_Fangbo.jpg',credit:'Wikimedia Commons／羅芳伯後世圖像',alt:'羅芳伯的後世畫像'},
   };
   function photo(key, cls=''){ const x=PHOTO_SOURCES[key];if(!x)return ''; const credit=x.page?`<a href="${esc(x.page)}" target="_blank" rel="noopener noreferrer">圖片來源：${esc(x.credit)} ↗</a>`:`<span>圖片來源：${esc(x.credit)}</span>`;return `<figure class="real-photo ${cls}"><img src="${esc(x.url)}" alt="${esc(x.alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.classList.add('photo-failed')"><figcaption>${credit}</figcaption></figure>`; }
+  const sidePanel=document.getElementById('sidebar');
+  const navButton=document.getElementById('mobileMenu');
+  const navBackdrop=document.getElementById('navBackdrop');
+  function openNavigation(){
+    sidePanel.classList.add('open');
+    sidePanel.setAttribute('aria-hidden','false');
+    navButton.setAttribute('aria-expanded','true');
+    navButton.setAttribute('aria-label','關閉章節導覽');
+    navBackdrop.hidden=false;
+    sidePanel.querySelector('.nav-step.active')?.focus();
+  }
+  function closeNavigation(returnFocus=false){
+    const wasOpen=sidePanel.classList.contains('open');
+    sidePanel.classList.remove('open');
+    sidePanel.setAttribute('aria-hidden','true');
+    navButton.setAttribute('aria-expanded','false');
+    navButton.setAttribute('aria-label','開啟章節導覽');
+    navBackdrop.hidden=true;
+    if(returnFocus&&wasOpen)navButton.focus();
+  }
+  function toggleNavigation(){sidePanel.classList.contains('open')?closeNavigation(true):openNavigation();}
   function navRender(){
     nav.innerHTML = STAGES.map((s,i)=>`<button type="button" class="nav-step ${i===state.stage?'active':''}" data-action="jump" data-index="${i}" ${i===state.stage?'aria-current="step"':''}><span class="n">${String(i+1).padStart(2,'0')}</span><span><strong>${esc(s.name)}</strong><small>${esc(s.sub)}</small></span></button>`).join('');
   }
@@ -90,7 +111,7 @@
     body.querySelectorAll(".teacher-note,.read-tip,.map-note").forEach(el=>el.remove());
     if(state.stage===0){updateMapInfo();if(state.mapView==='taiwan'){updateTaiwanZoom();bindTaiwanPan();}}
     if(state.stage===5) updateAudioPlayers();
-    document.getElementById('sidebar').classList.remove('open');
+    closeNavigation();
   }
   function goto(i,transition=false){
     if(transition && state.stage===0 && i===1){openJourneyTransition();return;}
@@ -360,10 +381,18 @@
       <p class="prompt-side">這些客家社群都在同一座島上嗎？</p></aside>`;
     }
     return `<aside class="panel intro-side country-facts"><div class="micro-label">認識印尼 Indonesia</div><h2>千島之國，多語社會</h2>
-      <div class="country-numbers"><div><span>人口（2025年）</span><strong>約2.84億</strong></div><div><span>華人比例（2010年）</span><strong>約1.2%</strong></div></div>
+      <div class="country-numbers"><div><span>印尼總人口（2026年推估）</span><strong>約2.87億</strong></div><div><span>華人占比（2010年普查）</span><strong>約1.2%</strong></div></div>
+      <div class="population-compare" aria-label="臺灣客家人口與印尼華人人口比較">
+        <div class="population-compare-title">人數比一比：比例小，不代表人數少</div>
+        <div class="population-compare-pair">
+          <div class="population-compare-item"><span>臺灣客家人口</span><strong>約467萬人</strong><small>2021年客委會調查推估</small></div>
+          <div class="population-compare-item"><span>印尼華人人口</span><strong>約283萬人</strong><small>2010年人口普查</small></div>
+        </div>
+        <p class="population-compare-note">兩組資料年份與族群定義不同；「印尼華人」不等於「印尼客家人」。</p>
+      </div>
       <p class="country-language"><b>國家官方語言：</b>印尼語（Bahasa Indonesia）</p>
       <div class="country-heritage"><b>印尼華人保留的部分傳承語言</b><div class="heritage-tags"><span>福建話（閩南語）</span><span>潮汕話（閩語）</span><span>廣府話（粵語）</span><span>客語</span></div></div>
-      <p class="source-mini">人口：2025年估計；華人比例：2010年人口普查。統計年份不同，不宜直接推算當年華人人數。</p>
+      <p class="source-mini">資料：<a href="https://www.bps.go.id/en/statistics-table/2/MTk3NSMy/mid-year-population-" target="_blank" rel="noopener">印尼統計局（2026年人口推估）</a>、<a href="https://www.atlantis-press.com/article/25889515.pdf" target="_blank" rel="noopener">印尼2010年族群普查</a>、<a href="https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=56071&amp;pid=253058" target="_blank" rel="noopener">臺灣客委會2021年調查</a>。不宜將2010年1.2%直接套用於2026年總人口。</p>
       <div class="map-info map-info-side" id="mapInfo" aria-live="polite"></div>
       </aside>`;
   }
@@ -592,13 +621,12 @@
     if(isZong)return `${nav}<section class="grid2 food-comparison">
       <div class="food-card">${foodCarousel('zong_tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>客家粽</h3><p>常以粽葉包裹糯米與鹹餡，餡料與作法依地方、家庭而不同。</p></div></div>
       <div class="food-card">${foodCarousel('zong_id')}<div class="food-body"><span class="tag amber">印尼・邦加島</span><h3>Bakcang／Nyuk Cung</h3><p>邦加部分做法以斑蘭葉包裹，也有使用椰奶處理糯米、搭配肉類與蝦米等配料的食譜。</p></div></div>
-    </section><section class="panel"><div class="micro-label">觀察與比較</div><h2>相同的粽子，會因環境而改變哪些材料？</h2><div class="compare-line"><div><strong>共同的傳統</strong><br>包葉、糯米、內餡以及節慶飲食。</div><div><strong>在地的變化</strong><br>包裹葉材、調味材料、餡料與製作方式。</div></div></section>`;
+    </section><section class="panel teaching-reveal"><div class="micro-label">觀察與比較・先討論，再揭曉</div><h2>相同的粽子，會因環境而改變哪些材料？</h2><p class="reveal-instruction">先觀察兩地照片，請小組說出一項共同點與一項差異，再點開資訊卡。</p><div class="reveal-grid"><details class="reveal-card"><summary><span>共同的傳統</span><span class="reveal-hint">點擊揭曉</span></summary><p>包葉、糯米、內餡以及節慶飲食。</p></details><details class="reveal-card"><summary><span>在地的變化</span><span class="reveal-hint">點擊揭曉</span></summary><p>包裹葉材、調味材料、餡料與製作方式。</p></details></div></section>`;
     return `${nav}<section class="grid2 food-comparison">
       <div class="food-card">${foodCarousel('tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>菜包／豬籠粄</h3><p>常見鹹餡包含蘿蔔絲、香菇等，米製外皮可呈現不同形狀。</p></div></div>
       <div class="food-card">${foodCarousel('id')}<div class="food-body"><span class="tag amber">印尼・西加里曼丹</span><h3>Choi Pan／菜粄</h3><p>常見涼薯、韭菜等餡料，通常搭配蒜酥或醬汁食用。</p></div></div>
     </section>
-    <section class="panel"><div class="micro-label">觀察兩地粄食</div><h2>看一看：相同在哪裡？不同在哪裡？</h2><div class="compare-line"><div><strong>相似的地方</strong><br>米製外皮與包餡的做法，保留熟悉的客家米食特色。</div><div><strong>各地的變化</strong><br>外形、餡料、調味與食用方式，隨地方飲食文化發展。</div></div></section>
-    <section class="panel soft"><h2>南洋米食都比較甜嗎？</h2><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但Choi Pan通常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></section>`;
+    <section class="panel teaching-reveal"><div class="micro-label">觀察兩地粄食・先討論，再揭曉</div><h2>看一看：相同在哪裡？不同在哪裡？</h2><p class="reveal-instruction">五組學生先觀察圖片並討論，發表後由教師依序打開資訊卡。</p><div class="reveal-grid"><details class="reveal-card"><summary><span>相似的地方</span><span class="reveal-hint">點擊揭曉</span></summary><p>米製外皮與包餡的做法，保留熟悉的客家米食特色。</p></details><details class="reveal-card"><summary><span>各地的變化</span><span class="reveal-hint">點擊揭曉</span></summary><p>外形、餡料、調味與食用方式，隨地方飲食文化發展。</p></details></div><details class="reveal-card reveal-wide"><summary><span>南洋米食都比較甜嗎？</span><span class="reveal-hint">想一想，再揭曉</span></summary><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但Choi Pan通常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></details></section>`;
   }
   const FESTIVAL_PHOTOS={
     lantern:[
@@ -746,9 +774,10 @@
     if(action==='reflect'){state.reflection=el.dataset.value;render();}
   });
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){if(transitionOverlay&&!transitionOverlay.hidden){closeJourneyTransition();return;}closeDialog();document.getElementById('sidebar').classList.remove('open');return;}
+    if(e.key==='Escape'){if(transitionOverlay&&!transitionOverlay.hidden){closeJourneyTransition();return;}closeDialog();closeNavigation(true);return;}
     if(!overlay.hidden||(transitionOverlay&&!transitionOverlay.hidden)||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
     if((e.key==='Enter'||e.key===' ') && e.target.matches('.map-svg .pin')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));return;}
+    if(e.key.toLowerCase()==='m' && !e.ctrlKey&&!e.altKey&&!e.metaKey){e.preventDefault();toggleNavigation();return;}
     if(e.key==='ArrowRight' || e.key==='PageDown'){e.preventDefault();goto(state.stage+1,true);}
     if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goto(state.stage-1);}
     if(e.key.toLowerCase()==='f'){document.getElementById('fullscreenToggle').click();}
@@ -761,7 +790,8 @@
   document.getElementById('prevBtn').addEventListener('click',()=>goto(state.stage-1));
   document.getElementById('mapHome').addEventListener('click',()=>goto(0));
   document.getElementById('viewSources').addEventListener('click',showSources);
-  document.getElementById('mobileMenu').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
+  document.getElementById('mobileMenu').addEventListener('click',toggleNavigation);
+  navBackdrop.addEventListener('click',()=>closeNavigation(true));
   document.getElementById('dialogClose').addEventListener('click',closeDialog);
   document.getElementById('fullscreenToggle').addEventListener('click',()=>{
     if(document.fullscreenElement)document.exitFullscreen(); else if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});

@@ -628,3 +628,45 @@ html,body{font-size:18px}
 .cv-nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.cv-nav button{border:1px solid #9dbdc4;background:#fff;border-radius:10px;padding:11px 18px;color:#1e5a6d;font-size:18px;font-weight:750;cursor:pointer}
 .cv-modal button:focus-visible{outline:3px solid #ef9f3c;outline-offset:3px}
 @media(max-width:800px){.cv-modal{max-height:96vh}.cv-modal-head .micro-label{font-size:13px}.cv-word-area{min-height:220px}.cv-han{font-size:52px}.cv-pinyin{font-size:28px}.cv-nav button{font-size:14px;padding:9px}.country-facts .country-numbers strong{font-size:21px}}
+
+/* V7.0.1｜第一站族群人口比較（16:9投影用緊湊卡） */
+.country-facts .population-compare{border:1px solid #c9d9e4;background:#f7fafc;border-radius:12px;padding:10px;display:grid;gap:7px}
+.country-facts .population-compare-title{font-size:14px;font-weight:850;color:#1f5363;line-height:1.35}
+.country-facts .population-compare-pair{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.country-facts .population-compare-item{display:grid;align-content:start;gap:3px;background:#eaf3f7;padding:9px 7px;border-radius:9px;min-width:0}
+.country-facts .population-compare-item span{font-size:13px;font-weight:750;color:#345b68}
+.country-facts .population-compare-item strong{font-size:clamp(20px,1.9vw,27px);line-height:1.3;color:#13566c;white-space:nowrap}
+.country-facts .population-compare-item small{font-size:11px;color:#637780;line-height:1.35}
+.country-facts .population-compare-note{font-size:12px!important;line-height:1.5!important;margin:0;color:#506a72}
+.country-facts .source-mini a{color:#185b78;text-decoration:underline}
+@media(max-width:450px){.country-facts .population-compare-pair{grid-template-columns:1fr}}
+
+/* beta V7.0.2：投影優先的覆蓋式導覽，不推擠教材內容 */
+.site-shell{display:block!important;min-height:100vh}
+.workspace{width:100%;min-width:0}
+#mobileMenu{display:inline-grid!important;place-items:center;flex-shrink:0;font-size:21px}
+.sidebar{position:fixed!important;z-index:82!important;top:0;left:0;bottom:0;height:100dvh!important;width:min(320px,87vw)!important;padding:23px 17px 20px!important;transform:translateX(-105%);transition:transform .22s ease;box-shadow:15px 0 45px #09232c33;visibility:hidden;pointer-events:none;overflow-y:auto}
+.sidebar.open{transform:translateX(0);visibility:visible;pointer-events:auto}
+.nav-backdrop{position:fixed;inset:0;z-index:81;background:rgba(8,27,37,.44);border:0;cursor:pointer}
+.nav-backdrop[hidden]{display:none!important}
+@media(min-width:901px){.main{padding-inline:clamp(24px,3vw,54px)}}
+@media(max-width:900px){.sidebar{width:min(300px,88vw)!important}}
+/* 文化比較：討論前不顯示結論，資訊卡各自揭曉 */
+.teaching-reveal{display:grid;gap:13px}
+.teaching-reveal h2{margin:0}
+.reveal-instruction{margin:0;color:#537078;font-size:clamp(15px,1.3vw,19px);line-height:1.65}
+.reveal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.reveal-card{border:1px solid #cfe2e2;border-radius:16px;background:#fff;overflow:hidden;min-width:0;box-shadow:0 4px 15px #16384d0a}
+.reveal-card summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 23px;min-height:85px;color:#1d515e;font-size:clamp(20px,1.75vw,27px);font-weight:800}
+.reveal-card summary::-webkit-details-marker{display:none}
+.reveal-card summary:focus-visible{outline:3px solid #2e8493;outline-offset:-4px}
+.reveal-hint{font-size:clamp(13px,1vw,16px);color:#287583;white-space:nowrap;font-weight:650}
+.reveal-hint::after{content:' ＋';font-size:21px}
+.reveal-card[open] .reveal-hint::after{content:' −'}
+.reveal-card[open]{background:#eef8f5;border-color:#87b4aa}
+.reveal-card p{padding:0 23px 24px;margin:0;font-size:calc(19px * var(--fontup,1));line-height:1.75;color:#274a53}
+.reveal-wide{margin-top:1px}
+@media(max-width:680px){.reveal-grid{grid-template-columns:1fr}.reveal-card summary{min-height:66px;padding:16px}.reveal-card p{padding:0 16px 18px}}
+/* 只在拼音顯示時，以系統標楷體描繪調型符號；拉丁字母維持原本字型。 */
+@font-face{font-family:'HakkaToneKai';src:local('DFKai-SB'),local('BiauKai'),local('標楷體');unicode-range:U+02CA,U+02CB,U+02C7,U+002B;font-weight:400 900}
+.pinyin-text,.reading-title-pinyin,.vocab-pinyin,.cv-pinyin,.phonology-dialog{font-family:'HakkaToneKai',Arial,'Noto Sans',sans-serif}
