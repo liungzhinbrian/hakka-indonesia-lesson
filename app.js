@@ -7,18 +7,18 @@
   if (!DATA) { document.getElementById('stageBody').textContent='找不到content.js，請確認檔案放在同一資料夾。'; return; }
   const STAGES = [
     {name:'認識印尼',sub:'地圖與移民路線',time:'0～5分鐘',heading:'千島之國，客家在哪裡？',lead:'從原鄉到南洋，客家人如何在新的環境中延續自己的語言與生活？'},
-    {name:'課文閱讀',sub:'雙腔課文與詞彙',time:'5～10分鐘',heading:'行讀客家世界：印尼客家之旅',lead:'從課文認識印尼客家人的移民與生活。'},
-    {name:'移民與蘭芳',sub:'採礦、經商、組織',time:'10～17分鐘',heading:'客家人為何來到南洋？',lead:'從移民、採礦到蘭芳公司，認識海外客家人的歷史。'},
-    {name:'尋找客家味',sub:'菜粄與粽子',time:'17～25分鐘',heading:'熟悉的客家味，到了印尼有什麼不一樣？',lead:'比較臺灣與印尼的菜粄和粽子，觀察飲食文化的延續與變化。'},
-    {name:'元宵文化',sub:'臺灣與山口洋',time:'25～32分鐘',heading:'元宵節，原來可以這樣過！',lead:'從臺灣客庄到印尼山口洋，看看節慶如何展現地方特色。'},
-    {name:'海外客語',sub:'聽見山口洋',time:'32～36分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'聽聽臺灣海陸客語與山口洋河婆客語，有哪些熟悉或不同的地方。'},
-    {name:'語言傳承',sub:'政策、家庭與社區',time:'36～42分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從語言政策與家庭生活，認識海外客語的使用環境與傳承。'},
-    {name:'文化統整',sub:'保留、改變、融合',time:'42～45分鐘',heading:'飄洋過海之後，客家文化變了嗎？',lead:'回顧飲食、節慶與語言的線索，說明文化如何延續、改變與融合。'}
+    {name:'課文閱讀',sub:'雙腔課文與詞彙',time:'5～16分鐘',heading:'行讀客家世界：印尼客家之旅',lead:'從課文認識印尼客家人的移民與生活。'},
+    {name:'移民與蘭芳',sub:'採礦、經商、組織',time:'16～22分鐘',heading:'客家人為何來到南洋？',lead:'從移民、採礦到蘭芳公司，認識海外客家人的歷史。'},
+    {name:'尋找客家味',sub:'菜包、粽子與粢粑',time:'22～29分鐘',heading:'熟悉的客家味，到了印尼有什麼不一樣？',lead:'比較菜粄、粽子與粢粑等米食在臺灣及印尼的不同樣貌。'},
+    {name:'元宵文化',sub:'臺灣與山口洋',time:'29～35分鐘',heading:'元宵節，原來可以這樣過！',lead:'從臺灣客庄到印尼山口洋，看看節慶如何展現地方特色。'},
+    {name:'海外客語',sub:'聽見山口洋',time:'35～38分鐘',heading:'隔著海洋，還聽得見熟悉的客話嗎？',lead:'聽聽臺灣海陸客語與山口洋河婆客語，有哪些熟悉或不同的地方。'},
+    {name:'語言傳承',sub:'政策、家庭與社區',time:'38～44分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從語言政策與家庭生活，認識海外客語的使用環境與傳承。'},
+    {name:'文化統整',sub:'保留、改變、融合',time:'44～50分鐘',heading:'飄洋過海之後，客家文化變了嗎？',lead:'回顧飲食、節慶與語言的線索，說明文化如何延續、改變與融合。'}
   ];  /* 固定播放教師提供的臺灣海陸及山口洋河婆客語語料。 */
   const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu.wav', id:'assets/audio/singkawang-hopo.wav'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
-  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false},festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0,ciba_tw:0,kaloci_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false,ciba_tw:false,kaloci_id:false},festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -58,6 +58,8 @@
     luo: {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Luo_Fangbo.jpg?width=700',page:'https://commons.wikimedia.org/wiki/File:Luo_Fangbo.jpg',credit:'Wikimedia Commons／羅芳伯後世圖像',alt:'羅芳伯的後世畫像'},
   };
   function photo(key, cls=''){ const x=PHOTO_SOURCES[key];if(!x)return ''; const credit=x.page?`<a href="${esc(x.page)}" target="_blank" rel="noopener noreferrer">圖片來源：${esc(x.credit)} ↗</a>`:`<span>圖片來源：${esc(x.credit)}</span>`;return `<figure class="real-photo ${cls}"><img src="${esc(x.url)}" alt="${esc(x.alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.classList.add('photo-failed')"><figcaption>${credit}</figcaption></figure>`; }
+  const studentMode=new URLSearchParams(window.location.search).get('mode')==='student';
+  if(studentMode)document.documentElement.classList.add('student-mode');
   const sidePanel=document.getElementById('sidebar');
   const navButton=document.getElementById('mobileMenu');
   const navBackdrop=document.getElementById('navBackdrop');
@@ -582,12 +584,20 @@
       {src:'assets/images/user-zongzi/BAKCANG(In).jpg',label:'邦加粽子介紹圖',caption:'邦加粽子斑蘭葉包裹方式的宣傳示意圖（非實景照片）。',source:'授課教師提供・宣傳示意',page:''},
       {src:'https://img-global.cpcdn.com/recipes/cfc394e40a979d05/680x781cq80/kue-bakcang-bangka-foto-resep-utama.jpg',label:'邦加Bakcang',caption:'邦加粽子的綠葉包裹外觀；當地有使用斑蘭葉的做法。',source:'Cookpad・Kue Bak Cang Bangka',page:'https://cookpad.com/id/resep/15368273'},
       {src:'https://img-global.cpcdn.com/recipes/6a62aaba6964def1/1200x630cq80/photo.jpg',label:'邦加Nyuk Cung',caption:'觀察邦加粽子的葉材、外形與綁法。',source:'Cookpad・Bacang Bangka',page:'https://cookpad.com/id/resep/15141993'}
+    ],
+    ciba_tw:[
+      {src:'https://webc.hakka.gov.tw/findhakkafood/images/rice_inside_img3.png',label:'臺灣客家粢粑',caption:'白色糯米糰搭配花生粉，是臺灣客家常見的粢粑吃法。',source:'客家委員會・食食客客',page:'https://webc.hakka.gov.tw/findhakkafood/rice_inside3_cht.html'},
+      {src:'https://taiwanflavor.iseetaiwan.org/upload/small/55RA91576424544.jpg',label:'分食粢粑',caption:'多人用筷子分取粢粑、沾花生糖粉，觀察它的食用方式。',source:'看見臺灣基金會・2019臺灣味故事',page:'https://taiwanflavor.iseetaiwan.org/review-content.php?id=2473'}
+    ],
+    kaloci_id:[
+      {src:'https://cdn.yummy.co.id/content-images/images/20230723/gBwsQ95pJGdcfDueRHp1YzrIQA0V9WA8-31363930303933373731d41d8cd98f00b204e9800998ecf8427e.jpg?x-oss-process=image%2Fresize%2Cw_388%2Ch_388%2Cm_fixed%2Cx-oss-process%3Dimage%2Fformat%2Cwebp',label:'綠色斑蘭Kaloci',caption:'印尼斑蘭口味Kaloci的食譜照片；可觀察綠色米糰與花生碎。非山口洋店家實拍。',source:'Yummy App・Laila Fitria',page:'https://www.yummy.co.id/resep/kaloci-pandan'},
+      {src:'https://media.zcreators.id/crop/0x0%3A0x0/x/photo/p2/94/2025/05/02/IMG_8803-3767337231.jpeg',label:'斑蘭Kaloci切面',caption:'綠色斑蘭風味Kaloci的黏韌米糰，外層裹有花生碎。非山口洋店家實拍。',source:'Indozone・Achmad Rafiq',page:'https://hiling.indozone.id/food/945954870/resep-kaloci-camilan-khas-pontianak-yang-kenyal-dengan-balutan-kacang-menggoda'}
     ]
   };
   let foodTicker=null;
   function foodCarousel(kind){
     const slides=FOOD_PHOTOS[kind];const ix=state.foodPos[kind]%slides.length;const slide=slides[ix];
-    return `<div class="food-carousel" data-food-carousel="${kind}" aria-label="${({tw:'臺灣菜包',id:'印尼Choi Pan',zong_tw:'臺灣客家粽',zong_id:'印尼邦加粽子'}[kind]||'食物')}圖片輪播">
+    return `<div class="food-carousel" data-food-carousel="${kind}" aria-label="${({tw:'臺灣菜包',id:'印尼Choi Pan',zong_tw:'臺灣客家粽',zong_id:'印尼邦加粽子',ciba_tw:'臺灣客家粢粑',kaloci_id:'印尼斑蘭Kaloci'}[kind]||'食物')}圖片輪播">
       <div class="food-slide-viewport">
         <img class="food-slide-image" src="${esc(slide.src)}" alt="${esc(slide.caption)}" loading="eager" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.hidden=false">
         <div class="food-image-error" hidden>照片暫時無法顯示。${slide.page?`<a href="${esc(slide.page)}" target="_blank" rel="noopener noreferrer">查看原圖 ↗</a>`:""}</div>
@@ -612,7 +622,7 @@
     if(state.stage!==3)return;
     foodTicker=window.setInterval(()=>{
       if(state.stage!==3||!overlay.hidden||document.hidden)return;
-      for(const kind of (state.foodTopic==='zongzi'?['zong_tw','zong_id']:['tw','id'])){
+      for(const kind of (state.foodTopic==='zongzi'?['zong_tw','zong_id']:state.foodTopic==='kaloci'?['ciba_tw','kaloci_id']:['tw','id'])){
         const panel=body.querySelector(`[data-food-carousel="${kind}"]`);
         if(!panel||panel.matches(':hover')||state.foodPaused[kind])continue;
         state.foodPos[kind]=(state.foodPos[kind]+1)%FOOD_PHOTOS[kind].length;
@@ -628,8 +638,14 @@
       '<path d="M65 151 Q75 107 112 111 Q149 119 163 156Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M137 156 Q146 102 192 109 Q222 114 239 158Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M226 157 Q228 121 263 117 Q288 124 300 156Z" fill="url(#idfood)" stroke="#a0b7a2" stroke-width="4"/><path d="M85 141 Q114 123 144 143 M163 142 Q193 124 218 145 M247 144 Q270 134 287 148" fill="none" stroke="#bfd1bd" stroke-width="4"/>'}<circle cx="292" cy="180" r="10" fill="#588e61"/><circle cx="280" cy="187" r="8" fill="#65a66e"/><circle cx="311" cy="177" r="8" fill="#6a9a61"/></svg>`;
   }
   function foodStage(){
-    const isZong=state.foodTopic==='zongzi';
-    const nav=`<nav class="food-topic-tabs" aria-label="選擇食物比較主題"><button class="${!isZong?'active':''}" type="button" data-action="food-topic" data-topic="caibao" aria-pressed="${!isZong}">菜包 × Choi Pan</button><button class="${isZong?'active':''}" type="button" data-action="food-topic" data-topic="zongzi" aria-pressed="${isZong}">臺灣客家粽 × 邦加粽子</button></nav>`;
+    const topic=state.foodTopic;
+    const isZong=topic==='zongzi';
+    const isKaloci=topic==='kaloci';
+    const nav=`<nav class="food-topic-tabs" aria-label="選擇食物比較主題"><button class="${topic==='caibao'?'active':''}" type="button" data-action="food-topic" data-topic="caibao" aria-pressed="${topic==='caibao'}">菜包 × Choi Pan</button><button class="${isZong?'active':''}" type="button" data-action="food-topic" data-topic="zongzi" aria-pressed="${isZong}">臺灣客家粽 × 邦加粽子</button><button class="${isKaloci?'active':''}" type="button" data-action="food-topic" data-topic="kaloci" aria-pressed="${isKaloci}">粢粑 × 斑蘭Kaloci</button></nav>`;
+    if(isKaloci)return `${nav}<section class="grid2 food-comparison">
+      <div class="food-card">${foodCarousel('ciba_tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>粢粑（客家麻糬）</h3><p>以糯米製作，傳統做法會搗打或攪揉成有黏性的米糰，常分成小塊沾花生糖粉或芝麻粉食用。</p></div></div>
+      <div class="food-card">${foodCarousel('kaloci_id')}<div class="food-body"><span class="tag amber">印尼・西加里曼丹</span><h3>Kaloci（綠色斑蘭風味）</h3><p>西加里曼丹常見的糯米點心，有原味與斑蘭等口味；斑蘭風味的米糰可呈綠色，常搭配花生粉、芝麻或糖。圖為坤甸地區相關做法的示例，不代表所有Kaloci都呈綠色。</p></div></div>
+    </section><section class="panel teaching-reveal"><div class="micro-label">觀察與比較・先討論，再揭曉</div><h2>看一看：都是糯米點心，顏色與口味有什麼變化？</h2><p class="reveal-instruction">先看照片，說出一項共同點和一項差異，教師再逐張揭曉。</p><div class="reveal-grid"><details class="reveal-card"><summary><span>共同的米食傳統</span><span class="reveal-hint">點擊揭曉</span></summary><p>兩者都以糯米或糯米粉製作成柔軟、有黏性的米糰，常搭配花生粉等配料食用；實際加工方法依各地做法而異。</p></details><details class="reveal-card"><summary><span>斑蘭口味的在地變化</span><span class="reveal-hint">點擊揭曉</span></summary><p>臺灣常見白色粢粑；印尼Kaloci也有綠色斑蘭風味，呈現地方香草與甜點做法的結合。斑蘭只是其中一種口味，並非所有Kaloci都有。</p></details></div></section>`;
     if(isZong)return `${nav}<section class="grid2 food-comparison">
       <div class="food-card">${foodCarousel('zong_tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>客家粽</h3><p>常以粽葉包裹糯米與鹹餡，餡料與作法依地方、家庭而不同。</p></div></div>
       <div class="food-card">${foodCarousel('zong_id')}<div class="food-body"><span class="tag amber">印尼・邦加島</span><h3>Bakcang／Nyuk Cung</h3><p>邦加部分做法以斑蘭葉包裹，也有使用椰奶處理糯米、搭配肉類與蝦米等配料的食譜。</p></div></div>
@@ -638,30 +654,8 @@
       <div class="food-card">${foodCarousel('tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>菜包／豬籠粄</h3><p>常見鹹餡包含蘿蔔絲、香菇等，米製外皮可呈現不同形狀。</p></div></div>
       <div class="food-card">${foodCarousel('id')}<div class="food-body"><span class="tag amber">印尼・西加里曼丹</span><h3>Choi Pan／菜粄</h3><p>常見涼薯、韭菜等餡料，通常搭配蒜酥或醬汁食用。</p></div></div>
     </section>
-    <section class="panel teaching-reveal"><div class="micro-label">觀察兩地粄食・先討論，再揭曉</div><h2>看一看：相同在哪裡？不同在哪裡？</h2><p class="reveal-instruction">五組學生先觀察圖片並討論，發表後由教師依序打開資訊卡。</p><div class="reveal-grid"><details class="reveal-card"><summary><span>相似的地方</span><span class="reveal-hint">點擊揭曉</span></summary><p>米製外皮與包餡的做法，保留熟悉的客家米食特色。</p></details><details class="reveal-card"><summary><span>各地的變化</span><span class="reveal-hint">點擊揭曉</span></summary><p>外形、餡料、調味與食用方式，隨地方飲食文化發展。</p></details></div><details class="reveal-card reveal-wide"><summary><span>南洋米食都比較甜嗎？</span><span class="reveal-hint">想一想，再揭曉</span></summary><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但Choi Pan通常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></details></section>`;
+    <section class="panel teaching-reveal"><div class="micro-label">觀察兩地粄食・先討論，再揭曉</div><h2>看一看：相同在哪裡？不同在哪裡？</h2><p class="reveal-instruction">先觀察圖片並討論，發表後由教師依序打開資訊卡。</p><div class="reveal-grid"><details class="reveal-card"><summary><span>相似的地方</span><span class="reveal-hint">點擊揭曉</span></summary><p>米製外皮與包餡的做法，保留熟悉的客家米食特色。</p></details><details class="reveal-card"><summary><span>各地的變化</span><span class="reveal-hint">點擊揭曉</span></summary><p>外形、餡料、調味與食用方式，隨地方飲食文化發展。</p></details></div><details class="reveal-card reveal-wide"><summary><span>南洋米食都比較甜嗎？</span><span class="reveal-hint">想一想，再揭曉</span></summary><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但Choi Pan通常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></details></section>`;
   }
-  const FESTIVAL_PHOTOS={
-    lantern:[
-      {src:'https://image.nexttv.com.tw/material/news/img/2024/02/20240223204300YFPr.png',caption:'2024臺灣燈會・臺南主燈',source:'壹新聞',url:'https://www.nexttv.com.tw/NextTV/News/Home/Life/2024-02-23/1493940.html'},
-      {src:'https://media.taiwan.net.tw/zh-tw/Portal/Media/EncryptedCoverImage?f=AQAAANCMnd8BFdERjHoAwE%2FCl%2BsBAAAA9h6RcxMeWUyWMoY60yrloAAAAAACAAAAAAAQZgAAAAEAACAAAADGfh7uH%2BHHvjg16Oix5u6JqEOQHQ5W7koQud22oiAh8gAAAAAOgAAAAAIAACAAAAD24UAeVYNGtHtphJlL749Les5p%2Fa%2Bt9%2Bj%2FMm%2Bxd3m3HjAAAACgHnn71mE5RD5Ye%2FrV7drVT6QppQBBrJ%2BRqSCPlod%2FCI0AcFM1YMBXC0eDQngjkhlAAAAAj5q8onpBJC8sYA5rnTSbDZXCKcu4fa6dHNEkFpsbgaBHztf%2FMpRtiU508Kjss%2FfarWW%2FJ10RUzZ2WFREoCR6qg%3D%3D',caption:'2025臺灣燈會・光環境',source:'交通部觀光署',url:'https://media.taiwan.net.tw/zh-tw/portal/media/collection/47258_ph_20250324'},
-      {src:'https://s.yimg.com/ny/api/res/1.2/qYPUTKbRin.kAXHJN0lX2w--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTQ4MA--/https%3A/media.zenfs.com/zh-tw/libertytimes_786/031a3e659c0d6c028be08f9fc62fa15b',caption:'新埔花燈踩街迎天穿',source:'自由時報／Yahoo新聞',url:'https://www.hakka.gov.tw/chhakka/app/data/view?id=25&module=hotnews&serno=9a0eb6de-678f-4428-941f-6468de130f31'}
-    ],
-    dragon:[
-      {src:'https://resource.iyp.tw/static.iyp.tw/32272/files/926a1e2f-2442-412d-8760-8e2ed0841e17.jpg',caption:'2025苗栗𪹚龍・𪹚龍之夜',source:'苗栗時報',url:'https://www.miaoli-news.com.tw/news-detail-3842798.html'},
-      {src:'https://www.tristarnews.com.tw/upload/imgDB/20250206151605j339.jpg',caption:'苗栗𪹚龍・祥龍點睛',source:'三立星報',url:'https://n.yam.com/Article/20250206620196'},
-      {src:'https://pgw.udn.com.tw/gw/photo.php?exp=3600&sh=0&sw=0&u=https%3A%2F%2Fuc.udn.com.tw%2Fphoto%2F2025%2F02%2F07%2Fdraft%2F31456393.jpg&x=0&y=0',caption:'苗栗𪹚龍・舞龍隊伍',source:'聯合新聞網',url:'https://woman.udn.com/woman/story/123162/8534198'}
-    ],
-    beipu:[
-      {src:'assets/images/beipu-yuhanghuo.jpg',caption:'北埔油笐火・火把繞行',source:'授課教師提供',url:''},
-      {src:'https://www.lookit.tw/upload/51/TX4/8e8509af10514a86a4b1b80a1f0ad62e.jpg',caption:'北埔油笐火・老街夜景',source:'好想去喔',url:'https://www.lookit.tw/travel/40244'},
-      {src:'https://photo.settour.com.tw/900x600/https%3A/www.settour.com.tw/ss_img/info/location/HSZ/Z0/HSZ0000080/HSZ0000080_92428.jpg',caption:'北埔油笐火・慈天宮前',source:'東南旅遊',url:'https://trip.settour.com.tw/taiwan/product/GRT0000002444'}
-    ]
-  };
-  const FESTIVAL_TOPICS=[
-    {id:'lantern',title:'元宵花燈',subtitle:'臺灣燈會、新埔花燈迎天穿',desc:'從臺灣燈會的大型燈飾，到新埔花燈踩街迎天穿，看見不同地方的節慶創意。'},
-    {id:'dragon',title:'苗栗𪹚龍',subtitle:'龍藝、炮火與客庄元宵',desc:'苗栗以祥龍點睛、舞龍及𪹚龍活動，展現獨特的客庄元宵民俗。'},
-    {id:'beipu',title:'北埔油笐火',subtitle:'竹火把與老街夜巡',desc:'北埔居民在元宵夜舉起油笐火，走過老街與秀巒山，火光連成長龍。'}
-  ];
   function festivalStage(){
     if(state.festivalView==='home'){
       return `<section class="festival-hub"><button class="festival-entry" data-action="festival-view" data-view="tw"><span class="festival-entry-art" aria-hidden="true">🏮</span><span class="festival-entry-body"><span>臺灣客庄</span><strong>臺灣元宵</strong><small>元宵花燈・苗栗𪹚龍・北埔油笐火</small></span><span class="festival-entry-arrow">→</span></button><button class="festival-entry" data-action="festival-view" data-view="id"><span class="festival-entry-art" aria-hidden="true">🎬</span><span class="festival-entry-body"><span>印尼・西加里曼丹</span><strong>山口洋元宵</strong><small>Cap Go Meh・觀看慶典影片</small></span><span class="festival-entry-arrow">→</span></button></section>`;
@@ -707,7 +701,7 @@
     openDialog(w.hailu===w.sixian?w.hailu:`${w.hailu}／${w.sixian}`,'詞彙解釋',`${lines}<p class="vocab-definition"><strong>詞義：</strong>${esc(w.definition)}</p>`);
   }
   function showSources(){
-    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},{label:'客家公共傳播基金會×臺灣吧｜蘭芳公司客語版動畫',url:LANFANG_YOUTUBE},...DATA.sources,...FOOD_PHOTOS.tw.map(x=>({label:'臺灣菜包照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.id.filter(x=>x.page).map(x=>({label:'印尼Choi Pan照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.zong_tw.map(x=>({label:'臺灣客家粽照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.zong_id.map(x=>({label:'印尼邦加粽子照片｜'+x.source,url:x.page}))]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${FESTIVAL_YOUTUBE}" target="_blank" rel="noopener noreferrer">山口洋元宵Cap Go Meh・影片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
+    openDialog('資料與圖片來源','文獻與圖像',`<div class="sources-list">${([{label:'客委會｜110年全國客家人口暨語言基礎資料調查研究（縣市人口數及比例）',url:'https://www.hakka.gov.tw/File/Attach/37585/File_96737.pdf'},{label:'國家文化記憶庫｜新竹市的方言區劃：客家語',url:'https://tcmb.culture.tw/zh-tw/detail?id=170548&indexCode=Culture_Object'},{label:'臺中市客委會｜客語腔調分布',url:'https://www.hakka.taichung.gov.tw/381494/post'},{label:'客家公共傳播基金會×臺灣吧｜蘭芳公司客語版動畫',url:LANFANG_YOUTUBE},...DATA.sources,...FOOD_PHOTOS.tw.map(x=>({label:'臺灣菜包照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.id.filter(x=>x.page).map(x=>({label:'印尼Choi Pan照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.zong_tw.map(x=>({label:'臺灣客家粽照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.zong_id.map(x=>({label:'印尼邦加粽子照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.ciba_tw.map(x=>({label:'臺灣客家粢粑照片｜'+x.source,url:x.page})),...FOOD_PHOTOS.kaloci_id.map(x=>({label:'印尼斑蘭Kaloci照片｜'+x.source,url:x.page})),{label:'客家委員會｜客家粢粑介紹',url:'https://webc.hakka.gov.tw/findhakkafood/rice_inside3_cht.html'},{label:'HiPontianak｜Kaloci傳統與斑蘭口味',url:'https://kumparan.com/hipontianak/kaloci-camilan-khas-pontianak-yang-mirip-moci-1tkENKtlpkq'}]).map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.label)} ↗</a>`).join('')}${[`<a href="${PHOTO_SOURCES.twfood.page}" target="_blank" rel="noopener noreferrer">臺灣客家菜包・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.idfood.page}" target="_blank" rel="noopener noreferrer">印尼邦加客家菜粄・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.lantern.page}" target="_blank" rel="noopener noreferrer">臺灣元宵花燈・圖片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.dragon.page}" target="_blank" rel="noopener noreferrer">苗栗𪹚龍・圖片來源 ↗</a>`,`<a href="${FESTIVAL_YOUTUBE}" target="_blank" rel="noopener noreferrer">山口洋元宵Cap Go Meh・影片來源 ↗</a>`,`<a href="${PHOTO_SOURCES.singkawang.page}" target="_blank" rel="noopener noreferrer">山口洋廟宇・圖片來源 ↗</a>`].join('')}</div>`);
   }
   function stopDialogMedia(){overlay.querySelectorAll('video,audio').forEach(media=>{media.pause();});overlay.querySelectorAll('iframe').forEach(frame=>{frame.src='about:blank';});}
   function closeDialog(){stopDialogMedia();overlay.hidden=true;overlay.querySelector('.dialog')?.classList.remove('video-dialog');}
@@ -772,7 +766,7 @@
     }
     if(action==='lanfang-play'){const story=document.getElementById('lanfangStory');if(story){story.classList.remove('is-playing');void story.offsetWidth;story.classList.add('is-playing');el.textContent='↻ 重播動畫';el.setAttribute('aria-label','重播蘭芳公司動畫');}}
     if(action==='food-topic'){
-      const topic=el.dataset.topic;if(!['caibao','zongzi'].includes(topic))return;
+      const topic=el.dataset.topic;if(!['caibao','zongzi','kaloci'].includes(topic))return;
       state.foodTopic=topic;render();return;
     }
     if(action==='food-next'||action==='food-prev'||action==='food-dot'){

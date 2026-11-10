@@ -836,3 +836,9 @@ html,body{font-size:18px}
 @media(max-width:650px){
  .tw-distribution .county-info-number,.tw-distribution .county-info-dialects{grid-template-columns:1fr!important}
 }
+
+/* beta V8.0.7：新增第三組食物比較，三個分頁在16:9投影仍可並列；學生自學模式不顯示抽籤與計時工具。 */
+@media(min-width:901px){.food-topic-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.food-topic-tabs button{padding:13px 11px;font-size:clamp(16px,1.45vw,21px);line-height:1.45}}
+@media(min-width:641px) and (max-width:900px){.food-topic-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.food-topic-tabs button{padding:10px 7px;font-size:15px}}
+.student-mode [data-tool],.student-mode #cvSlotPanel{display:none!important}
+.student-mode .cv-modal-body{grid-template-columns:minmax(0,1fr)!important}
