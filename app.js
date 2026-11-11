@@ -15,7 +15,7 @@
     {name:'語言傳承',sub:'政策、家庭與社區',time:'38～44分鐘',heading:'客家人不少，為什麼客語仍面臨傳承挑戰？',lead:'從語言政策與家庭生活，認識海外客語的使用環境與傳承。'},
     {name:'文化統整',sub:'保留、改變、融合',time:'44～50分鐘',heading:'飄洋過海之後，客家文化變了嗎？',lead:'回顧飲食、節慶與語言的線索，說明文化如何延續、改變與融合。'}
   ];  /* 固定播放教師提供的臺灣海陸及山口洋河婆客語語料。 */
-  const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu.wav', id:'assets/audio/singkawang-hopo.wav'};
+  const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu', id:'assets/audio/singkawang-hopo'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
   const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0,ciba_tw:0,kaloci_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false,ciba_tw:false,kaloci_id:false},festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
@@ -465,7 +465,7 @@
   function audioCard(id,title,subtitle){
     const file=BUILTIN_AUDIO[id];
     return `<div class="audio-chooser audio-fixed"><span class="micro-label">${id==='tw'?'音檔 A':'音檔 B'}</span><h3>${title}</h3><p class="audio-note">${subtitle}</p>
-      <audio id="audio-${id}" controls preload="metadata" src="${esc(file)}">此瀏覽器無法播放音檔。</audio>
+      <audio id="audio-${id}" controls preload="auto"><source src="${esc(file)}.mp3" type="audio/mpeg"><source src="${esc(file)}.wav" type="audio/wav">此瀏覽器無法播放音檔。</audio>
     </div>`;
   }
   const INFO_CARDS={
