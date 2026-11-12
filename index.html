@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f2835">
   <meta name="description" content="高中客語第八課〈行讀客家世界：印尼客家之旅〉互動教學網站。海陸與四縣課文、移民歷史、語言傳承、蘭芳公司、菜包、粽子、粢粑與元宵。">
-  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V8.0.9</title>
+  <title>飄洋過海尋客家：印尼客家文化之旅｜beta V8.1.0</title>
   <link rel="stylesheet" href="styles.css">
   <script src="content.js" defer></script>
   <script src="culture-vocab.js" defer></script>
   <script src="app.js" defer></script>
+  <script src="phonology-rimes-data.js" defer></script>
   <script src="phonology-tools.js" defer></script>
 </head>
 <body>
@@ -24,7 +25,7 @@
       <nav id="lessonNav" class="lesson-nav" aria-label="八個教學階段"></nav>
       <div class="side-bottom">
         
-        <a href="worksheet.html" target="_blank" rel="noopener">學習單（處理中） ↗</a>
+        <a href="worksheet.html" target="_blank" rel="noopener">課程學習單 ↗</a>
         <button type="button" id="viewSources" class="quiet-button">資料與圖片來源</button>
         <a href="versions.html" target="_blank" rel="noopener">版本更新紀錄 ↗</a>
       </div>
@@ -37,7 +38,7 @@
           <button type="button" id="themeAnimationBtn" class="top-button theme-animation-launch" title="播放／重播開場主題動畫" aria-haspopup="dialog" aria-controls="journeyOverlay">▶ 主題動畫</button>
           <div class="topbar-identity">
             <div class="breadcrumb"><span>高中客語</span><span class="dot">·</span><strong class="site-full-name">飄洋過海尋客家：印尼客家文化之旅</strong><span class="dot">·</span><strong id="stepLabel">認識印尼</strong></div>
-            <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V8.0.9</strong>｜<a class="version-history-link" href="versions.html" target="_blank" rel="noopener">版本更新紀錄 ↗</a></div>
+            <div class="site-credit">網頁設計／原始程式碼設計：曾櫳震老師｜<strong>beta V8.1.0</strong>｜<a class="version-history-link" href="versions.html" target="_blank" rel="noopener">版本更新紀錄 ↗</a></div>
           </div>
         </div>
         <nav class="top-pager" aria-label="課程站別導覽">
@@ -61,7 +62,7 @@
           <div class="tool-launchers" role="group" aria-label="課堂小工具">
             <button type="button" data-tool="stopwatch" class="top-button tool-trigger" title="開啟碼錶">◴ 碼錶</button>
             <button type="button" data-tool="countdown" class="top-button tool-trigger" title="開啟倒數計時器">⏱ 計時</button>
-            <button type="button" id="phonologyLaunch" class="top-button" title="客語聲調與聲母速查">♫ 語音工具</button>
+            <button type="button" id="phonologyLaunch" class="top-button" title="客語聲調、聲母、元音與韻母速查">♫ 語音工具</button>
             <button type="button" data-tool="spinner" class="top-button tool-trigger" title="開啟輪盤抽籤">◉ 抽籤</button>
           </div>
           <button type="button" id="fullscreenToggle" class="icon-button" title="全螢幕（F）" aria-label="切換全螢幕">⛶</button>
@@ -102,7 +103,7 @@
   <div id="phonologyOverlay" class="phonology-overlay" hidden>
     <section class="phonology-dialog" role="dialog" aria-modal="true" aria-labelledby="phonologyTitle">
       <header class="phonology-head"><div><div class="micro-label">海陸腔／四縣腔</div><h2 id="phonologyTitle">客語語音互動工具</h2></div><button id="phonologyClose" class="phonology-close" type="button" aria-label="關閉語音工具">×</button></header>
-      <div class="phonology-actions"><button data-phon-tab="tones" class="active" aria-pressed="true">聲調</button><button data-phon-tab="consonants" aria-pressed="false">聲母</button><button data-phon-tab="references" aria-pressed="false">原始圖表</button><button data-phon-tab="sandhi" aria-pressed="false">連讀變調</button></div>
+      <div class="phonology-actions"><button data-phon-tab="tones" class="active" aria-pressed="true">聲調</button><button data-phon-tab="consonants" aria-pressed="false">聲母</button><button data-phon-tab="vowels" aria-pressed="false">元音</button><button data-phon-tab="rimes" aria-pressed="false">韻母配字表</button><button data-phon-tab="references" aria-pressed="false">原始圖表</button><button data-phon-tab="sandhi" aria-pressed="false">連讀變調</button></div>
       <div class="phonology-dialects"><button data-phon-dialect="hailu" class="active" aria-pressed="true">海陸腔</button><button data-phon-dialect="sixian" aria-pressed="false">四縣腔</button></div>
       <div id="phonologyContent"></div>
     </section>
