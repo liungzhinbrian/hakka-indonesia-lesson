@@ -1,0 +1,115 @@
+beta V8.1.1 轉寫對照表（IPA → 教育部臺灣客語拼音）
+
+【聲母：22項】
+p → b
+pʰ → p
+m → m
+f → f
+v → v
+t → d
+tʰ → t
+n → n
+l → l
+k → g
+kʰ → k
+ŋ → ng
+h → h
+ɲ → ng
+tʃ → zh
+tʃʰ → ch
+ʃ → sh
+ts → z
+tsʰ → c
+s → s
+ʒ → rh
+Ø → Ø
+
+【元音：8項】
+ɨ → ii
+i → i
+e → e
+a → a
+ɑ → a
+o → o
+u → u
+ə → er
+
+【表一｜單韻母、開口呼結合韻】
+a → a
+e → e
+o → o
+ɨ → ii
+u → u
+i → i
+ai → ai
+ɑm → am
+an → an
+ɑŋ → ang
+ɑu → au
+ap → ab
+at → ad
+ɑk → ag
+
+【表二｜開口呼、齊齒呼結合韻】
+em → em
+en → en
+eu → eu
+ep → eb
+et → ed
+ia → ia
+ie → ie
+im → im
+in → in
+io → io
+iu → iu
+it → id
+iai → iai
+iɑm → iam
+
+【表三｜齊齒呼結合韻】
+iɑŋ → iang
+iɑu → iau
+iap → iab
+iat → iad
+iɑk → iag
+iem → iem
+ien → ien
+ieu → ieu
+iep → ieb
+iet → ied
+ioi → ioi
+ion → ion
+ioŋ → iong
+
+【表四｜齊齒呼、開口呼、合口呼結合韻】
+iot → iod
+iok → iog
+iun → iun
+iuŋ → iung
+iut → iud
+iuk → iug
+oi → oi
+on → on
+oŋ → ong
+ot → od
+ok → og
+uɑ → ua
+ue → ue
+ui → ui
+un → un
+uŋ → ung
+ut → ud
+uk → ug
+uai → uai
+
+【表五｜合口呼、帶詞綴衍聲複詞與成音節輔音】
+uan → uan
+uɑŋ → uang
+uat → uad
+uɑk → uag
+uen → uen
+uet → ued
+ə → er
+m̩ → m
+n̩ → n
+ŋ̍ → ng
