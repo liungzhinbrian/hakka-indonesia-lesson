@@ -890,3 +890,14 @@ html,body{font-size:18px}
 #siteShell .map-svg.map-taiwan .county-pin,#siteShell .map-svg.map-taiwan .county-pin .pulse-ring,#siteShell .map-svg.map-taiwan .county-pin .halo{pointer-events:none}
 #siteShell .map-svg.map-taiwan .county-pin .pin-hit{fill:transparent;stroke:none;pointer-events:all}
 #siteShell .map-svg.map-taiwan .county-pin .core,#siteShell .map-svg.map-taiwan .county-pin text{pointer-events:all}
+/* V1.1.0：第一站側欄——印尼聚居地頁加入「認識印尼」資料與可展開的答案；東亞與東南亞頁只留遷移路線說明。 */
+.distribution-panel .prompt-answer{border:1px solid #d5e3d6;border-radius:12px;background:#fbfcf7;padding:0}
+.distribution-panel .prompt-answer summary{cursor:pointer;padding:12px 15px;font-size:16px;font-weight:800;color:#1f6474;list-style-position:inside}
+.distribution-panel .prompt-answer p{margin:0;padding:0 15px 14px;font-size:17px;line-height:1.7;color:#2c4f5a}
+.distribution-panel .side-divider{width:100%;border:0;border-top:1px solid #d9e5e7;margin:4px 0}
+.distribution-panel.indonesia-side .micro-label+h2{margin-top:-10px}
+.festival-stage-photo.festival-photo-empty{display:flex;align-items:center;justify-content:center;background:#27505b}
+.festival-stage-photo.festival-photo-empty .festival-photo-fallback{font-size:26px;font-weight:700;letter-spacing:.2em;opacity:.8}
+.side-migration-choices{margin-top:0}
+.side-migration-choices button.active{background:#1d6474;border-color:#1d6474;color:#fff}
+.side-migration-choices button.active small{color:#d5ecee}

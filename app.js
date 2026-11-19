@@ -20,7 +20,7 @@
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
   // 字級三段：小（原預設）、中（原「字級＋」）、大。
   const FONT_LEVELS=[['小',1],['中',1.27],['大',1.6]];
-  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0,ciba_tw:0,kaloci_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false,ciba_tw:false,kaloci_id:false},festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
+  const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0,ciba_tw:0,kaloci_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false,ciba_tw:false,kaloci_id:false},festivalView:'home',festivalTopic:0,festivalPhoto:{beipu:0,dragon:0,xinpu:0,liudui:0,lantern:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
   const nav=document.getElementById('lessonNav');
@@ -438,12 +438,13 @@
       </aside>`;
     }
     if(state.mapView==='indonesia'){
-      return `<aside class="panel intro-side distribution-panel"><span class="micro-label">印尼客家聚落</span><h2>跨島嶼的客家生活</h2>
+      return `<aside class="panel intro-side distribution-panel country-facts indonesia-side"><span class="micro-label">印尼客家聚落</span><h2>跨島嶼的客家生活</h2>
       <div class="map-info map-info-side" id="mapInfo" aria-live="polite"></div><p>從西加里曼丹的山口洋、坤甸，到邦加和爪哇島的城市，探索不同地方的客家社群。</p>
       <div class="location-chips"><button data-action="map-point" data-place="singkawang">山口洋</button><button data-action="map-point" data-place="pontianak">坤甸</button><button data-action="map-point" data-place="bangka">邦加</button><button data-action="map-point" data-place="jakarta">雅加達</button><button data-action="map-point" data-place="surabaya">泗水</button></div>
-      <p class="prompt-side">這些客家社群都在同一座島上嗎？</p></aside>`;
-    }
-    return `<aside class="panel intro-side country-facts overview-side"><div class="micro-label">認識印尼 Indonesia</div><h2>千島之國，多語社會</h2>
+      <p class="prompt-side">這些客家社群都在同一座島上嗎？</p>
+      <details class="prompt-answer"><summary>顯示答案</summary><p>並非在同一座島上，而是分布在加里曼丹島、爪哇島，以及蘇門答臘島東側的邦加島。</p></details>
+      <hr class="side-divider">
+      <div class="micro-label">認識印尼 Indonesia</div><h2>千島之國，多語社會</h2>
       <div class="country-numbers"><div><span>印尼總人口（2026年推估）</span><strong>約2.87億</strong></div><div><span>華人占比（2010年普查）</span><strong>約1.2%</strong></div></div>
       <div class="population-compare" aria-label="臺灣客家人口與印尼華人人口比較">
         <div class="population-compare-title">人數比一比：比例小，不代表人數少</div>
@@ -456,7 +457,14 @@
       <p class="country-language"><b>國家官方語言：</b>印尼語（Bahasa Indonesia）</p>
       <div class="country-heritage"><b class="heritage-title">印尼華人保留的部分傳承語言</b><div class="heritage-tags"><span>福建話（閩南語）</span><span>潮汕話（閩語）</span><span>廣府話（粵語）</span><span>客語</span></div></div>
       <p class="source-mini">資料：<a href="https://www.bps.go.id/en/statistics-table/2/MTk3NSMy/mid-year-population-" target="_blank" rel="noopener">印尼統計局（2026年人口推估）</a>、<a href="https://www.atlantis-press.com/article/25889515.pdf" target="_blank" rel="noopener">印尼2010年族群普查</a>、<a href="https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=56071&amp;pid=253058" target="_blank" rel="noopener">臺灣客委會2021年調查</a>。不宜將2010年1.2%直接套用於2026年總人口。</p>
+      </aside>`;
+    }
+    return `<aside class="panel intro-side distribution-panel overview-side"><span class="micro-label">客家移民路線</span><h2>客家人離開原鄉，往哪裡遷移？</h2>
       <div class="map-info map-info-side overview-map-info" id="mapInfo" aria-live="polite"></div>
+      <div class="migration-choices side-migration-choices">
+        <button type="button" class="${state.migrationRoute==='taiwan'?'active':''}" data-action="migration-select" data-destination="taiwan" aria-pressed="${state.migrationRoute==='taiwan'}"><span class="choice-symbol">↗</span><strong>往臺灣移民</strong><small>從原鄉到臺灣客庄</small></button>
+        <button type="button" class="${state.migrationRoute==='nanyang'?'active':''}" data-action="migration-select" data-destination="nanyang" aria-pressed="${state.migrationRoute==='nanyang'}"><span class="choice-symbol">↘</span><strong>往南洋移民</strong><small>從原鄉到婆羅洲等地</small></button>
+      </div>
       </aside>`;
   }
   function updateMapInfo(){
@@ -470,6 +478,7 @@
     }
     const places={
       intro:['點選地圖，開始探索','請點廣東、福建客家原鄉，選擇往臺灣或往南洋的遷移方向。'],
+      indoIntro:['點選地圖，開始探索','請點地圖上的標記或下方地名，認識印尼各地的客家社群。'],
       origin:['廣東、福建客家原鄉','選擇「往臺灣移民」或「往南洋移民」，探索歷史遷移路線。'],
       taiwan:['臺灣客庄','客家人移居臺灣後，形成桃竹苗、六堆、花東等不同地方的客家生活。'],
       singkawang:['山口洋｜Singkawang','位於西加里曼丹，保有客語生活、廟宇與元宵慶典。'],
@@ -479,7 +488,7 @@
       jakarta:['雅加達｜Jakarta','印尼首都與都會區，歷來有客家會館及社團。'],
       surabaya:['泗水｜Surabaya','位於東爪哇，有客家社團與會館活動。']
     };
-    const s=places[state.place]||places.intro;
+    const s=(state.mapView==='indonesia'&&state.place==='intro')?places.indoIntro:(places[state.place]||places.intro);
     e.innerHTML=`<strong>${s[0]}</strong><div>${s[1]}</div>`;
   }
   function showMigrationChoice(){
@@ -708,18 +717,51 @@
     </section>
     <section class="panel teaching-reveal"><div class="micro-label">觀察兩地粄食・先討論，再揭曉</div><h2>看一看：相同在哪裡？不同在哪裡？</h2><p class="reveal-instruction">先觀察圖片並討論，發表後由教師依序打開資訊卡。</p><div class="reveal-grid"><details class="reveal-card"><summary><span>相似的地方</span><span class="reveal-hint">點擊揭曉</span></summary><p>米製外皮與包餡的做法，保留熟悉的客家米食特色。</p></details><details class="reveal-card"><summary><span>各地的變化</span><span class="reveal-hint">點擊揭曉</span></summary><p>外形、餡料、調味與食用方式，隨地方飲食文化發展。</p></details></div><details class="reveal-card reveal-wide"><summary><span>南洋米食都比較甜嗎？</span><span class="reveal-hint">想一想，再揭曉</span></summary><p>某些南洋米食與甜點會使用椰奶、椰絲或椰糖；但Choi Pan通常是鹹食。臺灣客家粄食也同時有甜、鹹兩類。</p></details></section>`;
   }
+  // 「臺灣客家人的元宵」五個主題的照片與說明。照片均為網站本機圖片（若某主題沒有照片，會顯示「照片待補」）。
+  const FESTIVAL_PHOTOS={
+    beipu:[
+      {src:'assets/images/beipu-yuhanghuo.jpg',caption:'北埔油笐火・火把繞行',source:'取自網路，僅供教學使用',url:''}
+    ],
+    dragon:[
+      {src:'assets/images/commons/bombing-dragon.jpg',caption:'苗栗𪹚龍・炮火中的祥龍',source:'Wikimedia Commons',url:'https://commons.wikimedia.org/wiki/File:Taiwan_Bombing_Dragon-3.jpg'}
+    ],
+    xinpu:[
+      {src:'assets/images/festival/xinpu-lantern-1.jpg',caption:'新埔花燈踩街・推著花燈走過街道',source:'自由時報',url:''},
+      {src:'assets/images/festival/xinpu-lantern-2.jpg',caption:'新埔花燈迎天穿・提燈籠的踩街隊伍',source:'商周',url:''},
+      {src:'assets/images/festival/xinpu-lantern-3.jpg',caption:'新埔花燈迎天穿・大型花燈',source:'新竹縣政府',url:''}
+    ],
+    liudui:[
+      {src:'assets/images/festival/liudui-paocheng-1.jpg',caption:'六堆尖炮城・高掛在竹竿上的炮城',source:'國家文化記憶庫',url:''},
+      {src:'assets/images/festival/liudui-paocheng-2.jpg',caption:'六堆尖炮城・夜間的城堡尖炮城',source:'國家文化記憶庫',url:''},
+      {src:'assets/images/festival/liudui-paocheng-3.jpg',caption:'六堆尖炮城・炮城點燃的瞬間',source:'寶島神很大',url:''},
+      {src:'assets/images/festival/liudui-paocheng-4.jpg',caption:'六堆尖炮城・把鞭炮拋向炮城',source:'中央社',url:''}
+    ],
+    lantern:[
+      {src:'assets/images/commons/taipei-lantern-festival-2023.jpg',caption:'2023臺灣燈會在臺北',source:'HC Lin（Wikimedia Commons）',url:'https://commons.wikimedia.org/wiki/File:Taiwan_Lantern_Festival_in_Taipei_2023.jpg'}
+    ]
+  };
+  const FESTIVAL_TOPICS=[
+    {id:'beipu',title:'北埔油笐火',subtitle:'竹火把與老街夜巡',desc:'北埔居民在元宵夜舉起油笐火，走過老街與秀巒山，火光連成長龍。'},
+    {id:'dragon',title:'苗栗𪹚龍',subtitle:'龍藝、炮火與客庄元宵',desc:'苗栗以祥龍點睛、舞龍及𪹚龍活動，展現獨特的客庄元宵民俗。'},
+    {id:'xinpu',title:'新埔花燈迎天穿',subtitle:'會移動的花燈與天穿日',desc:'新竹縣新埔鎮把花燈放上板車推著踩街遊行，被稱為「會移動的花燈」，在農曆正月二十天穿日前後熱鬧登場。'},
+    {id:'liudui',title:'六堆尖炮城',subtitle:'攻炮城與伯公祈福',desc:'「尖炮城」就是攻炮城。屏東六堆的萬巒五溝水在元宵節祈福後，眾人把點燃的鞭炮拋向高掛竹竿上的炮城，比賽誰能投進去。'},
+    {id:'lantern',title:'臺灣燈會',subtitle:'各縣市輪流主辦的元宵燈會',desc:'每年元宵節前後，由各縣市輪流主辦的大型燈會，以主燈和各式燈區展現節慶創意。'}
+  ];
   function festivalStage(){
     if(state.festivalView==='home'){
-      return `<section class="festival-hub"><button class="festival-entry" data-action="festival-view" data-view="tw"><span class="festival-entry-art" aria-hidden="true">🏮</span><span class="festival-entry-body"><span>臺灣客庄</span><strong>臺灣元宵</strong><small>元宵花燈・苗栗𪹚龍・北埔油笐火</small></span><span class="festival-entry-arrow">→</span></button><button class="festival-entry" data-action="festival-view" data-view="id"><span class="festival-entry-art" aria-hidden="true">🎬</span><span class="festival-entry-body"><span>印尼・西加里曼丹</span><strong>山口洋元宵</strong><small>Cap Go Meh・觀看慶典影片</small></span><span class="festival-entry-arrow">→</span></button></section>`;
+      return `<section class="festival-hub"><button class="festival-entry" data-action="festival-view" data-view="tw"><span class="festival-entry-art" aria-hidden="true">🏮</span><span class="festival-entry-body"><span>臺灣客庄</span><strong>臺灣客家人的元宵</strong><small>北埔油笐火・苗栗𪹚龍・新埔花燈迎天穿・六堆尖炮城・臺灣燈會</small></span><span class="festival-entry-arrow">→</span></button><button class="festival-entry" data-action="festival-view" data-view="id"><span class="festival-entry-art" aria-hidden="true">🎬</span><span class="festival-entry-body"><span>印尼・西加里曼丹</span><strong>山口洋元宵</strong><small>Cap Go Meh・觀看慶典影片</small></span><span class="festival-entry-arrow">→</span></button></section>`;
     }
     if(state.festivalView==='id'){
       return `<section class="panel festival-explore"><div class="festival-explore-head"><button class="festival-back" data-action="festival-view" data-view="home">← 選擇節慶</button><div><div class="micro-label">印尼・西加里曼丹</div><h2>山口洋元宵・Cap Go Meh</h2></div></div><p class="festival-explore-lead">每年農曆正月十五，山口洋的華人會慶祝元宵節（Cap Go Meh）。相傳早期當地曾發生疫情，人們透過乩童祈福、驅邪，逐漸形成大型乩童遊行的節慶特色。活動不只有華人參與，也能看到當地達雅族人的參與，呈現跨族群文化交流。觀看影片時，請觀察各種民俗活動與參與者。</p><button class="festival-main-video" data-action="festival-video"><span class="festival-big-play">▶</span><strong>觀看山口洋元宵節影片</strong><small>點擊開啟影片播放器</small></button></section>`;
     }
     const topic=FESTIVAL_TOPICS[state.festivalTopic];
     const slides=FESTIVAL_PHOTOS[topic.id];
+    if(!slides.length){
+      return `<section class="panel festival-explore"><div class="festival-explore-head"><button class="festival-back" data-action="festival-view" data-view="home">← 選擇節慶</button><div><div class="micro-label">臺灣客家人的元宵</div><h2>${topic.title}</h2></div></div><div class="festival-topic-tabs">${FESTIVAL_TOPICS.map((t,i)=>`<button data-action="festival-topic" data-index="${i}" class="${i===state.festivalTopic?'active':''}" aria-pressed="${i===state.festivalTopic}">${t.title}</button>`).join('')}</div><div class="festival-showcase"><div class="festival-stage-photo festival-photo-empty"><div class="festival-photo-fallback">照片待補</div></div><div class="festival-photo-meta"><div><strong>${esc(topic.title)}</strong><span>${esc(topic.subtitle)}</span></div></div></div><p class="festival-explore-lead">${topic.desc}</p></section>`;
+    }
     const n=(state.festivalPhoto[topic.id]||0)%slides.length;
     const img=slides[n];
-    return `<section class="panel festival-explore"><div class="festival-explore-head"><button class="festival-back" data-action="festival-view" data-view="home">← 選擇節慶</button><div><div class="micro-label">臺灣元宵</div><h2>${topic.title}</h2></div></div><div class="festival-topic-tabs">${FESTIVAL_TOPICS.map((t,i)=>`<button data-action="festival-topic" data-index="${i}" class="${i===state.festivalTopic?'active':''}" aria-pressed="${i===state.festivalTopic}">${t.title}</button>`).join('')}</div><div class="festival-showcase"><div class="festival-stage-photo"><img src="${esc(img.src)}" alt="${esc(img.caption)}" loading="eager" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><div class="festival-photo-fallback" hidden>照片無法載入，請按左右箭頭查看其他照片。</div><button class="festival-nav-arrow left" data-action="festival-slide" data-move="prev" aria-label="上一張照片">‹</button><button class="festival-nav-arrow right" data-action="festival-slide" data-move="next" aria-label="下一張照片">›</button><span class="festival-slide-number">${n+1}／${slides.length}</span></div><div class="festival-photo-meta"><div><strong>${esc(img.caption)}</strong><span>${esc(topic.subtitle)}</span></div>${img.url?`<a href="${esc(img.url)}" target="_blank" rel="noopener noreferrer">圖片來源：${esc(img.source)} ↗</a>`:`<span>圖片來源：${esc(img.source)}</span>`}</div><div class="festival-slide-dots">${slides.map((_,i)=>`<button data-action="festival-slide" data-slide="${i}" class="${i===n?'active':''}" aria-label="第${i+1}張照片" aria-pressed="${i===n}"></button>`).join('')}</div></div><p class="festival-explore-lead">${topic.desc}</p></section>`;
+    return `<section class="panel festival-explore"><div class="festival-explore-head"><button class="festival-back" data-action="festival-view" data-view="home">← 選擇節慶</button><div><div class="micro-label">臺灣客家人的元宵</div><h2>${topic.title}</h2></div></div><div class="festival-topic-tabs">${FESTIVAL_TOPICS.map((t,i)=>`<button data-action="festival-topic" data-index="${i}" class="${i===state.festivalTopic?'active':''}" aria-pressed="${i===state.festivalTopic}">${t.title}</button>`).join('')}</div><div class="festival-showcase"><div class="festival-stage-photo"><img src="${esc(img.src)}" alt="${esc(img.caption)}" loading="eager" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><div class="festival-photo-fallback" hidden>照片無法載入，請按左右箭頭查看其他照片。</div><button class="festival-nav-arrow left" data-action="festival-slide" data-move="prev" aria-label="上一張照片">‹</button><button class="festival-nav-arrow right" data-action="festival-slide" data-move="next" aria-label="下一張照片">›</button><span class="festival-slide-number">${n+1}／${slides.length}</span></div><div class="festival-photo-meta"><div><strong>${esc(img.caption)}</strong><span>${esc(topic.subtitle)}</span></div>${img.url?`<a href="${esc(img.url)}" target="_blank" rel="noopener noreferrer">圖片來源：${esc(img.source)} ↗</a>`:`<span>圖片來源：${esc(img.source)}</span>`}</div><div class="festival-slide-dots">${slides.map((_,i)=>`<button data-action="festival-slide" data-slide="${i}" class="${i===n?'active':''}" aria-label="第${i+1}張照片" aria-pressed="${i===n}"></button>`).join('')}</div></div><p class="festival-explore-lead">${topic.desc}</p></section>`;
   }
   function endingStage(){
     const cards=[
@@ -810,10 +852,11 @@
     if(action==='lanfang-video'){showLanfangVideo();}
     if(action==='festival-video'){showFestivalVideo();}
     if(action==='festival-view'){state.festivalView=el.dataset.view==='id'?'id':el.dataset.view==='tw'?'tw':'home';render();return;}
-    if(action==='festival-topic'){state.festivalTopic=Math.max(0,Math.min(2,Number(el.dataset.index)||0));render();return;}
+    if(action==='festival-topic'){state.festivalTopic=Math.max(0,Math.min(FESTIVAL_TOPICS.length-1,Number(el.dataset.index)||0));render();return;}
     if(action==='festival-slide'){
       const key=FESTIVAL_TOPICS[state.festivalTopic].id;
       const total=FESTIVAL_PHOTOS[key].length;
+      if(!total)return;
       const direct=el.dataset.slide;
       state.festivalPhoto[key]=direct!==undefined?Number(direct):(state.festivalPhoto[key]+(el.dataset.move==='next'?1:total-1))%total;
       render();return;
