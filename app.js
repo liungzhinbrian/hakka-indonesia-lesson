@@ -18,6 +18,8 @@
   const BUILTIN_AUDIO = {tw:'assets/audio/taiwan-hailu', id:'assets/audio/singkawang-hopo'};
   const LANFANG_YOUTUBE = 'https://www.youtube.com/watch?v=pwxlliP1mqQ';
   const FESTIVAL_YOUTUBE = 'https://www.youtube.com/watch?v=FEBVKPOcH7k&t=70s';
+  // 字級三段：小（原預設）、中（原「字級＋」）、大。
+  const FONT_LEVELS=[['小',1],['中',1.27],['大',1.6]];
   const state = {migrationRoute:'',mapView:'overview',stage:0,dialect:'hailu',pinyin:true,toneMode:'value',fontUp:1,chunk:0,geoCamera:{x:165,y:60,w:720,h:585},twZoom:1,twCenter:{x:340,y:355},indoZoom:1,indoCenter:{x:510,y:250},readingParagraph:1,reveal:false,place:'intro',poll:[],lanfang:0,food:0,foodTopic:'caibao',foodPos:{tw:0,id:0,zong_tw:0,zong_id:0,ciba_tw:0,kaloci_id:0},foodPaused:{tw:false,id:false,zong_tw:false,zong_id:false,ciba_tw:false,kaloci_id:false},festivalView:'home',festivalTopic:0,festivalPhoto:{lantern:0,dragon:0,beipu:0},audio:{tw:BUILTIN_AUDIO.tw,id:BUILTIN_AUDIO.id},audioTemporary:{tw:false,id:false}};
   const root=document.getElementById('siteShell');
   const body=document.getElementById('stageBody');
@@ -48,14 +50,14 @@
   }
 
   const PHOTO_SOURCES = {
-    twfood: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg/960px-%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg', page:'https://commons.wikimedia.org/wiki/File:%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg', credit:'客家委員會', alt:'臺灣客家菜包' },
-    idfood: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Choipan.jpg/960px-Choipan.jpg', page:'https://commons.wikimedia.org/wiki/File:Choipan.jpg', credit:'Cun Cun', alt:'印尼邦加客家菜粄' },
-    lantern: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Taiwan_Lantern_Festival_in_Taipei_2023.jpg/960px-Taiwan_Lantern_Festival_in_Taipei_2023.jpg', page:'https://commons.wikimedia.org/wiki/File:Taiwan_Lantern_Festival_in_Taipei_2023.jpg', credit:'HC Lin', alt:'臺灣元宵花燈' },
-    dragon: { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Taiwan_Bombing_Dragon-3.jpg/960px-Taiwan_Bombing_Dragon-3.jpg', page:'https://commons.wikimedia.org/wiki/File:Taiwan_Bombing_Dragon-3.jpg', credit:'Wikimedia Commons', alt:'苗栗𪹚龍' },
-    beipu: { url:'assets/images/beipu-yuhanghuo.jpg', page:'', credit:'授課教師提供', alt:'北埔油笐火活動夜景' },
-    singkawang: { url:'https://commons.wikimedia.org/wiki/Special:FilePath/Singkawang_temple_101221-10576.jpg?width=960', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10576.jpg', credit:'Wibowo Djatmiko', alt:'山口洋三教合一廟宇夜景' },
-    singkawang2: {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Singkawang_temple_101221-10563.JPG?width=960', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10563.JPG', credit:'Wibowo Djatmiko', alt:'山口洋廟宇實景'},
-    luo: {url:'https://commons.wikimedia.org/wiki/Special:FilePath/Luo_Fangbo.jpg?width=700',page:'https://commons.wikimedia.org/wiki/File:Luo_Fangbo.jpg',credit:'Wikimedia Commons／羅芳伯後世圖像',alt:'羅芳伯的後世畫像'},
+    twfood: { url:'assets/images/commons/hakka-caibao.jpg', page:'https://commons.wikimedia.org/wiki/File:%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg', credit:'客家委員會', alt:'臺灣客家菜包' },
+    idfood: { url:'assets/images/commons/choipan.jpg', page:'https://commons.wikimedia.org/wiki/File:Choipan.jpg', credit:'Cun Cun', alt:'印尼邦加客家菜粄' },
+    lantern: { url:'assets/images/commons/taipei-lantern-festival-2023.jpg', page:'https://commons.wikimedia.org/wiki/File:Taiwan_Lantern_Festival_in_Taipei_2023.jpg', credit:'HC Lin', alt:'臺灣元宵花燈' },
+    dragon: { url:'assets/images/commons/bombing-dragon.jpg', page:'https://commons.wikimedia.org/wiki/File:Taiwan_Bombing_Dragon-3.jpg', credit:'Wikimedia Commons', alt:'苗栗𪹚龍' },
+    beipu: { url:'assets/images/beipu-yuhanghuo.jpg', page:'', credit:'取自網路，僅供教學使用', alt:'北埔油笐火活動夜景' },
+    singkawang: { url:'assets/images/commons/singkawang-temple-10576.jpg', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10576.jpg', credit:'Wibowo Djatmiko', alt:'山口洋三教合一廟宇夜景' },
+    singkawang2: {url:'assets/images/commons/singkawang-temple-10563.jpg', page:'https://commons.wikimedia.org/wiki/File:Singkawang_temple_101221-10563.JPG', credit:'Wibowo Djatmiko', alt:'山口洋廟宇實景'},
+    luo: {url:'assets/images/commons/luo-fangbo.jpg',page:'https://commons.wikimedia.org/wiki/File:Luo_Fangbo.jpg',credit:'Wikimedia Commons／羅芳伯後世圖像',alt:'羅芳伯的後世畫像'},
   };
   function photo(key, cls=''){ const x=PHOTO_SOURCES[key];if(!x)return ''; const credit=x.page?`<a href="${esc(x.page)}" target="_blank" rel="noopener noreferrer">圖片來源：${esc(x.credit)} ↗</a>`:`<span>圖片來源：${esc(x.credit)}</span>`;return `<figure class="real-photo ${cls}"><img src="${esc(x.url)}" alt="${esc(x.alt)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.parentElement.classList.add('photo-failed')"><figcaption>${credit}</figcaption></figure>`; }
   const studentMode=new URLSearchParams(window.location.search).get('mode')==='student';
@@ -102,7 +104,7 @@
     toneButton.title=`目前為${toneLabel}表記，點擊切換${state.toneMode==='value'?'調型':'調值'}`;
     toneButton.setAttribute('aria-label',toneButton.title);
     toneButton.classList.toggle('tone-shape-mode',state.toneMode==='shape');
-    document.getElementById('fontToggle').textContent=state.fontUp>1?'字級－':'字級＋';
+    const fontBtn=document.getElementById('fontToggle'),fontName=FONT_LEVELS.find(x=>x[1]===state.fontUp)?.[0]||'小';fontBtn.textContent=`字級：${fontName}`;fontBtn.setAttribute('aria-label',`目前字級：${fontName}，點擊切換小、中、大`);
     root.style.setProperty('--fontup',state.fontUp);
     document.querySelectorAll('[data-dialect]').forEach(el=>{const on=el.dataset.dialect===state.dialect;el.classList.toggle('active',on);el.setAttribute('aria-pressed',String(on));});
     navRender();
@@ -179,6 +181,7 @@
       <circle class="halo" cx="${c.x}" cy="${c.y}" r="24"/>
       <path class="pin-leader" d="M${startX} ${startY} L${labelX<c.x?labelX+82:labelX-7} ${labelY-5}"/>
       <circle class="core" cx="${c.x}" cy="${c.y}" r="7"/>
+      <circle class="pin-hit" cx="${c.x}" cy="${c.y}" r="13"/>
       <text x="${labelX}" y="${labelY}">${c.name}</text>
     </g>`;
   }
@@ -202,18 +205,41 @@
     </g>`;
   }
   function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
-  function taiwanViewBox(){
-    const w=680/state.twZoom,h=710/state.twZoom;
-    return `${clamp(state.twCenter.x-w/2,0,680-w).toFixed(1)} ${clamp(state.twCenter.y-h/2,0,710-h).toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`;
+  // 臺灣地圖鋪滿整個地圖區：viewBox 依畫面長寬比延伸（兩側是海），整個區域都能操作。
+  const TW_MAX_ZOOM=3;
+  function taiwanBox(){
+    const svg=document.querySelector('.map-svg.map-taiwan');
+    const cw=svg?.clientWidth||680,ch=svg?.clientHeight||710,ratio=cw/ch;
+    let h=710/state.twZoom,w=h*ratio;
+    if(ratio<680/710){w=680/state.twZoom;h=w/ratio;}
+    // 完整視圖固定置中；放大後可拖到任一邊界，但不會把臺灣整個拖出畫面。
+    const span=(size,full)=>size>=full?[full/2,full/2]:[size/2,full-size/2];
+    const [x0,x1]=span(w,680),[y0,y1]=span(h,710);
+    state.twCenter={x:clamp(state.twCenter.x,x0,x1),y:clamp(state.twCenter.y,y0,y1)};
+    return {x:state.twCenter.x-w/2,y:state.twCenter.y-h/2,w,h};
   }
+  function taiwanViewBox(){const b=taiwanBox();return `${b.x.toFixed(1)} ${b.y.toFixed(1)} ${b.w.toFixed(1)} ${b.h.toFixed(1)}`;}
   function updateTaiwanZoom(){
     const svg=document.querySelector('.map-svg.map-taiwan');if(!svg)return;
     svg.setAttribute('viewBox',taiwanViewBox());
+    svg.classList.toggle('is-zoomed',state.twZoom>1.01);
     const label=document.getElementById('taiwanZoomLabel');if(label)label.textContent=`${Math.round(state.twZoom*100)}%`;
     document.querySelectorAll('[data-action="map-zoom"]').forEach(b=>{
-      if(b.dataset.zoom==='in')b.disabled=state.twZoom>=2.49;
+      if(b.dataset.zoom==='in')b.disabled=state.twZoom>=TW_MAX_ZOOM-.01;
       if(b.dataset.zoom==='out')b.disabled=state.twZoom<=1.01;
     });
+  }
+  // 以畫面上某一點為中心縮放（滾輪、觸控板或雙指），該點底下的位置不動。
+  function zoomTaiwanAt(next,clientX,clientY){
+    const svg=document.querySelector('.map-svg.map-taiwan');if(!svg)return;
+    next=clamp(next,1,TW_MAX_ZOOM);if(Math.abs(next-state.twZoom)<.001)return;
+    const r=svg.getBoundingClientRect(),b=taiwanBox();
+    const fx=(clientX-r.left)/r.width,fy=(clientY-r.top)/r.height;
+    const px=b.x+fx*b.w,py=b.y+fy*b.h,k=state.twZoom/next;
+    state.twZoom=next;
+    state.twCenter={x:px+(.5-fx)*b.w*k,y:py+(.5-fy)*b.h*k};
+    if(next<=1.01)state.twCenter={x:340,y:355};
+    updateTaiwanZoom();
   }
   // 印尼聚居地：點擊標記後視角平滑放大，並可返回全圖。
   let indoFrame=0;
@@ -244,28 +270,51 @@
     stopIndoCamera();state.indoZoom=1;state.indoCenter={x:510,y:250};
     const svg=document.querySelector('.map-svg.map-indonesia');if(svg)svg.setAttribute('viewBox',indoViewBox());
   }
-  // 臺灣地圖在放大時以滑鼠、觸控或觸控筆拖曳；完整視圖不拖動。
-  let ignoreMapClickUntil=0;
+  // 臺灣地圖放大後可用滑鼠、觸控或觸控筆拖曳，從標記或文字上起手也可以；移動超過幾個像素才算拖曳，單純點一下仍是選縣市。
+  let ignoreMapClickUntil=0,taiwanResize=null;
   function bindTaiwanPan(){
     const svg=document.querySelector('.map-svg.map-taiwan');if(!svg)return;
-    let drag=null;
+    const pointers=new Map();let drag=null,pinch=null;
+    const endDrag=()=>{if(drag?.moved)ignoreMapClickUntil=performance.now()+400;drag=null;svg.classList.remove('is-dragging');};
     svg.addEventListener('pointerdown',e=>{
-      if(state.twZoom<=1||e.button!==0||e.target.closest('.pin'))return;
-      const vb=svg.viewBox.baseVal;
-      drag={pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,cx:state.twCenter.x,cy:state.twCenter.y,w:vb.width,h:vb.height,moved:false};
-      svg.setPointerCapture(e.pointerId);e.preventDefault();
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pointers.size===2){
+        const [a,b]=[...pointers.values()];
+        pinch={dist:Math.hypot(a.x-b.x,a.y-b.y)||1,zoom:state.twZoom};endDrag();ignoreMapClickUntil=performance.now()+400;return;
+      }
+      if(state.twZoom<=1.01)return;
+      drag={pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,cx:state.twCenter.x,cy:state.twCenter.y,scale:svg.clientWidth/svg.viewBox.baseVal.width,moved:false};
     });
     svg.addEventListener('pointermove',e=>{
-      if(!drag||e.pointerId!==drag.pointerId)return;
+      if(pointers.has(e.pointerId))pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(pinch&&pointers.size===2){
+        const [a,b]=[...pointers.values()];
+        zoomTaiwanAt(pinch.zoom*Math.hypot(a.x-b.x,a.y-b.y)/pinch.dist,(a.x+b.x)/2,(a.y+b.y)/2);e.preventDefault();return;
+      }
+      if(!drag||e.pointerId!==drag.pointerId||!(drag.scale>0))return;
       const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;
-      if(Math.hypot(dx,dy)>5)drag.moved=true;
-      const scale=Math.min(svg.clientWidth/drag.w,svg.clientHeight/drag.h);
-      if(!(scale>0))return;
-      state.twCenter={x:drag.cx-dx/scale,y:drag.cy-dy/scale};
+      if(!drag.moved){
+        if(Math.hypot(dx,dy)<6)return;
+        drag.moved=true;svg.classList.add('is-dragging');
+        try{svg.setPointerCapture(e.pointerId);}catch(_){}
+      }
+      e.preventDefault();
+      state.twCenter={x:drag.cx-dx/drag.scale,y:drag.cy-dy/drag.scale};
       updateTaiwanZoom();
     });
-    const endDrag=()=>{if(drag?.moved)ignoreMapClickUntil=performance.now()+400;drag=null;};
-    svg.addEventListener('pointerup',endDrag);svg.addEventListener('pointercancel',endDrag);svg.addEventListener('lostpointercapture',endDrag);
+    const release=e=>{pointers.delete(e.pointerId);if(pointers.size<2)pinch=null;if(drag&&e.pointerId===drag.pointerId)endDrag();};
+    svg.addEventListener('pointerup',release);svg.addEventListener('pointercancel',release);
+    svg.addEventListener('lostpointercapture',e=>{if(drag&&e.pointerId===drag.pointerId)endDrag();});
+    // 滾輪：已放大時直接縮放；完整視圖時要按住 Ctrl（或觸控板雙指開合）才縮放，免得捲動頁面時誤觸。
+    svg.addEventListener('wheel',e=>{
+      if(state.twZoom<=1.01&&!e.ctrlKey)return;
+      e.preventDefault();
+      zoomTaiwanAt(state.twZoom*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0018)),e.clientX,e.clientY);
+    },{passive:false});
+    svg.addEventListener('dblclick',e=>{if(e.target.closest('.pin'))return;e.preventDefault();zoomTaiwanAt(state.twZoom>=TW_MAX_ZOOM-.01?1:state.twZoom+.75,e.clientX,e.clientY);});
+    if(taiwanResize)taiwanResize.disconnect();
+    if(window.ResizeObserver){taiwanResize=new ResizeObserver(()=>updateTaiwanZoom());taiwanResize.observe(svg);}
   }
   // 路線動畫與地圖鏡頭分開處理：目的地是實際標註位置，鏡頭只改變觀看範圍。
   const GEO_FULL={x:165,y:60,w:720,h:585};
@@ -356,7 +405,7 @@
     }else if(state.mapView==='taiwan'){
       title='臺灣的客家人，分布在哪些縣市？';
       map=`<svg class="map-svg map-taiwan" viewBox="${taiwanViewBox()}" role="img" aria-label="臺灣客家人口熱區地圖，點選十個縣市的光暈標記查看客家人口及客語腔調。">
-        <image href="assets/images/taiwan-hakka-heatmap-v6.svg" width="680" height="710"/>
+        <image href="assets/images/taiwan-hakka-heatmap-v7.svg" x="-1000" y="-600" width="2680" height="1910"/>
         <image class="county-boundaries" href="assets/images/taiwan-county-lines.png" x="74" y="57" width="486.2" height="629.7" preserveAspectRatio="none" opacity=".65" style="pointer-events:none"/>
         ${TW_COUNTIES.map(countyPin).join('')}
       </svg>`;
@@ -371,7 +420,7 @@
     return `<section class="map-panel" id="mapPanel"><div class="map-header"><div><span class="micro-label">地理探索</span><h2>${title}</h2></div></div>
        <div class="map-tabs" role="group" aria-label="切換地圖主題">${tabs}</div>
        <div class="map-viewport ${state.mapView==='taiwan'?'zoomable-map':''}">${map}
-         ${state.mapView==='taiwan'?`<div class="map-zoom-controls" role="group" aria-label="縮放臺灣地圖"><button type="button" data-action="map-zoom" data-zoom="out" aria-label="縮小臺灣地圖" ${state.twZoom<=1?'disabled':''}>−</button><span id="taiwanZoomLabel">${Math.round(state.twZoom*100)}%</span><button type="button" data-action="map-zoom" data-zoom="in" aria-label="放大臺灣地圖" ${state.twZoom>=2.5?'disabled':''}>＋</button><button type="button" data-action="map-zoom" data-zoom="reset" aria-label="恢復原始比例">還原</button></div>`:''}
+         ${state.mapView==='taiwan'?`<div class="map-zoom-controls" role="group" aria-label="縮放臺灣地圖"><button type="button" data-action="map-zoom" data-zoom="out" aria-label="縮小臺灣地圖" ${state.twZoom<=1?'disabled':''}>−</button><span id="taiwanZoomLabel">${Math.round(state.twZoom*100)}%</span><button type="button" data-action="map-zoom" data-zoom="in" aria-label="放大臺灣地圖" ${state.twZoom>=TW_MAX_ZOOM?'disabled':''}>＋</button><button type="button" data-action="map-zoom" data-zoom="reset" aria-label="恢復原始比例">還原</button></div>`:''}
          ${state.mapView==='overview'&&state.migrationRoute?`<div class="geo-camera-controls" role="group" aria-label="遷移路線檢視"><button type="button" data-action="geo-replay">重播路線</button><button type="button" data-action="geo-reset">返回全圖</button></div>`:''}
          ${state.mapView==='indonesia'&&state.indoZoom>1?`<div class="geo-camera-controls"><button type="button" data-action="indo-reset">返回全圖</button></div>`:''}
        </div>
@@ -562,38 +611,39 @@
     </div></section>`;
   }
   // Separate photo albums let students compare two regional foods side by side.
-  // These are remote images with explicit links to the original source pages.
+  // 照片均為網站本機圖片；Wikimedia來源者保留原始頁面連結。
   const FOOD_PHOTOS={
     tw:[
-      {src:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg/960px-%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg',label:'客家菜包',caption:'臺灣客家菜包：米皮包著炒香的蘿蔔絲等內餡',source:'客家委員會',page:'https://commons.wikimedia.org/wiki/File:%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg'},
-      {src:'https://img.ltn.com.tw/Upload/food/page/2014/08/13/140813-99-0-Tabkm.jpg',label:'豬籠粄',caption:'不同顏色的豬籠粄與切開的內餡',source:'自由時報食譜自由配',page:'https://food.ltn.com.tw/article/99'},
-      {src:'https://www.jdx32tw.com/archive/image/product1/images/1776763166838.webp',label:'客家菜包切面',caption:'草綠色米皮與菜包的鹹餡',source:'九鼎軒',page:'https://www.jdx32tw.com/product_d.php?id=139&lang=tw&tb=1'}
+      {src:'assets/images/commons/hakka-caibao.jpg',label:'客家菜包',caption:'臺灣客家菜包：米皮包著炒香的蘿蔔絲等內餡',source:'客家委員會',page:'https://commons.wikimedia.org/wiki/File:%E5%AE%A2%E5%AE%B6%E8%8F%9C%E5%8C%85.jpg'},
+      {src:'assets/images/user-caibao/zhulongban-green.jpg',label:'豬籠粄',caption:'竹篩上的綠色豬籠粄，觀察米皮的顏色與外形。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/user-caibao/caibao-cut-1.jpg',label:'客家菜包切面',caption:'切開的菜包：白色米皮包著香菇、肉末等鹹餡。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/user-caibao/caibao-cut-2.jpg',label:'菜包內餡',caption:'菜包剖面的蘿蔔絲與肉絲內餡。',source:'取自網路，僅供教學使用',page:''}
     ],
     id:[
-      {src:'assets/images/choi-pan-bowl.jpg',label:'Choi Pan',caption:'在蒸盤中鋪上葉片，擺放白色菜粄與蒜酥。',source:'授課教師提供',page:''},
-      {src:'assets/images/choi-pan-table.jpg',label:'Choi Pan與醬料',caption:'桌上菜粄、佐料與醬汁的實際食用場景。',source:'授課教師提供',page:''}
+      {src:'assets/images/choi-pan-bowl.jpg',label:'Choi Pan',caption:'在蒸盤中鋪上葉片，擺放白色菜粄與蒜酥。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/choi-pan-table.jpg',label:'Choi Pan與醬料',caption:'桌上菜粄、佐料與醬汁的實際食用場景。',source:'取自網路，僅供教學使用',page:''}
     ],
     zong_tw:[
-      {src:'assets/images/user-zongzi/PANCHUNG(TW).jpg',label:'臺灣客家粽內餡',caption:'客家粽切面：觀察米皮與鹹餡。',source:'授課教師提供',page:''},
-      {src:'assets/images/user-zongzi/PANCHUNG2(TW).jpg',label:'臺灣客家粽剖面',caption:'臺灣客家粽切開後的內餡與包裹葉材。',source:'授課教師提供',page:''},
-      {src:'https://yuann.tw/archive/8309/33505685126_d741a1ce62_b.jpg',label:'臺灣客家粽',caption:'以粽葉包裹的客家鹹粽，觀察葉片、繩結與外形。',source:'隨裕而安・頭份客家粽',page:'https://yuann.tw/%E9%A0%AD%E4%BB%BD%E9%98%BF%E7%A7%80%E5%AB%82%E5%AE%A2%E5%AE%B6%E7%B2%BD-%E9%85%8D%E6%96%99%E7%B0%A1%E5%96%AE%E8%B6%85%E5%A5%BD%E5%90%83/'},
-      {src:'https://imgproxy.icook.network/safe/rt%3Afit/w%3A1242/el%3A0/q%3A80/plain/http%3A%2F%2Ftokyo-kitchen.icook.tw.s3.amazonaws.com%2Fuploads%2Frecipe%2Fcover%2F340450%2Fde34f58d0c3f6dd9.jpg',label:'客家粄粽',caption:'臺灣客家粄粽的包裹方式，與一般糯米鹹粽可再比較。',source:'愛料理・客家粿粽／粄粽',page:'https://icook.tw/recipes/340450'}
+      {src:'assets/images/user-zongzi/PANCHUNG(TW).jpg',label:'臺灣客家粽內餡',caption:'客家粽切面：觀察米皮與鹹餡。',source:'客新聞',page:''},
+      {src:'assets/images/user-zongzi/PANCHUNG2(TW).jpg',label:'臺灣客家粽剖面',caption:'臺灣客家粽切開後的內餡與包裹葉材。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/user-zongzi/banzong-wrapped.jpg',label:'客家粄粽外觀',caption:'剝開的白色粄粽與後方以粽葉、棉繩包綁的粽子，觀察葉材、繩結與外形。',source:'客新聞',page:''},
+      {src:'assets/images/user-zongzi/banzong-kenews.jpg',label:'客家粄粽內餡',caption:'粄粽剝開後的米粄外皮與鹹餡。',source:'客新聞',page:''}
     ],
     zong_id:[
-      {src:'assets/images/user-zongzi/BAKCANG2(In).jpg',label:'邦加粽子內餡',caption:'印尼邦加粽子剖面與葉材，觀察糯米與肉餡。',source:'授課教師提供',page:''},
-      {src:'assets/images/user-zongzi/BAKCANG(In).jpg',label:'邦加粽子介紹圖',caption:'邦加粽子斑蘭葉包裹方式的宣傳示意圖（非實景照片）。',source:'授課教師提供・宣傳示意',page:''},
-      {src:'https://img-global.cpcdn.com/recipes/cfc394e40a979d05/680x781cq80/kue-bakcang-bangka-foto-resep-utama.jpg',label:'邦加Bakcang',caption:'邦加粽子的綠葉包裹外觀；當地有使用斑蘭葉的做法。',source:'Cookpad・Kue Bak Cang Bangka',page:'https://cookpad.com/id/resep/15368273'},
-      {src:'https://img-global.cpcdn.com/recipes/6a62aaba6964def1/1200x630cq80/photo.jpg',label:'邦加Nyuk Cung',caption:'觀察邦加粽子的葉材、外形與綁法。',source:'Cookpad・Bacang Bangka',page:'https://cookpad.com/id/resep/15141993'}
+      {src:'assets/images/user-zongzi/BAKCANG2(In).jpg',label:'邦加粽子內餡',caption:'印尼邦加粽子剖面與葉材，觀察糯米與肉餡。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/user-zongzi/BAKCANG(In).jpg',label:'邦加粽子介紹圖',caption:'邦加粽子斑蘭葉包裹方式的宣傳示意圖（非實景照片）。',source:'取自網路・宣傳示意，僅供教學使用',page:''},
+      {src:'assets/images/user-zongzi/bakcang-hanging.jpg',label:'Bakcang／Nyuk Cung外觀',caption:'以綠葉包裹、白繩綁起成串吊掛的粽子，觀察葉材、外形與綁法。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/user-zongzi/bakcang-plate.jpg',label:'Bakcang／Nyuk Cung',caption:'解開粽葉的粽子與另一顆以紅繩綁好的粽子。',source:'取自網路，僅供教學使用',page:''}
     ],
     ciba_tw:[
-      {src:'assets/images/user-tshipa-kaloci/tshipa2.jpg',label:'臺灣客家粢粑',caption:'白色粢粑裹上花生粉，以筷子夾取，觀察米糰與沾粉。',source:'授課教師提供',page:''},
-      {src:'assets/images/user-tshipa-kaloci/tshipa.jpg',label:'臺灣粢粑米糰',caption:'完整的白色粢粑放在花生粉上，可以觀察米糰的外觀。',source:'授課教師提供',page:''},
-      {src:'assets/images/user-tshipa-kaloci/tshipa-cut.jpg',label:'臺灣粢粑分切後',caption:'分成小塊的粢粑與花生粉，觀察食用方式與形狀。',source:'授課教師提供',page:''}
+      {src:'assets/images/user-tshipa-kaloci/tshipa2.jpg',label:'臺灣客家粢粑',caption:'白色粢粑裹上花生粉，以筷子夾取，觀察米糰與沾粉。',source:'美食二三事 Cooking23s',page:''},
+      {src:'assets/images/user-tshipa-kaloci/tshipa.jpg',label:'臺灣粢粑米糰',caption:'完整的白色粢粑放在花生粉上，可以觀察米糰的外觀。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/user-tshipa-kaloci/tshipa-cut.jpg',label:'臺灣粢粑分切後',caption:'分成小塊的粢粑與花生粉，觀察食用方式與形狀。',source:'取自網路，僅供教學使用',page:''}
     ],
     kaloci_id:[
-      {src:'assets/images/user-tshipa-kaloci/kaloci-pandan.jpg',label:'斑蘭風味Kaloci',caption:'綠色斑蘭風味Kaloci裹上花生碎，觀察顏色與外觀。',source:'授課教師提供',page:''},
-      {src:'assets/images/user-tshipa-kaloci/kaloci-pandan-2.jpg',label:'白色與綠色Kaloci',caption:'同盤可見原色與綠色米糰，呈現Kaloci不同的口味與外觀。',source:'授課教師提供',page:''},
-      {src:'assets/images/user-tshipa-kaloci/kaloci-pandan-3.jpg',label:'Kaloci製作與分切',caption:'印尼Kaloci攤位製作畫面，可觀察將米糰分切並裹上花生碎的過程。',source:'授課教師提供',page:''}
+      {src:'assets/images/user-tshipa-kaloci/kaloci-pandan.jpg',label:'斑蘭風味Kaloci',caption:'綠色斑蘭風味Kaloci裹上花生碎，觀察顏色與外觀。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/user-tshipa-kaloci/kaloci-pandan-2.jpg',label:'白色與綠色Kaloci',caption:'同盤可見原色與綠色米糰，呈現Kaloci不同的口味與外觀。',source:'取自網路，僅供教學使用',page:''},
+      {src:'assets/images/user-tshipa-kaloci/kaloci-pandan-3.jpg',label:'Kaloci製作與分切',caption:'印尼Kaloci攤位製作畫面，可觀察將米糰分切並裹上花生碎的過程。',source:'Simas Gulali',page:''}
     ]
   };
   let foodTicker=null;
@@ -650,7 +700,7 @@
     </section><section class="panel teaching-reveal"><div class="micro-label">觀察與比較・先討論，再揭曉</div><h2>看一看：都是糯米點心，顏色與口味有什麼變化？</h2><p class="reveal-instruction">先看照片，說出一項共同點和一項差異，教師再逐張揭曉。</p><div class="reveal-grid"><details class="reveal-card"><summary><span>共同的米食傳統</span><span class="reveal-hint">點擊揭曉</span></summary><p>兩者都以糯米或糯米粉製作成柔軟、有黏性的米糰，常搭配花生粉等配料食用；實際加工方法依各地做法而異。</p></details><details class="reveal-card"><summary><span>斑蘭口味的在地變化</span><span class="reveal-hint">點擊揭曉</span></summary><p>臺灣常見白色粢粑；印尼Kaloci也有綠色斑蘭風味，呈現地方香草與甜點做法的結合。斑蘭只是其中一種口味，並非所有Kaloci都有。</p></details></div></section>`;
     if(isZong)return `${nav}<section class="grid2 food-comparison">
       <div class="food-card">${foodCarousel('zong_tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>客家粽</h3><p>常以粽葉包裹糯米與鹹餡，餡料與作法依地方、家庭而不同。</p></div></div>
-      <div class="food-card">${foodCarousel('zong_id')}<div class="food-body"><span class="tag amber">印尼・邦加島</span><h3>Bakcang／Nyuk Cung</h3><p>邦加部分做法以斑蘭葉包裹，也有使用椰奶處理糯米、搭配肉類與蝦米等配料的食譜。</p></div></div>
+      <div class="food-card">${foodCarousel('zong_id')}<div class="food-body"><span class="tag amber">印尼・邦加島</span><h3>Bakcang／Nyuk Cung</h3><p>邦加部分做法以斑蘭葉包裹，也有使用椰奶處理糯米、搭配肉類與蝦米等配料的食譜。</p><p class="food-name-note">註：Bakcang是印尼當地以閩語或潮州話稱「肉粽」，Nyuk Cung是印尼當地以客語稱「肉粽」，兩者指同一種食物。</p></div></div>
     </section><section class="panel teaching-reveal"><div class="micro-label">觀察與比較・先討論，再揭曉</div><h2>相同的粽子，會因環境而改變哪些材料？</h2><p class="reveal-instruction">先觀察兩地照片，請小組說出一項共同點與一項差異，再點開資訊卡。</p><div class="reveal-grid"><details class="reveal-card"><summary><span>共同的傳統</span><span class="reveal-hint">點擊揭曉</span></summary><p>包葉、糯米、內餡以及節慶飲食。</p></details><details class="reveal-card"><summary><span>在地的變化</span><span class="reveal-hint">點擊揭曉</span></summary><p>包裹葉材、調味材料、餡料與製作方式。</p></details></div></section>`;
     return `${nav}<section class="grid2 food-comparison">
       <div class="food-card">${foodCarousel('tw')}<div class="food-body"><span class="tag">臺灣客家</span><h3>菜包／豬籠粄</h3><p>常見鹹餡包含蘿蔔絲、香菇等，米製外皮可呈現不同形狀。</p></div></div>
@@ -739,9 +789,11 @@
     if(action==='map-zoom'){
       const level=el.dataset.zoom;
       if(level==='reset'){state.twZoom=1;state.twCenter={x:340,y:355};}
-      else{state.twZoom=clamp(state.twZoom+(level==='in'?.5:-.5),1,2.5);
+      else{const was=state.twZoom;state.twZoom=clamp(state.twZoom+(level==='in'?.5:-.5),1,TW_MAX_ZOOM);
+        // 從完整視圖第一次放大時對準選定縣市；已放大後再按，維持目前拖到的位置。
         const county=TW_COUNTIES.find(c=>c.id===state.place);
-        if(county&&state.twZoom>1)state.twCenter={x:county.x,y:county.y};
+        if(county&&was<=1.01&&state.twZoom>1)state.twCenter={x:county.x,y:county.y};
+        if(state.twZoom<=1.01)state.twCenter={x:340,y:355};
       }
       updateTaiwanZoom();
     }
@@ -794,7 +846,7 @@
   document.querySelectorAll('[data-dialect]').forEach(el=>el.addEventListener('click',()=>{state.dialect=el.dataset.dialect;render();}));
   document.getElementById('pinyinToggle').addEventListener('click',()=>{state.pinyin=!state.pinyin;render();});
   document.getElementById('toneModeToggle').addEventListener('click',()=>{state.toneMode=state.toneMode==='value'?'shape':'value';render();});
-  document.getElementById('fontToggle').addEventListener('click',()=>{state.fontUp=state.fontUp>1?1:1.27;render();});
+  document.getElementById('fontToggle').addEventListener('click',()=>{const i=FONT_LEVELS.findIndex(x=>x[1]===state.fontUp);state.fontUp=FONT_LEVELS[(i+1)%FONT_LEVELS.length][1];render();});
   document.getElementById('nextBtn').addEventListener('click',()=>goto(state.stage===7?0:state.stage+1));
   document.getElementById('prevBtn').addEventListener('click',()=>goto(state.stage-1));
   document.getElementById('mapHome').addEventListener('click',()=>goto(0));

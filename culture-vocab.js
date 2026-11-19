@@ -14,13 +14,13 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
 const TONES={hailu:{'53':'ˋ','55':'','24':'ˊ','11':'ˇ','33':'+','5':'','2':'ˋ'},sixian:{'24':'ˊ','11':'ˇ','31':'ˋ','55':'','2':'ˋ','5':''}};
 const IMAGE_INFO={
- '菜包':{src:'assets/images/choi-pan-table.jpg',credit:'課程既有菜粄／Choi Pan照片',note:'觀察米製外皮與內餡'},
- '粽仔':{src:'assets/images/user-zongzi/PANCHUNG(TW).jpg',credit:'教師提供：臺灣粽子剖面照片',note:'觀察糯米和內餡的樣子'},
- '粄粽':{src:'assets/images/user-zongzi/PANCHUNG2(TW).jpg',credit:'教師提供：臺灣客家粄粽剖面照片',note:'外層是米粄，通常看不到完整米粒'},
- '菜頭':{src:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Daikon.Japan.jpg/640px-Daikon.Japan.jpg',credit:'蘿蔔照片（連網載入）',note:'菜頭就是蘿蔔'},
- '菜脯':{src:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Preserved_radish.jpg/640px-Preserved_radish.jpg',credit:'蘿蔔乾照片（連網載入）',note:'將蘿蔔加工保存後的食材'},
- '香菇':{src:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Shiitake_mushroom.jpg/640px-Shiitake_mushroom.jpg',credit:'香菇照片（連網載入）',note:'常用於米食餡料'},
- '蝦米':{src:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Dried_shrimp.jpg/640px-Dried_shrimp.jpg',credit:'蝦米照片（連網載入）',note:'常見的乾燥海產食材'}
+ '菜包':{src:'assets/images/choi-pan-table.jpg',credit:'菜粄／Choi Pan照片（取自網路，僅供教學使用）',note:'觀察米製外皮與內餡'},
+ '粽仔':{src:'assets/images/user-zongzi/PANCHUNG(TW).jpg',credit:'臺灣粽子剖面照片（來源：客新聞）',note:'觀察糯米和內餡的樣子'},
+ '粄粽':{src:'assets/images/user-zongzi/PANCHUNG2(TW).jpg',credit:'臺灣客家粄粽剖面照片（取自網路，僅供教學使用）',note:'外層是米粄，通常看不到完整米粒'},
+ '菜頭':{src:'assets/images/vocab/daikon.jpg',credit:'蘿蔔照片（取自Wiki）',note:'菜頭就是蘿蔔'},
+ '菜脯':{src:'assets/images/vocab/preserved-radish.jpg',credit:'蘿蔔乾照片（取自網路，僅供教學使用）',note:'將蘿蔔加工保存後的食材'},
+ '香菇':{src:'assets/images/vocab/shiitake.jpg',credit:'香菇照片（取自Wiki）',note:'常用於米食餡料'},
+ '蝦米':{src:'assets/images/vocab/dried-shrimp.jpg',credit:'蝦米照片（取自Wiki）',note:'常見的乾燥海產食材'}
 };
 const overlay=document.getElementById('cultureVocabOverlay');
 if(!overlay)return;

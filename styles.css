@@ -874,21 +874,19 @@ html,body{font-size:18px}
 .phon-rime-search-results{margin:14px 0;background:#f4f9f9;border:1px solid #d8e7e8;padding:13px;border-radius:9px;max-height:300px;overflow:auto}.phon-rime-search-results h3{margin:0 0 10px;font-size:15px}.phon-rime-search-results button{display:inline-block;margin:3px;padding:7px 10px;background:white;border:1px solid #cadbdf;border-radius:7px;cursor:pointer;color:#255666}
 @media(max-width:680px){.phon-vowel-table{min-width:590px}.phonology-actions button{font-size:13px;padding:7px 9px}.phon-rime-list button{min-width:48px;padding:7px 9px}.phon-rime-selection{padding:12px}.phon-rime-pairs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-/* beta V8.1.1：僅元音表及韻母配字表，教育部拼音優先、IPA小字次之 */
-.phon-moe-main{font-size:1em;font-weight:800;line-height:1.25}
-.phon-ipa-note{display:block;font-size:11px;font-weight:500;line-height:1.3;color:#66828a;letter-spacing:0;white-space:nowrap}
-.phon-vowel-example{display:inline-flex;align-items:baseline;gap:3px;white-space:nowrap}
-.phon-vowel-example .phon-moe-main{font-size:16px}
-.phon-vowel-example .phon-ipa-note{display:inline;font-size:10px;margin-left:2px}
-.phon-rime-list button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:54px}
-.phon-rime-list button .phon-moe-main{font-size:17px}
-.phon-rime-list button.active .phon-ipa-note{color:#daeff3}
-.phon-rime-name .phon-moe-main{font-size:23px}
-.phon-rime-name .phon-ipa-note{font-size:12px}
-.phon-rime-initial .phon-moe-main{font-size:17px}
-.phon-rime-initial .phon-ipa-note{font-size:11px}
-.phon-rime-table thead button .phon-moe-main{font-size:14px}
-.phon-rime-table tbody th .phon-moe-main{font-size:14px}
-.phon-rime-search-results button .phon-moe-main{font-size:13px}
-.phon-rime-search-results button .phon-ipa-note{display:inline;font-size:10px;margin-left:3px}
-.phon-rime-table thead button .phon-ipa-note{font-size:10px}
+/* V1.0.0：元音表與韻母配字表以教育部拼音為主，方括號內的IPA用小字附註（與「生活中的科學　客語詞彙篇」同步）。 */
+.phon-vowel-table .pv-ipa{font-size:22px;font-weight:750;white-space:nowrap}
+.phon-rime-initial small,.phon-rime-table th small{display:block;margin-top:1px;font-size:11px;font-weight:400;color:#66828a;white-space:nowrap}
+.phon-rime-ipa{margin-left:8px;font-size:14px;color:#66828a}
+.food-card .food-body .food-name-note{margin-top:8px;font-size:15px;line-height:1.6;color:#55707a}
+
+/* V1.0.0：臺灣客家人口地圖鋪滿整個地圖區（兩側不留空白），放大後整區都可拖曳。 */
+#siteShell .map-panel .map-viewport.zoomable-map{display:block}
+#siteShell .map-panel .map-svg.map-taiwan{display:block;width:100%!important;max-width:none!important;touch-action:pan-y;cursor:default;user-select:none;-webkit-user-select:none}
+#siteShell .map-panel .map-svg.map-taiwan.is-zoomed{touch-action:none;cursor:grab}
+#siteShell .map-panel .map-svg.map-taiwan.is-dragging{cursor:grabbing}
+#siteShell .map-panel .map-svg.map-taiwan.is-dragging .pin{pointer-events:none}
+/* 縣市標記的可點範圍只算圓點周圍與縣市名，不再用整個標記的外框，避免相鄰縣市（新竹縣／新竹市、屏東縣／臺東縣）互相蓋住。 */
+#siteShell .map-svg.map-taiwan .county-pin,#siteShell .map-svg.map-taiwan .county-pin .pulse-ring,#siteShell .map-svg.map-taiwan .county-pin .halo{pointer-events:none}
+#siteShell .map-svg.map-taiwan .county-pin .pin-hit{fill:transparent;stroke:none;pointer-events:all}
+#siteShell .map-svg.map-taiwan .county-pin .core,#siteShell .map-svg.map-taiwan .county-pin text{pointer-events:all}
